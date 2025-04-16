@@ -5,6 +5,18 @@ import { authMiddleware, AuthRequest } from '../middlewares/authMiddlewares';
 const router = Router();
 const prisma = new PrismaClient();
 
+router.get('/', authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const sites = await prisma.site.findMany({
+      where: { ownerId: req.userId! },
+    });
+    res.json(sites);
+  } catch (error) {
+    console.log('Error during fetching sites: ', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
   const { domain, language, legislation } = req.body;
 
