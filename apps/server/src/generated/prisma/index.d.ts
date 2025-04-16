@@ -2211,6 +2211,7 @@ export namespace Prisma {
     content: string | null
     siteId: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DocumentMaxAggregateOutputType = {
@@ -2219,6 +2220,7 @@ export namespace Prisma {
     content: string | null
     siteId: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DocumentCountAggregateOutputType = {
@@ -2227,6 +2229,7 @@ export namespace Prisma {
     content: number
     siteId: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -2237,6 +2240,7 @@ export namespace Prisma {
     content?: true
     siteId?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type DocumentMaxAggregateInputType = {
@@ -2245,6 +2249,7 @@ export namespace Prisma {
     content?: true
     siteId?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type DocumentCountAggregateInputType = {
@@ -2253,6 +2258,7 @@ export namespace Prisma {
     content?: true
     siteId?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -2334,6 +2340,7 @@ export namespace Prisma {
     content: string
     siteId: string
     createdAt: Date
+    updatedAt: Date
     _count: DocumentCountAggregateOutputType | null
     _min: DocumentMinAggregateOutputType | null
     _max: DocumentMaxAggregateOutputType | null
@@ -2359,6 +2366,7 @@ export namespace Prisma {
     content?: boolean
     siteId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     site?: boolean | SiteDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -2368,6 +2376,7 @@ export namespace Prisma {
     content?: boolean
     siteId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     site?: boolean | SiteDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -2377,6 +2386,7 @@ export namespace Prisma {
     content?: boolean
     siteId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     site?: boolean | SiteDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -2386,9 +2396,10 @@ export namespace Prisma {
     content?: boolean
     siteId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "content" | "siteId" | "createdAt", ExtArgs["result"]["document"]>
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "content" | "siteId" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
   export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     site?: boolean | SiteDefaultArgs<ExtArgs>
   }
@@ -2410,6 +2421,7 @@ export namespace Prisma {
       content: string
       siteId: string
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["document"]>
     composites: {}
   }
@@ -2839,6 +2851,7 @@ export namespace Prisma {
     readonly content: FieldRef<"Document", 'String'>
     readonly siteId: FieldRef<"Document", 'String'>
     readonly createdAt: FieldRef<"Document", 'DateTime'>
+    readonly updatedAt: FieldRef<"Document", 'DateTime'>
   }
     
 
@@ -4398,7 +4411,8 @@ export namespace Prisma {
     type: 'type',
     content: 'content',
     siteId: 'siteId',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -4552,6 +4566,7 @@ export namespace Prisma {
     content?: StringFilter<"Document"> | string
     siteId?: StringFilter<"Document"> | string
     createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
     site?: XOR<SiteScalarRelationFilter, SiteWhereInput>
   }
 
@@ -4561,6 +4576,7 @@ export namespace Prisma {
     content?: SortOrder
     siteId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     site?: SiteOrderByWithRelationInput
   }
 
@@ -4573,6 +4589,7 @@ export namespace Prisma {
     content?: StringFilter<"Document"> | string
     siteId?: StringFilter<"Document"> | string
     createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
     site?: XOR<SiteScalarRelationFilter, SiteWhereInput>
   }, "id">
 
@@ -4582,6 +4599,7 @@ export namespace Prisma {
     content?: SortOrder
     siteId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: DocumentCountOrderByAggregateInput
     _max?: DocumentMaxOrderByAggregateInput
     _min?: DocumentMinOrderByAggregateInput
@@ -4596,6 +4614,7 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter<"Document"> | string
     siteId?: StringWithAggregatesFilter<"Document"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
   }
 
   export type SiteWhereInput = {
@@ -4738,6 +4757,7 @@ export namespace Prisma {
     type: string
     content: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     site: SiteCreateNestedOneWithoutDocuemntsInput
   }
 
@@ -4747,6 +4767,7 @@ export namespace Prisma {
     content: string
     siteId: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DocumentUpdateInput = {
@@ -4754,6 +4775,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     site?: SiteUpdateOneRequiredWithoutDocuemntsNestedInput
   }
 
@@ -4763,6 +4785,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     siteId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentCreateManyInput = {
@@ -4771,6 +4794,7 @@ export namespace Prisma {
     content: string
     siteId: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DocumentUpdateManyMutationInput = {
@@ -4778,6 +4802,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateManyInput = {
@@ -4786,6 +4811,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     siteId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SiteCreateInput = {
@@ -4967,6 +4993,7 @@ export namespace Prisma {
     content?: SortOrder
     siteId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DocumentMaxOrderByAggregateInput = {
@@ -4975,6 +5002,7 @@ export namespace Prisma {
     content?: SortOrder
     siteId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DocumentMinOrderByAggregateInput = {
@@ -4983,6 +5011,7 @@ export namespace Prisma {
     content?: SortOrder
     siteId?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UsersScalarRelationFilter = {
@@ -5360,6 +5389,7 @@ export namespace Prisma {
     type: string
     content: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DocumentUncheckedCreateWithoutSiteInput = {
@@ -5367,6 +5397,7 @@ export namespace Prisma {
     type: string
     content: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DocumentCreateOrConnectWithoutSiteInput = {
@@ -5433,6 +5464,7 @@ export namespace Prisma {
     content?: StringFilter<"Document"> | string
     siteId?: StringFilter<"Document"> | string
     createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
   }
 
   export type SiteCreateManyOwnerInput = {
@@ -5478,6 +5510,7 @@ export namespace Prisma {
     type: string
     content: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DocumentUpdateWithoutSiteInput = {
@@ -5485,6 +5518,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateWithoutSiteInput = {
@@ -5492,6 +5526,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateManyWithoutSiteInput = {
@@ -5499,6 +5534,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

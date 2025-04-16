@@ -1,13 +1,11 @@
 import { Router } from 'express';
 import { PrismaClient } from '../generated/prisma';
 import { AuthRequest, authMiddleware } from '../middlewares/authMiddlewares';
-import { error } from 'console';
-import { json } from 'stream/consumers';
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/:siteId', authMiddleware, async (req: AuthRequest, res) => {
+router.get('/:siteId', authMiddleware, async (req: AuthRequest, res) => {
   const { siteId } = req.params;
 
   try {
@@ -20,6 +18,7 @@ router.post('/:siteId', authMiddleware, async (req: AuthRequest, res) => {
 
     const doc = await prisma.document.findMany({
       where: { siteId },
+      orderBy: { updatedAt: 'desc' },
     });
 
     res.status(201).json(doc);
@@ -41,7 +40,6 @@ router.get('/view/:id', authMiddleware, async (req: AuthRequest, res) => {
     if (!doc || doc.site.ownerId != req.userId) {
       res.status(403).json({ error: 'Access denied' });
     }
-
     res.status(200).json(doc);
   } catch (error) {
     console.log('Error during creating document: ', error);
@@ -65,7 +63,7 @@ router.put('/:id', authMiddleware, async (req: AuthRequest, res) => {
 
     const newDoc = await prisma.document.update({
       where: { id },
-      data: { content },
+      data: { content, updatedAt: new Date() },
     });
 
     res.status(200).json(newDoc);

@@ -131,7 +131,8 @@ exports.Prisma.DocumentScalarFieldEnum = {
   type: 'type',
   content: 'content',
   siteId: 'siteId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SiteScalarFieldEnum = {
