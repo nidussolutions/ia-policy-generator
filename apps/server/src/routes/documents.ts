@@ -40,6 +40,14 @@ router.get('/view/:id', authMiddleware, async (req: AuthRequest, res) => {
     if (!doc || doc.site.ownerId != req.userId) {
       res.status(403).json({ error: 'Access denied' });
     }
+
+    await prisma.activityLog.create({
+      data: {
+        userId: req.userId!,
+        action: `Visualizou o documento "${doc!.type}" do site "${doc!.site.name}"`,
+      },
+    });
+
     res.status(200).json(doc);
   } catch (error) {
     console.log('Error during creating document: ', error);
@@ -66,6 +74,13 @@ router.put('/:id', authMiddleware, async (req: AuthRequest, res) => {
       data: { content, updatedAt: new Date() },
     });
 
+    await prisma.activityLog.create({
+      data: {
+        userId: req.userId!,
+        action: `Atualizou o documento "${doc!.type}" do site "${doc!.site.name}"`,
+      },
+    });
+
     res.status(200).json(newDoc);
   } catch (error) {
     console.log('Error during creating document: ', error);
@@ -87,6 +102,14 @@ router.delete('/:id', authMiddleware, async (req: AuthRequest, res) => {
     }
 
     await prisma.document.delete({ where: { id } });
+
+    await prisma.activityLog.create({
+      data: {
+        userId: req.userId!,
+        action: `Removeu o documento "${doc!.type}" do site "${doc!.site.name}"`,
+      },
+    });
+
     res.status(204).send();
   } catch (error) {
     console.log('Error during deleting document: ', error);

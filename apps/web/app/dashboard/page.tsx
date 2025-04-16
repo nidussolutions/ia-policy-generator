@@ -45,18 +45,18 @@ export default function DashboardPage() {
 
         const metricsJson = await resMetrics.json();
 
-        // const resLog = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/dashboard/logs`,
-        //   {
-        //     headers: { Authorization: `Bearer ${token}` },
-        //   }
-        // );
+        const resLog = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/dashboard/logs`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-        // const logsJson = await resLog.json();
+        const logsJson = await resLog.json();
 
         setUserData(userJson);
         setMetrics(metricsJson);
-        setAtividades([]);
+        setAtividades(logsJson.logs || []);
       } catch (err) {
         console.error(err);
       } finally {

@@ -28,6 +28,18 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
       data: { siteId, type, content },
     });
 
+    await prisma.users.update({
+      where: { id: req.userId! },
+      data: { documents: { connect: { id: doc.id } } },
+    });
+
+    await prisma.activityLog.create({
+      data: {
+        userId: req.userId!,
+        action: `Criou o documento "${doc.type}" do site "${site!.name}"`,
+      },
+    });
+
     res.status(201).json(doc);
   } catch (error) {
     console.log('Error during creating document: ', error);

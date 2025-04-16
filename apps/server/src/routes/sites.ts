@@ -31,6 +31,13 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
       },
     });
 
+    await prisma.activityLog.create({
+      data: {
+        userId: req.userId!,
+        action: `Criou o site "${site.name}"`,
+      },
+    });
+
     res.status(201).json(site);
   } catch (error) {
     console.log('Error during creating site: ', error);
@@ -42,8 +49,22 @@ router.delete('/:id', authMiddleware, async (req: AuthRequest, res) => {
   const { id } = req.params;
 
   try {
+    const site = await prisma.site.findUnique({ where: { id } });
+
+    if (!site) {
+      res.status(404).json({ error: 'Site not found' });
+    }
+
     await prisma.document.deleteMany({ where: { siteId: id } });
     await prisma.site.delete({ where: { id } });
+
+    await prisma.activityLog.create({
+      data: {
+        userId: req.userId!,
+        action: `Removeu o site "${site!.name}"`,
+      },
+    });
+
     res.status(204).send();
   } catch (error) {
     console.log('Error during deleting site: ', error);
