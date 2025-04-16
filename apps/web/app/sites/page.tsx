@@ -24,7 +24,15 @@ export default function SitesPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Seus Sites</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Seus Sites</h1>
+        <Link
+          href="/sites/new"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          + Novo Site
+        </Link>
+      </div>
 
       {data?.length === 0 && (
         <p className="text-gray-600">

@@ -1,9 +1,18 @@
 export type DocType = {
-  id: string;
+  id?: string;
   type: string;
   content: string;
   siteId: string;
   updatedAt: string;
+};
+
+export type SiteType = {
+  id?: string;
+  name: string;
+  domain: string;
+  language: string;
+  legislation: string;
+  ownerId?: string;
 };
 
 export async function fetcher(url: string, token: string) {
