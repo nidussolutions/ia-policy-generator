@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "ia-policy-generator",
   "private": true,
   "scripts": {
     "build": "turbo run build",
