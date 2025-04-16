@@ -1,17 +1,11 @@
 import express from 'express';
-import { PrismaClient } from './generated/prisma';
+import authRouter from './routes/auth';
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
-const prisma = new PrismaClient();
-
 app.use(express.json());
-
-app.get('/', async (req, res) => {
-  const users = await prisma.user.findMany();
-  res.status(200).send({ users });
-});
+app.use('/auth', authRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
