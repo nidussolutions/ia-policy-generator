@@ -18,11 +18,12 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
 });
 
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
-  const { domain, language, legislation } = req.body;
+  const { domain, language, legislation, name } = req.body;
 
   try {
     const site = await prisma.site.create({
       data: {
+        name,
         domain,
         language,
         legislation,

@@ -3278,6 +3278,7 @@ export namespace Prisma {
 
   export type SiteMinAggregateOutputType = {
     id: string | null
+    name: string | null
     domain: string | null
     language: string | null
     legislation: string | null
@@ -3288,6 +3289,7 @@ export namespace Prisma {
 
   export type SiteMaxAggregateOutputType = {
     id: string | null
+    name: string | null
     domain: string | null
     language: string | null
     legislation: string | null
@@ -3298,6 +3300,7 @@ export namespace Prisma {
 
   export type SiteCountAggregateOutputType = {
     id: number
+    name: number
     domain: number
     language: number
     legislation: number
@@ -3310,6 +3313,7 @@ export namespace Prisma {
 
   export type SiteMinAggregateInputType = {
     id?: true
+    name?: true
     domain?: true
     language?: true
     legislation?: true
@@ -3320,6 +3324,7 @@ export namespace Prisma {
 
   export type SiteMaxAggregateInputType = {
     id?: true
+    name?: true
     domain?: true
     language?: true
     legislation?: true
@@ -3330,6 +3335,7 @@ export namespace Prisma {
 
   export type SiteCountAggregateInputType = {
     id?: true
+    name?: true
     domain?: true
     language?: true
     legislation?: true
@@ -3413,6 +3419,7 @@ export namespace Prisma {
 
   export type SiteGroupByOutputType = {
     id: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -3440,6 +3447,7 @@ export namespace Prisma {
 
   export type SiteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    name?: boolean
     domain?: boolean
     language?: boolean
     legislation?: boolean
@@ -3453,6 +3461,7 @@ export namespace Prisma {
 
   export type SiteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    name?: boolean
     domain?: boolean
     language?: boolean
     legislation?: boolean
@@ -3464,6 +3473,7 @@ export namespace Prisma {
 
   export type SiteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    name?: boolean
     domain?: boolean
     language?: boolean
     legislation?: boolean
@@ -3475,6 +3485,7 @@ export namespace Prisma {
 
   export type SiteSelectScalar = {
     id?: boolean
+    name?: boolean
     domain?: boolean
     language?: boolean
     legislation?: boolean
@@ -3483,7 +3494,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SiteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "domain" | "language" | "legislation" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["site"]>
+  export type SiteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "domain" | "language" | "legislation" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["site"]>
   export type SiteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UsersDefaultArgs<ExtArgs>
     docuemnts?: boolean | Site$docuemntsArgs<ExtArgs>
@@ -3504,6 +3515,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      name: string
       domain: string
       language: string
       legislation: string
@@ -3936,6 +3948,7 @@ export namespace Prisma {
    */
   interface SiteFieldRefs {
     readonly id: FieldRef<"Site", 'String'>
+    readonly name: FieldRef<"Site", 'String'>
     readonly domain: FieldRef<"Site", 'String'>
     readonly language: FieldRef<"Site", 'String'>
     readonly legislation: FieldRef<"Site", 'String'>
@@ -4420,6 +4433,7 @@ export namespace Prisma {
 
   export const SiteScalarFieldEnum: {
     id: 'id',
+    name: 'name',
     domain: 'domain',
     language: 'language',
     legislation: 'legislation',
@@ -4622,6 +4636,7 @@ export namespace Prisma {
     OR?: SiteWhereInput[]
     NOT?: SiteWhereInput | SiteWhereInput[]
     id?: StringFilter<"Site"> | string
+    name?: StringFilter<"Site"> | string
     domain?: StringFilter<"Site"> | string
     language?: StringFilter<"Site"> | string
     legislation?: StringFilter<"Site"> | string
@@ -4634,6 +4649,7 @@ export namespace Prisma {
 
   export type SiteOrderByWithRelationInput = {
     id?: SortOrder
+    name?: SortOrder
     domain?: SortOrder
     language?: SortOrder
     legislation?: SortOrder
@@ -4649,6 +4665,7 @@ export namespace Prisma {
     AND?: SiteWhereInput | SiteWhereInput[]
     OR?: SiteWhereInput[]
     NOT?: SiteWhereInput | SiteWhereInput[]
+    name?: StringFilter<"Site"> | string
     domain?: StringFilter<"Site"> | string
     language?: StringFilter<"Site"> | string
     legislation?: StringFilter<"Site"> | string
@@ -4661,6 +4678,7 @@ export namespace Prisma {
 
   export type SiteOrderByWithAggregationInput = {
     id?: SortOrder
+    name?: SortOrder
     domain?: SortOrder
     language?: SortOrder
     legislation?: SortOrder
@@ -4677,6 +4695,7 @@ export namespace Prisma {
     OR?: SiteScalarWhereWithAggregatesInput[]
     NOT?: SiteScalarWhereWithAggregatesInput | SiteScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Site"> | string
+    name?: StringWithAggregatesFilter<"Site"> | string
     domain?: StringWithAggregatesFilter<"Site"> | string
     language?: StringWithAggregatesFilter<"Site"> | string
     legislation?: StringWithAggregatesFilter<"Site"> | string
@@ -4816,6 +4835,7 @@ export namespace Prisma {
 
   export type SiteCreateInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -4827,6 +4847,7 @@ export namespace Prisma {
 
   export type SiteUncheckedCreateInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -4838,6 +4859,7 @@ export namespace Prisma {
 
   export type SiteUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -4849,6 +4871,7 @@ export namespace Prisma {
 
   export type SiteUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -4860,6 +4883,7 @@ export namespace Prisma {
 
   export type SiteCreateManyInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -4870,6 +4894,7 @@ export namespace Prisma {
 
   export type SiteUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -4879,6 +4904,7 @@ export namespace Prisma {
 
   export type SiteUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -5031,6 +5057,7 @@ export namespace Prisma {
 
   export type SiteCountOrderByAggregateInput = {
     id?: SortOrder
+    name?: SortOrder
     domain?: SortOrder
     language?: SortOrder
     legislation?: SortOrder
@@ -5041,6 +5068,7 @@ export namespace Prisma {
 
   export type SiteMaxOrderByAggregateInput = {
     id?: SortOrder
+    name?: SortOrder
     domain?: SortOrder
     language?: SortOrder
     legislation?: SortOrder
@@ -5051,6 +5079,7 @@ export namespace Prisma {
 
   export type SiteMinOrderByAggregateInput = {
     id?: SortOrder
+    name?: SortOrder
     domain?: SortOrder
     language?: SortOrder
     legislation?: SortOrder
@@ -5248,6 +5277,7 @@ export namespace Prisma {
 
   export type SiteCreateWithoutOwnerInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -5258,6 +5288,7 @@ export namespace Prisma {
 
   export type SiteUncheckedCreateWithoutOwnerInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -5297,6 +5328,7 @@ export namespace Prisma {
     OR?: SiteScalarWhereInput[]
     NOT?: SiteScalarWhereInput | SiteScalarWhereInput[]
     id?: StringFilter<"Site"> | string
+    name?: StringFilter<"Site"> | string
     domain?: StringFilter<"Site"> | string
     language?: StringFilter<"Site"> | string
     legislation?: StringFilter<"Site"> | string
@@ -5307,6 +5339,7 @@ export namespace Prisma {
 
   export type SiteCreateWithoutDocuemntsInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -5317,6 +5350,7 @@ export namespace Prisma {
 
   export type SiteUncheckedCreateWithoutDocuemntsInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -5343,6 +5377,7 @@ export namespace Prisma {
 
   export type SiteUpdateWithoutDocuemntsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -5353,6 +5388,7 @@ export namespace Prisma {
 
   export type SiteUncheckedUpdateWithoutDocuemntsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -5469,6 +5505,7 @@ export namespace Prisma {
 
   export type SiteCreateManyOwnerInput = {
     id?: string
+    name: string
     domain: string
     language: string
     legislation: string
@@ -5478,6 +5515,7 @@ export namespace Prisma {
 
   export type SiteUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -5488,6 +5526,7 @@ export namespace Prisma {
 
   export type SiteUncheckedUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string
@@ -5498,6 +5537,7 @@ export namespace Prisma {
 
   export type SiteUncheckedUpdateManyWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     domain?: StringFieldUpdateOperationsInput | string
     language?: StringFieldUpdateOperationsInput | string
     legislation?: StringFieldUpdateOperationsInput | string

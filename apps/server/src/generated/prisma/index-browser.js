@@ -137,6 +137,7 @@ exports.Prisma.DocumentScalarFieldEnum = {
 
 exports.Prisma.SiteScalarFieldEnum = {
   id: 'id',
+  name: 'name',
   domain: 'domain',
   language: 'language',
   legislation: 'legislation',
