@@ -126,6 +126,24 @@ exports.Prisma.UsersScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DocumentScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  content: 'content',
+  siteId: 'siteId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SiteScalarFieldEnum = {
+  id: 'id',
+  domain: 'domain',
+  language: 'language',
+  legislation: 'legislation',
+  ownerId: 'ownerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -138,7 +156,9 @@ exports.Prisma.QueryMode = {
 
 
 exports.Prisma.ModelName = {
-  users: 'users'
+  Users: 'Users',
+  Document: 'Document',
+  Site: 'Site'
 };
 
 /**

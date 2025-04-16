@@ -13,7 +13,6 @@ export const authMiddleware: RequestHandler = (
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
-
   if (!authHeader) {
     res.status(401).json({ error: 'Invalid Token' });
   }

@@ -8,11 +8,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model Users {
   id        String   @id @default(uuid())
   email     String   @unique
   name      String
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Site      Site[]
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  type      String
+  content   String
+  siteId    String
+  createdAt DateTime @default(now())
+
+  site Site @relation(fields: [siteId], references: [id])
+}
+
+model Site {
+  id          String   @id @default(uuid())
+  domain      String
+  language    String
+  legislation String
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner     Users      @relation(fields: [ownerId], references: [id])
+  docuemnts Document[]
 }

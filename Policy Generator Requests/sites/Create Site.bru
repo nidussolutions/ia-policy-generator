@@ -1,15 +1,23 @@
 meta {
-  name: profile
+  name: Create Site
   type: http
   seq: 1
 }
 
-get {
-  url: {{user}}/profile
-  body: none
+post {
+  url: {{sites}}/
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YmJjNDNlNi0wYjdjLTQyZjUtYjQ0Zi0zYzg4MjhiYjc2OGMiLCJpYXQiOjE3NDQ4MjE0MjcsImV4cCI6MTc0NDkwNzgyN30.iDt3EgGbeC43COJraaGSBkhCRqw1OapYhNifjLnC2jc
+}
+
+body:json {
+  {
+    "domain": "nidussolutions.com",
+    "language": "portuguese",
+    "legislation": "LGPD"
+  }
 }
