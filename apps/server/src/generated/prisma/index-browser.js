@@ -121,7 +121,9 @@ exports.Prisma.UsersScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
+  plan: 'plan',
   password: 'password',
+  lastLogin: 'lastLogin',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -132,7 +134,8 @@ exports.Prisma.DocumentScalarFieldEnum = {
   content: 'content',
   siteId: 'siteId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  usersId: 'usersId'
 };
 
 exports.Prisma.SiteScalarFieldEnum = {
@@ -146,6 +149,13 @@ exports.Prisma.SiteScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ActivityLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -156,11 +166,17 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
   Users: 'Users',
   Document: 'Document',
-  Site: 'Site'
+  Site: 'Site',
+  ActivityLog: 'ActivityLog'
 };
 
 /**

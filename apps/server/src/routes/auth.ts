@@ -57,6 +57,11 @@ router.post('/login', async (req, res) => {
       expiresIn: '24h',
     });
 
+    await prisma.users.update({
+      where: { id: user!.id },
+      data: { lastLogin: new Date() },
+    });
+
     res.status(200).json({ token });
   } catch (error) {
     console.log('Erro during login: ', error);

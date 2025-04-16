@@ -36,14 +36,14 @@ export default function DashboardPage() {
         const userJson = await resUser.json();
         if (!resUser.ok) throw new Error(userJson.message);
 
-        // const resMetrics = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/dashboard/metrics`,
-        //   {
-        //     headers: { Authorization: `Bearer ${token}` },
-        //   }
-        // );
+        const resMetrics = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/dashboard/metrics`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-        // const metricsJson = await resMetrics.json();
+        const metricsJson = await resMetrics.json();
 
         // const resLog = await fetch(
         //   `${process.env.NEXT_PUBLIC_API_URL}/dashboard/logs`,
@@ -55,10 +55,7 @@ export default function DashboardPage() {
         // const logsJson = await resLog.json();
 
         setUserData(userJson);
-        setMetrics({
-          sites: userJson.sites?.length || 0,
-          documentos: 250,
-        });
+        setMetrics(metricsJson);
         setAtividades([]);
       } catch (err) {
         console.error(err);
@@ -125,9 +122,9 @@ export default function DashboardPage() {
 
 function Card({ title, value }: { title: string; value: string | number }) {
   return (
-    <div className="p-4 bg-white border rounded shadow text-center">
+    <div className="p-4 bg-white border rounded shadow text-center hover:shadow-lg transition">
       <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-2xl font-bold text-gray-800 mt-1">{value}</p>
+      <p className="text-1xl font-bold text-gray-800 mt-1">{value}</p>
     </div>
   );
 }
