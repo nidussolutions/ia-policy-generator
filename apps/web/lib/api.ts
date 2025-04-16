@@ -15,6 +15,16 @@ export type SiteType = {
   ownerId?: string;
 };
 
+export type UserType = {
+  id?: string;
+  name: string;
+  email: string;
+  password?: string;
+  lastLogin: string;
+  plan?: string;
+  sites?: SiteType[];
+};
+
 export async function fetcher(url: string, token: string) {
   const res = await fetch(url, {
     headers: {
