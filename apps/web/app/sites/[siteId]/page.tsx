@@ -3,6 +3,7 @@ import useSWR from 'swr';
 import { DocType, fetcher } from '@/lib/api';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { ArrowLeft, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 export default function DocumentPage() {
   const { siteId } = useParams() as { siteId: string };
@@ -19,7 +20,15 @@ export default function DocumentPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-4">Documentos do Site</h1>
+      <div className="flex gap-2 mb-4 justify-start items-center">
+        <button
+          onClick={() => window.history.back()}
+          className="hover:text-blue-600 mt-1"
+        >
+          <ArrowLeft size={24} />
+        </button>
+        <h1 className="text-2xl font-bold">Documentos Gerados</h1>
+      </div>
       <div className="overflow-x-auto rounded shadown bg-white">
         <table className="w-full text-sm text-left">
           <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
