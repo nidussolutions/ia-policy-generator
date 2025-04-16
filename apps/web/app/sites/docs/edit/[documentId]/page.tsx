@@ -2,17 +2,19 @@
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 import { fetcher, putWithAuth } from '@/lib/api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 export default function DocumentEditPage() {
   const { documentId } = useParams() as { documentId: string };
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
-  const [saveState, setSaveState] = useState<
-    'idle' | 'saving' | 'success' | 'error'
-  >('idle');
+  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>(
+    'idle'
+  );
   const [hasChanges, setHasChanges] = useState(false);
+
+  const saveTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -28,9 +30,11 @@ export default function DocumentEditPage() {
     if (data?.content) setContent(data.content);
   }, [data]);
 
-  const handleSave = async () => {
+  const autoSave = async () => {
+    if (!hasChanges || saving) return;
+
     setSaving(true);
-    setSaveState('saving');
+    setStatus('saving');
     try {
       await putWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/docs/${documentId}`,
@@ -39,14 +43,29 @@ export default function DocumentEditPage() {
       );
       mutate();
       setHasChanges(false);
-      setSaveState('success');
+      setStatus('saved');
     } catch (err) {
       console.error(err);
-      setSaveState('error');
+      setStatus('error');
     } finally {
       setSaving(false);
-      setTimeout(() => setSaveState('idle'), 3000);
+      setTimeout(() => setStatus('idle'), 2000);
     }
+  };
+
+  const handleChange = (value: string) => {
+    setContent(value);
+    setHasChanges(true);
+
+    if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    saveTimeout.current = setTimeout(() => {
+      autoSave();
+    }, 5000);
+  };
+
+  const handleManualSave = async () => {
+    if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    await autoSave();
   };
 
   const handleCancel = () => {
@@ -80,33 +99,32 @@ export default function DocumentEditPage() {
           </h1>
         </div>
 
-        <div className="flex gap-2 items-center">
-          {saveState === 'saving' && (
-            <Loader2 className="animate-spin text-blue-500" size={20} />
+        <div className="flex gap-3 items-center text-sm">
+          {status === 'saving' && (
+            <span className="flex items-center gap-1 text-blue-500">
+              <Loader2 className="animate-spin" size={16} /> Salvando...
+            </span>
           )}
-          {saveState === 'success' && (
-            <CheckCircle className="text-green-500" size={20} />
+          {status === 'saved' && (
+            <span className="flex items-center gap-1 text-green-600">
+              <CheckCircle size={16} /> Salvo
+            </span>
           )}
-          {saveState === 'error' && (
-            <XCircle className="text-red-500" size={20} />
-          )}
-          {hasChanges && saveState === 'idle' && (
-            <span className="text-sm text-yellow-600">
-              Alterações não salvas
+          {status === 'error' && (
+            <span className="flex items-center gap-1 text-red-500">
+              <XCircle size={16} /> Erro ao salvar
             </span>
           )}
           <button
             onClick={handleCancel}
-            className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300 text-sm"
+            className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300"
           >
             Cancelar
           </button>
           <button
-            onClick={handleSave}
+            onClick={handleManualSave}
             disabled={saving}
-            className={`px-4 py-1.5 rounded text-sm text-white ${
-              saving ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
-            }`}
+            className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
           >
             Salvar
           </button>
@@ -117,10 +135,7 @@ export default function DocumentEditPage() {
         <textarea
           className="w-full h-[500px] p-4 border rounded shadow-sm bg-white text-sm font-mono resize-none"
           value={content}
-          onChange={(e) => {
-            setContent(e.target.value);
-            setHasChanges(true);
-          }}
+          onChange={(e) => handleChange(e.target.value)}
         />
       </main>
     </div>
