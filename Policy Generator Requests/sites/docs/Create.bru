@@ -5,7 +5,18 @@ meta {
 }
 
 post {
-  url: {{docs}}/
-  body: none
-  auth: none
+  url: {{docs}}/generate
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YmJjNDNlNi0wYjdjLTQyZjUtYjQ0Zi0zYzg4MjhiYjc2OGMiLCJpYXQiOjE3NDQ4MjE0MjcsImV4cCI6MTc0NDkwNzgyN30.iDt3EgGbeC43COJraaGSBkhCRqw1OapYhNifjLnC2jc
+}
+
+body:json {
+  {
+    "siteId": "b128139b-3a3e-4683-b6c3-7927c9907631",
+    "type": "Uso de cookies"
+  }
 }

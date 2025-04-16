@@ -1,10 +1,8 @@
-import dotenv from 'dotenv';
 import { Router } from 'express';
 import { PrismaClient } from '../generated/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-dotenv.config();
 const router = Router();
 const prisma = new PrismaClient();
 const jwtSecret = process.env.JWT_SECRET || 'secret';
