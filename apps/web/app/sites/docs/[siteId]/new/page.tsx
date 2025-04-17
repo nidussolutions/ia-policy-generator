@@ -14,7 +14,8 @@ export default function NewDoc() {
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
   const [doc, setDoc] = useState({
-    siteid: siteId,
+    title: '',
+    siteId: siteId,
     type: '',
     observations: '',
   });
@@ -57,6 +58,20 @@ export default function NewDoc() {
           <h1>Novo Docuemento</h1>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Titulo de documento
+            </label>
+            <input
+              name="title"
+              placeholder="ex: Termo de uso"
+              type="text"
+              value={doc.title}
+              onChange={handleChange}
+              className="w-full mt-1 border rounded px-3 py-2"
+              required
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Tipo de documento

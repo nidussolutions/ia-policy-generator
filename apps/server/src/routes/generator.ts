@@ -7,7 +7,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
-  const { siteId, type, title } = req.body;
+  const { siteId, type, title, observations = '' } = req.body;
 
   try {
     const site = await prisma.site.findUnique({
@@ -26,6 +26,7 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
       domain: site!.domain,
       legislation: site!.legislation,
       language: site!.language,
+      observations,
     });
 
     const doc = await prisma.document.create({

@@ -10,18 +10,20 @@ type GenerateInput = {
   domain: string;
   language: string;
   legislation: string;
+  observations?: string;
 };
 
 export async function generateAiDocument(
   input: GenerateInput
 ): Promise<string> {
-  const { type, domain, language, legislation } = input;
+  const { type, domain, language, legislation, observations } = input;
 
   const prompt = `
     Crie um documento do tipo ${type} para o site ${domain}, escrito em ${language}. 
     Considere as legislações: ${legislation}. 
     Seja profissional, use uma lingaugem formal e inclue cláusulas comuns 
-    baseadas em boas práticas e nas legislações citadas
+    baseadas em boas práticas e nas legislações citadas.
+    ${observations != '' && `Considere as seguintes observações: ${observations}`}
   `;
 
   const response = await openai.chat.completions.create({
