@@ -4,6 +4,7 @@ import { DocType, fetcher } from '@/lib/api';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import Layout from '@/components/Layout';
 
 export default function DocumentPage() {
   const { siteId } = useParams() as { siteId: string };
@@ -19,7 +20,7 @@ export default function DocumentPage() {
   if (!data) return <p>Carregando...</p>;
 
   return (
-    <>
+    <Layout>
       <div className="flex gap-2 mb-4 justify-start items-center">
         <button
           onClick={() => window.history.back()}
@@ -58,6 +59,6 @@ export default function DocumentPage() {
           </tbody>
         </table>
       </div>
-    </>
+    </Layout>
   );
 }

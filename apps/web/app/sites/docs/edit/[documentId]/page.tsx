@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { fetcher, putWithAuth } from '@/lib/api';
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import Layout from '@/components/Layout';
 
 export default function DocumentEditPage() {
   const { documentId } = useParams() as { documentId: string };
@@ -92,78 +93,80 @@ export default function DocumentEditPage() {
     return <p className="animate-pulse text-gray-500">Carregando...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow sticky top-0 z-10 px-6 py-4 flex justify-between items-center border-b">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => window.history.back()}
-            className="hover:text-blue-600"
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <h1 className="text-lg font-semibold text-gray-800">
-            Editando:{' '}
-            <span className="font-mono text-gray-600">{data.type}</span>
-          </h1>
-        </div>
-
-        <div className="flex gap-3 items-center text-sm ">
-          {status === 'saving' && (
-            <span className="flex items-center gap-1 text-blue-500">
-              <Loader2 className="animate-spin" size={16} /> Salvando...
-            </span>
-          )}
-          {status === 'saved' && (
-            <span className="flex items-center gap-1 text-green-600">
-              <CheckCircle size={16} /> Salvo
-            </span>
-          )}
-          {status === 'error' && (
-            <span className="flex items-center gap-1 text-red-500">
-              <XCircle size={16} /> Erro ao salvar
-            </span>
-          )}
-          <div>
+    <Layout>
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-white shadow sticky top-0 z-10 px-6 py-4 flex justify-between items-center border-b">
+          <div className="flex items-center gap-2">
             <button
-              onClick={handleCancel}
-              className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300"
+              onClick={() => window.history.back()}
+              className="hover:text-blue-600"
             >
-              Cancelar
+              <ArrowLeft size={20} />
             </button>
-            <button
-              onClick={handleManualSave}
-              disabled={saving}
-              className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
-            >
-              Salvar
-            </button>
+            <h1 className="text-lg font-semibold text-gray-800">
+              Editando:{' '}
+              <span className="font-mono text-gray-600">{data.type}</span>
+            </h1>
           </div>
-          {data.publicId && (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                readOnly
-                value={`${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`}
-                className="w-full p-2 border rounded text-sm text-gray-700 bg-gray-100"
-              />
+
+          <div className="flex gap-3 items-center text-sm ">
+            {status === 'saving' && (
+              <span className="flex items-center gap-1 text-blue-500">
+                <Loader2 className="animate-spin" size={16} /> Salvando...
+              </span>
+            )}
+            {status === 'saved' && (
+              <span className="flex items-center gap-1 text-green-600">
+                <CheckCircle size={16} /> Salvo
+              </span>
+            )}
+            {status === 'error' && (
+              <span className="flex items-center gap-1 text-red-500">
+                <XCircle size={16} /> Erro ao salvar
+              </span>
+            )}
+            <div>
               <button
-                onClick={handleCopyPublicLink}
-                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+                onClick={handleCancel}
+                className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300"
               >
-                {copied ? 'Copiado' : 'Copiar'}
+                Cancelar
+              </button>
+              <button
+                onClick={handleManualSave}
+                disabled={saving}
+                className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+              >
+                Salvar
               </button>
             </div>
-          )}
-        </div>
-      </header>
+            {data.publicId && (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={`${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`}
+                  className="w-full p-2 border rounded text-sm text-gray-700 bg-gray-100"
+                />
+                <button
+                  onClick={handleCopyPublicLink}
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+                >
+                  {copied ? 'Copiado' : 'Copiar'}
+                </button>
+              </div>
+            )}
+          </div>
+        </header>
 
-      <main className="p-6">
-        <textarea
-          className="w-full h-[500px] p-4 border rounded shadow-sm bg-white text-sm font-mono resize-none"
-          value={content}
-          onChange={(e) => handleChange(e.target.value)}
-        />
-      </main>
-    </div>
+        <main className="p-6">
+          <textarea
+            className="w-full h-[500px] p-4 border rounded shadow-sm bg-white text-sm font-mono resize-none"
+            value={content}
+            onChange={(e) => handleChange(e.target.value)}
+          />
+        </main>
+      </div>
+    </Layout>
   );
 }

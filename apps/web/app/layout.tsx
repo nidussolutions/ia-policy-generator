@@ -1,4 +1,5 @@
-import Header from '@/components/Header';
+'use client';
+
 import './globals.css';
 
 export default function RootLayout({
@@ -9,10 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <div className="min-h-screen bg-gray-100">
-          <Header />
-          <main className="p-6 max-w-5xl mx-auto">{children}</main>
-        </div>
+        <main className="p-6 max-w-5xl mx-auto">{children}</main>
       </body>
     </html>
   );

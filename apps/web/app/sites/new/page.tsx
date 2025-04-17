@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { postWithAuth } from '@/lib/api';
 import { SiteType } from '@/lib/api';
+import Layout from '@/components/Layout';
 
 export default function NewSitePage() {
   const [site, setSite] = useState<SiteType>({
@@ -46,73 +47,75 @@ export default function NewSitePage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Novo Site</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Nome do Site
-          </label>
-          <input
-            name="name"
-            placeholder="ex: Meu Site"
-            type="text"
-            value={site.name}
-            onChange={(e) => handleChange(e)}
-            required
-            className="w-full mt-1 border rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Domínio
-          </label>
-          <input
-            name="domain"
-            type="text"
-            placeholder="ex: meu-site.com"
-            value={site.domain}
-            onChange={(e) => handleChange(e)}
-            required
-            className="w-full mt-1 border rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Idioma
-          </label>
-          <input
-            name="language"
-            type="text"
-            value={site.language}
-            placeholder="ex: pt-BR, en-US"
-            onChange={(e) => handleChange(e)}
-            required
-            className="w-full mt-1 border rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Legislação
-          </label>
-          <input
-            name="legislation"
-            type="text"
-            placeholder="ex: LGPD, GDPR"
-            value={site.legislation}
-            onChange={(e) => handleChange(e)}
-            required
-            className="w-full mt-1 border rounded px-3 py-2"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          {loading ? 'Salvando...' : 'Criar Site'}
-        </button>
-      </form>
-    </div>
+    <Layout>
+      <div className="max-w-xl mx-auto p-6">
+        <h1 className="text-2xl font-bold mb-6">Novo Site</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Nome do Site
+            </label>
+            <input
+              name="name"
+              placeholder="ex: Meu Site"
+              type="text"
+              value={site.name}
+              onChange={(e) => handleChange(e)}
+              required
+              className="w-full mt-1 border rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Domínio
+            </label>
+            <input
+              name="domain"
+              type="text"
+              placeholder="ex: meu-site.com"
+              value={site.domain}
+              onChange={(e) => handleChange(e)}
+              required
+              className="w-full mt-1 border rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Idioma
+            </label>
+            <input
+              name="language"
+              type="text"
+              value={site.language}
+              placeholder="ex: pt-BR, en-US"
+              onChange={(e) => handleChange(e)}
+              required
+              className="w-full mt-1 border rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Legislação
+            </label>
+            <input
+              name="legislation"
+              type="text"
+              placeholder="ex: LGPD, GDPR"
+              value={site.legislation}
+              onChange={(e) => handleChange(e)}
+              required
+              className="w-full mt-1 border rounded px-3 py-2"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            {loading ? 'Salvando...' : 'Criar Site'}
+          </button>
+        </form>
+      </div>
+    </Layout>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserType } from '@/lib/api';
+import Layout from '@/components/Layout';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -71,52 +72,54 @@ export default function DashboardPage() {
     return <div className="p-8 text-gray-700">Carregando dashboard...</div>;
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Olá, {userData.name} 👋</h1>
+    <Layout>
+      <div className="p-6 space-y-6">
+        <h1 className="text-3xl font-bold">Olá, {userData.name} 👋</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card title="Sites Conectados" value={metrics.sites} />
-        <Card title="Documentos Gerados" value={metrics.documentos} />
-        <Card
-          title="Último Login"
-          value={new Date(userData.lastLogin).toLocaleString()}
-        />
-        <Card title="Plano" value={userData?.plan || 'Gratuito'} />
-      </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card title="Sites Conectados" value={metrics.sites} />
+          <Card title="Documentos Gerados" value={metrics.documentos} />
+          <Card
+            title="Último Login"
+            value={new Date(userData.lastLogin).toLocaleString()}
+          />
+          <Card title="Plano" value={userData?.plan || 'Gratuito'} />
+        </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Últimas Atividades</h2>
-        <ul className="bg-white rounded border divide-y">
-          {atividades.length === 0 ? (
-            <li className="p-4 text-gray-500">Nenhuma atividade recente.</li>
-          ) : (
-            atividades.map((a, idx) => (
-              <li key={idx} className="p-4 text-gray-700">
-                {a}
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Sugestões de Ações</h2>
+          <div className="flex flex-col md:flex-row gap-4">
+            <ActionButton
+              text="Cadastrar novo site"
+              onClick={() => router.push('/sites/new')}
+            />
+            <ActionButton
+              text="Gerar novo documento"
+              onClick={() => router.push('/documents/new')}
+            />
+            <ActionButton
+              text="Conferir status dos termos"
+              onClick={() => router.push('/sites')}
+            />
+          </div>
+        </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Sugestões de Ações</h2>
-        <div className="flex flex-col md:flex-row gap-4">
-          <ActionButton
-            text="Cadastrar novo site"
-            onClick={() => router.push('/sites/new')}
-          />
-          <ActionButton
-            text="Gerar novo documento"
-            onClick={() => router.push('/documents/new')}
-          />
-          <ActionButton
-            text="Conferir status dos termos"
-            onClick={() => router.push('/sites')}
-          />
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Últimas Atividades</h2>
+          <ul className="bg-white rounded border divide-y">
+            {atividades.length === 0 ? (
+              <li className="p-4 text-gray-500">Nenhuma atividade recente.</li>
+            ) : (
+              atividades.slice(0, 5).map((a, idx) => (
+                <li key={idx} className="p-4 text-gray-700">
+                  {a}
+                </li>
+              ))
+            )}
+          </ul>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 
