@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserType } from '@/lib/api';
 import Layout from '@/components/Layout';
+import Loading from '@/components/Loading';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -26,7 +27,6 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
       try {
-        // Buscar dados do usuário
         const resUser = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/user/profile`,
           {
@@ -68,8 +68,7 @@ export default function DashboardPage() {
     fetchData();
   }, [router]);
 
-  if (loading)
-    return <div className="p-8 text-gray-700">Carregando dashboard...</div>;
+  if (loading) return <Loading page="dashboard" />;
 
   return (
     <Layout>

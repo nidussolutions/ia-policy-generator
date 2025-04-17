@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { postWithAuth } from '@/lib/api';
 import { SiteType } from '@/lib/api';
+import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
 
 export default function NewSitePage() {
@@ -48,7 +49,15 @@ export default function NewSitePage() {
   return (
     <Layout>
       <div className="max-w-xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6">Novo Site</h1>
+        <div className="flex items-center gap-2 mb-6">
+          <button
+            onClick={() => window.history.back()}
+            className="hover:text-blue-600"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 className="text-2xl font-bold">Novo Site</h1>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">

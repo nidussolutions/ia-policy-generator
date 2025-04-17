@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
+import Loading from '@/components/Loading';
 
 export default function DocumentPage() {
   const { siteId } = useParams() as { siteId: string };
@@ -17,7 +18,7 @@ export default function DocumentPage() {
   );
 
   if (error) return <p>Error ao carregar documentos</p>;
-  if (!data) return <p>Carregando...</p>;
+  if (!data) return <Loading page={data.name} />;
 
   return (
     <Layout>

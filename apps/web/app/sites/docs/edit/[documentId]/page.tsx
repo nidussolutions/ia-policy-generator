@@ -5,6 +5,7 @@ import { fetcher, putWithAuth } from '@/lib/api';
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import Layout from '@/components/Layout';
+import Loading from '@/components/Loading';
 
 export default function DocumentEditPage() {
   const { documentId } = useParams() as { documentId: string };
@@ -89,8 +90,7 @@ export default function DocumentEditPage() {
   };
 
   if (error) return <p className="text-red-600">Erro ao carregar documento</p>;
-  if (!data)
-    return <p className="animate-pulse text-gray-500">Carregando...</p>;
+  if (data) return <Loading page={data.name} />;
 
   return (
     <Layout>

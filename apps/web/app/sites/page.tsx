@@ -3,6 +3,8 @@
 import useSWR from 'swr';
 import Link from 'next/link';
 import { fetcher } from '@/lib/api';
+import Layout from '@/components/Layout';
+import Loading from '@/components/Loading';
 
 type Site = {
   id: string;
@@ -18,47 +20,48 @@ export default function SitesPage() {
     (url) => fetcher(url, token)
   );
 
-  if (isLoading)
-    return <p className="p-4 text-gray-500">Carregando sites...</p>;
+  if (isLoading) return <Loading page="a listagem de sites" />;
   if (error) return <p className="p-4 text-red-500">Erro ao carregar sites.</p>;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Seus Sites</h1>
-        <Link
-          href="/sites/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          + Novo Site
-        </Link>
-      </div>
-
-      {data?.length === 0 && (
-        <p className="text-gray-600">
-          Você ainda não tem nenhum site cadastrado.
-        </p>
-      )}
-
-      <div className="space-y-4">
-        {data?.map((site: Site) => (
-          <div
-            key={site.id}
-            className="p-4 bg-white shadow rounded flex justify-between items-center"
+    <Layout>
+      <div className="p-6 max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">Seus Sites</h1>
+          <Link
+            href="/sites/new"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
-            <div>
-              <h2 className="text-lg font-semibold">{site.name}</h2>
-              <p className="text-sm text-gray-500">{site.domain}</p>
-            </div>
-            <Link
-              href={`/sites/${site.id}/`}
-              className="text-blue-600 hover:underline"
+            + Novo Site
+          </Link>
+        </div>
+
+        {data?.length === 0 && (
+          <p className="text-gray-600">
+            Você ainda não tem nenhum site cadastrado.
+          </p>
+        )}
+
+        <div className="space-y-4">
+          {data?.map((site: Site) => (
+            <div
+              key={site.id}
+              className="p-4 bg-white shadow rounded flex justify-between items-center"
             >
-              Acessar
-            </Link>
-          </div>
-        ))}
+              <div>
+                <h2 className="text-lg font-semibold">{site.name}</h2>
+                <p className="text-sm text-gray-500">{site.domain}</p>
+              </div>
+              <Link
+                href={`/sites/${site.id}/`}
+                className="text-blue-600 hover:underline"
+              >
+                Acessar
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
