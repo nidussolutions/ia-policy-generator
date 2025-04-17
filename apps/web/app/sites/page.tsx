@@ -21,7 +21,7 @@ export default function SitesPage() {
     (url) => fetcher(url, token)
   );
 
-  if (!isLoading) return <Loading page="a listagem de sites" />;
+  if (isLoading) return <Loading page="a listagem de sites" />;
   if (error) return <Error page="a listagem de sites" err={error} />;
 
   return (
