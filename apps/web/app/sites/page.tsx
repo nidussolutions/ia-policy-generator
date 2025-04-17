@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { fetcher } from '@/lib/api';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
+import Error from '@/components/Error';
 
 type Site = {
   id: string;
@@ -20,8 +21,8 @@ export default function SitesPage() {
     (url) => fetcher(url, token)
   );
 
-  if (isLoading) return <Loading page="a listagem de sites" />;
-  if (error) return <p className="p-4 text-red-500">Erro ao carregar sites.</p>;
+  if (!isLoading) return <Loading page="a listagem de sites" />;
+  if (error) return <Error page="a listagem de sites" err={error} />;
 
   return (
     <Layout>
