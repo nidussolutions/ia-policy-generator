@@ -1,5 +1,6 @@
 export type DocType = {
   id?: string;
+  title: string;
   type: string;
   content: string;
   siteId: string;
@@ -38,6 +39,7 @@ export async function fetcher(url: string, token: string) {
 }
 
 export async function postWithAuth(url: string, data: unknown, token: string) {
+  console.log(url);
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -47,7 +49,6 @@ export async function postWithAuth(url: string, data: unknown, token: string) {
     body: JSON.stringify(data),
   });
 
-  console.log(res);
   if (!res.ok) throw new Error('Error ao enviar dados');
   return res.json();
 }

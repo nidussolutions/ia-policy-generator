@@ -33,6 +33,9 @@ export default function DocumentEditPage() {
     if (data?.content) setContent(data.content);
   }, [data]);
 
+  if (error) return <p className="text-red-600">Erro ao carregar documento</p>;
+  if (!data) return <Loading page="o documento solicitado" />;
+
   const handleCopyPublicLink = () => {
     const link = `${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`;
     navigator.clipboard.writeText(link);
@@ -89,9 +92,6 @@ export default function DocumentEditPage() {
     }
   };
 
-  if (error) return <p className="text-red-600">Erro ao carregar documento</p>;
-  if (data) return <Loading page={data.title} />;
-
   return (
     <Layout>
       <div className="min-h-screen bg-gray-50">
@@ -105,7 +105,7 @@ export default function DocumentEditPage() {
             </button>
             <h1 className="text-lg font-semibold text-gray-800">
               Editando:{' '}
-              <span className="font-mono text-gray-600">{data.type}</span>
+              <span className="font-mono text-gray-600">{data.title}</span>
             </h1>
           </div>
 
@@ -125,7 +125,7 @@ export default function DocumentEditPage() {
                 <XCircle size={16} /> Erro ao salvar
               </span>
             )}
-            <div>
+            <div className="flex gap-2">
               <button
                 onClick={handleCancel}
                 className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300"

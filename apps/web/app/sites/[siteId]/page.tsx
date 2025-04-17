@@ -45,6 +45,7 @@ export default function DocumentPage() {
         <table className="w-full text-sm text-left">
           <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
             <tr>
+              <th className="px-4 py-3">Titulo</th>
               <th className="px-4 py-3">Tipo</th>
               <th className="px-4 py-3">Útima atualização</th>
               <th className="px-4 py-3">Ações</th>
@@ -53,6 +54,7 @@ export default function DocumentPage() {
           <tbody>
             {data.map((doc: DocType) => (
               <tr key={doc.id} className=" hover:bg-gray-100 transition">
+                <td className="px-4 py-3">{doc.title}</td>
                 <td className="px-4 py-3">{doc.type}</td>
                 <td className="px-4 py-3">
                   {new Date(doc.updatedAt).toLocaleDateString()}
