@@ -90,7 +90,7 @@ export default function DocumentEditPage() {
   };
 
   if (error) return <p className="text-red-600">Erro ao carregar documento</p>;
-  if (data) return <Loading page={data.name} />;
+  if (data) return <Loading page={data.title} />;
 
   return (
     <Layout>

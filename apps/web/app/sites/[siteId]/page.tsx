@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
+import Error from '@/components/Error';
 
 export default function DocumentPage() {
   const { siteId } = useParams() as { siteId: string };
@@ -17,15 +18,15 @@ export default function DocumentPage() {
     (url) => fetcher(url, token)
   );
 
-  if (error) return <p>Error ao carregar documentos</p>;
-  if (!data) return <Loading page={data.name} />;
+  if (error) return <Error page="os documentos do site" err={error} />;
+  if (!data) return <Loading page="a listagem dos documentos" />;
 
   return (
     <Layout>
       <div className="flex gap-2 mb-4 justify-start items-center">
         <button
           onClick={() => window.history.back()}
-          className="hover:text-blue-600 mt-1"
+          className="hover:text-blue-600"
         >
           <ArrowLeft size={24} />
         </button>

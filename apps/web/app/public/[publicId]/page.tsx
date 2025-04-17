@@ -1,6 +1,7 @@
 // app/public/[publicId]/page.tsx
 'use client';
 
+import Error from '@/components/Error';
 import Loading from '@/components/Loading';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -36,7 +37,7 @@ export default function PublicDocumentPage() {
 
   if (loading) return <Loading page="o documento" />;
   if (!document)
-    return <p className="p-8 text-red-500">Documento não encontrado</p>;
+    return <Error err="Documento não encontrado" page="solicitada" />;
 
   return (
     <div className="max-w-4xl mx-auto p-8">
