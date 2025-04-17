@@ -7,8 +7,11 @@ import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
+import ActionButton from '@/components/ActionButton';
+import { useRouter } from 'next/navigation';
 
 export default function DocumentPage() {
+  const router = useRouter();
   const { siteId } = useParams() as { siteId: string };
   const token =
     typeof window != 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -23,7 +26,7 @@ export default function DocumentPage() {
 
   return (
     <Layout>
-      <div className="flex gap-2 mb-4 justify-start items-center">
+      <div className="flex gap-2 mb-4 justify-arroud items-center">
         <button
           onClick={() => window.history.back()}
           className="hover:text-blue-600"
@@ -31,6 +34,12 @@ export default function DocumentPage() {
           <ArrowLeft size={24} />
         </button>
         <h1 className="text-2xl font-bold">Documentos Gerados</h1>
+        <div className="ml-auto">
+          <ActionButton
+            text="Gerar novo documento"
+            onClick={() => router.push(`/sites/docs/${siteId}/new`)}
+          />{' '}
+        </div>
       </div>
       <div className="overflow-x-auto rounded shadown bg-white">
         <table className="w-full text-sm text-left">

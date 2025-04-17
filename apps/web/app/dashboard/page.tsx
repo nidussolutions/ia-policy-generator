@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { UserType } from '@/lib/api';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
+import ActionButton from '@/components/ActionButton';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -94,7 +95,7 @@ export default function DashboardPage() {
             />
             <ActionButton
               text="Gerar novo documento"
-              onClick={() => router.push('/documents/new')}
+              onClick={() => router.push('/sites')}
             />
             <ActionButton
               text="Conferir status dos termos"
@@ -128,22 +129,5 @@ function Card({ title, value }: { title: string; value: string | number }) {
       <p className="text-sm text-gray-500">{title}</p>
       <p className="text-1xl font-bold text-gray-800 mt-1">{value}</p>
     </div>
-  );
-}
-
-function ActionButton({
-  text,
-  onClick,
-}: {
-  text: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex-1 bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 transition"
-    >
-      {text}
-    </button>
   );
 }
