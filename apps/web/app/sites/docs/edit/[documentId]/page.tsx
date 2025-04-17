@@ -8,6 +8,7 @@ import { ArrowLeft, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 export default function DocumentEditPage() {
   const { documentId } = useParams() as { documentId: string };
   const [content, setContent] = useState('');
+  const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>(
     'idle'
@@ -29,6 +30,13 @@ export default function DocumentEditPage() {
   useEffect(() => {
     if (data?.content) setContent(data.content);
   }, [data]);
+
+  const handleCopyPublicLink = () => {
+    const link = `${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`;
+    navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const autoSave = async () => {
     if (!hasChanges || saving) return;
@@ -99,7 +107,7 @@ export default function DocumentEditPage() {
           </h1>
         </div>
 
-        <div className="flex gap-3 items-center text-sm">
+        <div className="flex gap-3 items-center text-sm ">
           {status === 'saving' && (
             <span className="flex items-center gap-1 text-blue-500">
               <Loader2 className="animate-spin" size={16} /> Salvando...
@@ -115,19 +123,37 @@ export default function DocumentEditPage() {
               <XCircle size={16} /> Erro ao salvar
             </span>
           )}
-          <button
-            onClick={handleCancel}
-            className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleManualSave}
-            disabled={saving}
-            className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
-          >
-            Salvar
-          </button>
+          <div>
+            <button
+              onClick={handleCancel}
+              className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleManualSave}
+              disabled={saving}
+              className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+            >
+              Salvar
+            </button>
+          </div>
+          {data.publicId && (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                readOnly
+                value={`${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`}
+                className="w-full p-2 border rounded text-sm text-gray-700 bg-gray-100"
+              />
+              <button
+                onClick={handleCopyPublicLink}
+                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+              >
+                {copied ? 'Copiado' : 'Copiar'}
+              </button>
+            </div>
+          )}
         </div>
       </header>
 

@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { DocType, fetcher } from '@/lib/api';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function DocumentPage() {
   const { siteId } = useParams() as { siteId: string };
