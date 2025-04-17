@@ -2398,64 +2398,76 @@ export namespace Prisma {
 
   export type DocumentMinAggregateOutputType = {
     id: string | null
+    title: string | null
     type: string | null
     content: string | null
     siteId: string | null
+    usersId: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    usersId: string | null
   }
 
   export type DocumentMaxAggregateOutputType = {
     id: string | null
+    title: string | null
     type: string | null
     content: string | null
     siteId: string | null
+    usersId: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
-    usersId: string | null
   }
 
   export type DocumentCountAggregateOutputType = {
     id: number
+    title: number
     type: number
     content: number
     siteId: number
+    usersId: number
+    publicId: number
     createdAt: number
     updatedAt: number
-    usersId: number
     _all: number
   }
 
 
   export type DocumentMinAggregateInputType = {
     id?: true
+    title?: true
     type?: true
     content?: true
     siteId?: true
+    usersId?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
-    usersId?: true
   }
 
   export type DocumentMaxAggregateInputType = {
     id?: true
+    title?: true
     type?: true
     content?: true
     siteId?: true
+    usersId?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
-    usersId?: true
   }
 
   export type DocumentCountAggregateInputType = {
     id?: true
+    title?: true
     type?: true
     content?: true
     siteId?: true
+    usersId?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
-    usersId?: true
     _all?: true
   }
 
@@ -2533,12 +2545,14 @@ export namespace Prisma {
 
   export type DocumentGroupByOutputType = {
     id: string
+    title: string
     type: string
     content: string
     siteId: string
+    usersId: string | null
+    publicId: string
     createdAt: Date
     updatedAt: Date
-    usersId: string | null
     _count: DocumentCountAggregateOutputType | null
     _min: DocumentMinAggregateOutputType | null
     _max: DocumentMaxAggregateOutputType | null
@@ -2560,51 +2574,59 @@ export namespace Prisma {
 
   export type DocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    title?: boolean
     type?: boolean
     content?: boolean
     siteId?: boolean
+    usersId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    usersId?: boolean
     site?: boolean | SiteDefaultArgs<ExtArgs>
     Users?: boolean | Document$UsersArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
   export type DocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    title?: boolean
     type?: boolean
     content?: boolean
     siteId?: boolean
+    usersId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    usersId?: boolean
     site?: boolean | SiteDefaultArgs<ExtArgs>
     Users?: boolean | Document$UsersArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
   export type DocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    title?: boolean
     type?: boolean
     content?: boolean
     siteId?: boolean
+    usersId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    usersId?: boolean
     site?: boolean | SiteDefaultArgs<ExtArgs>
     Users?: boolean | Document$UsersArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
   export type DocumentSelectScalar = {
     id?: boolean
+    title?: boolean
     type?: boolean
     content?: boolean
     siteId?: boolean
+    usersId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    usersId?: boolean
   }
 
-  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "content" | "siteId" | "createdAt" | "updatedAt" | "usersId", ExtArgs["result"]["document"]>
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "type" | "content" | "siteId" | "usersId" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
   export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     site?: boolean | SiteDefaultArgs<ExtArgs>
     Users?: boolean | Document$UsersArgs<ExtArgs>
@@ -2626,12 +2648,14 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      title: string
       type: string
       content: string
       siteId: string
+      usersId: string | null
+      publicId: string
       createdAt: Date
       updatedAt: Date
-      usersId: string | null
     }, ExtArgs["result"]["document"]>
     composites: {}
   }
@@ -3058,12 +3082,14 @@ export namespace Prisma {
    */
   interface DocumentFieldRefs {
     readonly id: FieldRef<"Document", 'String'>
+    readonly title: FieldRef<"Document", 'String'>
     readonly type: FieldRef<"Document", 'String'>
     readonly content: FieldRef<"Document", 'String'>
     readonly siteId: FieldRef<"Document", 'String'>
+    readonly usersId: FieldRef<"Document", 'String'>
+    readonly publicId: FieldRef<"Document", 'String'>
     readonly createdAt: FieldRef<"Document", 'DateTime'>
     readonly updatedAt: FieldRef<"Document", 'DateTime'>
-    readonly usersId: FieldRef<"Document", 'String'>
   }
     
 
@@ -5699,12 +5725,14 @@ export namespace Prisma {
 
   export const DocumentScalarFieldEnum: {
     id: 'id',
+    title: 'title',
     type: 'type',
     content: 'content',
     siteId: 'siteId',
+    usersId: 'usersId',
+    publicId: 'publicId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    usersId: 'usersId'
+    updatedAt: 'updatedAt'
   };
 
   export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -5889,51 +5917,59 @@ export namespace Prisma {
     OR?: DocumentWhereInput[]
     NOT?: DocumentWhereInput | DocumentWhereInput[]
     id?: StringFilter<"Document"> | string
+    title?: StringFilter<"Document"> | string
     type?: StringFilter<"Document"> | string
     content?: StringFilter<"Document"> | string
     siteId?: StringFilter<"Document"> | string
+    usersId?: StringNullableFilter<"Document"> | string | null
+    publicId?: StringFilter<"Document"> | string
     createdAt?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
-    usersId?: StringNullableFilter<"Document"> | string | null
     site?: XOR<SiteScalarRelationFilter, SiteWhereInput>
     Users?: XOR<UsersNullableScalarRelationFilter, UsersWhereInput> | null
   }
 
   export type DocumentOrderByWithRelationInput = {
     id?: SortOrder
+    title?: SortOrder
     type?: SortOrder
     content?: SortOrder
     siteId?: SortOrder
+    usersId?: SortOrderInput | SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    usersId?: SortOrderInput | SortOrder
     site?: SiteOrderByWithRelationInput
     Users?: UsersOrderByWithRelationInput
   }
 
   export type DocumentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    publicId?: string
     AND?: DocumentWhereInput | DocumentWhereInput[]
     OR?: DocumentWhereInput[]
     NOT?: DocumentWhereInput | DocumentWhereInput[]
+    title?: StringFilter<"Document"> | string
     type?: StringFilter<"Document"> | string
     content?: StringFilter<"Document"> | string
     siteId?: StringFilter<"Document"> | string
+    usersId?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
-    usersId?: StringNullableFilter<"Document"> | string | null
     site?: XOR<SiteScalarRelationFilter, SiteWhereInput>
     Users?: XOR<UsersNullableScalarRelationFilter, UsersWhereInput> | null
-  }, "id">
+  }, "id" | "publicId">
 
   export type DocumentOrderByWithAggregationInput = {
     id?: SortOrder
+    title?: SortOrder
     type?: SortOrder
     content?: SortOrder
     siteId?: SortOrder
+    usersId?: SortOrderInput | SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    usersId?: SortOrderInput | SortOrder
     _count?: DocumentCountOrderByAggregateInput
     _max?: DocumentMaxOrderByAggregateInput
     _min?: DocumentMinOrderByAggregateInput
@@ -5944,12 +5980,14 @@ export namespace Prisma {
     OR?: DocumentScalarWhereWithAggregatesInput[]
     NOT?: DocumentScalarWhereWithAggregatesInput | DocumentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Document"> | string
+    title?: StringWithAggregatesFilter<"Document"> | string
     type?: StringWithAggregatesFilter<"Document"> | string
     content?: StringWithAggregatesFilter<"Document"> | string
     siteId?: StringWithAggregatesFilter<"Document"> | string
+    usersId?: StringNullableWithAggregatesFilter<"Document"> | string | null
+    publicId?: StringWithAggregatesFilter<"Document"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
-    usersId?: StringNullableWithAggregatesFilter<"Document"> | string | null
   }
 
   export type SiteWhereInput = {
@@ -6166,8 +6204,10 @@ export namespace Prisma {
 
   export type DocumentCreateInput = {
     id?: string
+    title: string
     type: string
     content: string
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     site: SiteCreateNestedOneWithoutDocuemntsInput
@@ -6176,18 +6216,22 @@ export namespace Prisma {
 
   export type DocumentUncheckedCreateInput = {
     id?: string
+    title: string
     type: string
     content: string
     siteId: string
+    usersId?: string | null
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    usersId?: string | null
   }
 
   export type DocumentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     site?: SiteUpdateOneRequiredWithoutDocuemntsNestedInput
@@ -6196,40 +6240,48 @@ export namespace Prisma {
 
   export type DocumentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     siteId?: StringFieldUpdateOperationsInput | string
+    usersId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DocumentCreateManyInput = {
     id?: string
+    title: string
     type: string
     content: string
     siteId: string
+    usersId?: string | null
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    usersId?: string | null
   }
 
   export type DocumentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     siteId?: StringFieldUpdateOperationsInput | string
+    usersId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SiteCreateInput = {
@@ -6538,32 +6590,38 @@ export namespace Prisma {
 
   export type DocumentCountOrderByAggregateInput = {
     id?: SortOrder
+    title?: SortOrder
     type?: SortOrder
     content?: SortOrder
     siteId?: SortOrder
+    usersId?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    usersId?: SortOrder
   }
 
   export type DocumentMaxOrderByAggregateInput = {
     id?: SortOrder
+    title?: SortOrder
     type?: SortOrder
     content?: SortOrder
     siteId?: SortOrder
+    usersId?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    usersId?: SortOrder
   }
 
   export type DocumentMinOrderByAggregateInput = {
     id?: SortOrder
+    title?: SortOrder
     type?: SortOrder
     content?: SortOrder
     siteId?: SortOrder
+    usersId?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    usersId?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -7075,8 +7133,10 @@ export namespace Prisma {
 
   export type DocumentCreateWithoutUsersInput = {
     id?: string
+    title: string
     type: string
     content: string
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     site: SiteCreateNestedOneWithoutDocuemntsInput
@@ -7084,9 +7144,11 @@ export namespace Prisma {
 
   export type DocumentUncheckedCreateWithoutUsersInput = {
     id?: string
+    title: string
     type: string
     content: string
     siteId: string
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7178,12 +7240,14 @@ export namespace Prisma {
     OR?: DocumentScalarWhereInput[]
     NOT?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
     id?: StringFilter<"Document"> | string
+    title?: StringFilter<"Document"> | string
     type?: StringFilter<"Document"> | string
     content?: StringFilter<"Document"> | string
     siteId?: StringFilter<"Document"> | string
+    usersId?: StringNullableFilter<"Document"> | string | null
+    publicId?: StringFilter<"Document"> | string
     createdAt?: DateTimeFilter<"Document"> | Date | string
     updatedAt?: DateTimeFilter<"Document"> | Date | string
-    usersId?: StringNullableFilter<"Document"> | string | null
   }
 
   export type SiteCreateWithoutDocuemntsInput = {
@@ -7347,8 +7411,10 @@ export namespace Prisma {
 
   export type DocumentCreateWithoutSiteInput = {
     id?: string
+    title: string
     type: string
     content: string
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     Users?: UsersCreateNestedOneWithoutDocumentsInput
@@ -7356,11 +7422,13 @@ export namespace Prisma {
 
   export type DocumentUncheckedCreateWithoutSiteInput = {
     id?: string
+    title: string
     type: string
     content: string
+    usersId?: string | null
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    usersId?: string | null
   }
 
   export type DocumentCreateOrConnectWithoutSiteInput = {
@@ -7512,9 +7580,11 @@ export namespace Prisma {
 
   export type DocumentCreateManyUsersInput = {
     id?: string
+    title: string
     type: string
     content: string
     siteId: string
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7571,8 +7641,10 @@ export namespace Prisma {
 
   export type DocumentUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     site?: SiteUpdateOneRequiredWithoutDocuemntsNestedInput
@@ -7580,35 +7652,43 @@ export namespace Prisma {
 
   export type DocumentUncheckedUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     siteId?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateManyWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     siteId?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentCreateManySiteInput = {
     id?: string
+    title: string
     type: string
     content: string
+    usersId?: string | null
+    publicId?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    usersId?: string | null
   }
 
   export type DocumentUpdateWithoutSiteInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Users?: UsersUpdateOneWithoutDocumentsNestedInput
@@ -7616,20 +7696,24 @@ export namespace Prisma {
 
   export type DocumentUncheckedUpdateWithoutSiteInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    usersId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DocumentUncheckedUpdateManyWithoutSiteInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    usersId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usersId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

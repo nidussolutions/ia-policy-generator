@@ -130,12 +130,14 @@ exports.Prisma.UsersScalarFieldEnum = {
 
 exports.Prisma.DocumentScalarFieldEnum = {
   id: 'id',
+  title: 'title',
   type: 'type',
   content: 'content',
   siteId: 'siteId',
+  usersId: 'usersId',
+  publicId: 'publicId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  usersId: 'usersId'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SiteScalarFieldEnum = {

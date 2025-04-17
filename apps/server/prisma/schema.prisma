@@ -25,15 +25,17 @@ model Users {
 
 model Document {
   id        String   @id @default(uuid())
+  title     String
   type      String
   content   String
   siteId    String
+  usersId   String?
+  publicId  String   @unique @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  site    Site    @relation(fields: [siteId], references: [id])
-  Users   Users?  @relation(fields: [usersId], references: [id])
-  usersId String?
+  site  Site   @relation(fields: [siteId], references: [id])
+  Users Users? @relation(fields: [usersId], references: [id])
 }
 
 model Site {
