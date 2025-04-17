@@ -1,6 +1,7 @@
 import './globals.css';
 import { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
+import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,9 +14,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${inter.className} bg-white text-black transition-colors duration-300`}
+        className={`${inter.className} bg-white text-black  transition-colors duration-300`}
       >
         {children}
+        <Footer />
       </body>
     </html>
   );
