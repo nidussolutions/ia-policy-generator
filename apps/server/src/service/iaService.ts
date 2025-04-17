@@ -6,6 +6,7 @@ const openai = new OpenAI({
 });
 
 type GenerateInput = {
+  plan: string;
   type: string;
   domain: string;
   language: string;
@@ -16,7 +17,7 @@ type GenerateInput = {
 export async function generateAiDocument(
   input: GenerateInput
 ): Promise<string> {
-  const { type, domain, language, legislation, observations } = input;
+  const { type, domain, language, legislation, observations, plan } = input;
 
   const prompt = `
     Crie um documento do tipo ${type} para o site ${domain}, escrito em ${language}. 
@@ -40,7 +41,7 @@ export async function generateAiDocument(
       },
     ],
     temperature: 1.5,
-    max_tokens: 5500,
+    max_tokens: plan === 'pro' ? 6000 : 4500,
   });
 
   return response.choices[0].message.content || '';

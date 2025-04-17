@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '../generated/prisma';
 import { authMiddleware, AuthRequest } from '../middlewares/authMiddlewares';
+import { checkPlanLimits } from '../middlewares/checkPlanLimits';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -17,33 +18,38 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
-router.post('/', authMiddleware, async (req: AuthRequest, res) => {
-  const { domain, language, legislation, name } = req.body;
+router.post(
+  '/',
+  authMiddleware,
+  checkPlanLimits,
+  async (req: AuthRequest, res) => {
+    const { domain, language, legislation, name } = req.body;
 
-  try {
-    const site = await prisma.site.create({
-      data: {
-        name,
-        domain,
-        language,
-        legislation,
-        ownerId: req.userId!,
-      },
-    });
+    try {
+      const site = await prisma.site.create({
+        data: {
+          name,
+          domain,
+          language,
+          legislation,
+          ownerId: req.userId!,
+        },
+      });
 
-    await prisma.activityLog.create({
-      data: {
-        userId: req.userId!,
-        action: `Criou o site "${site.name}"`,
-      },
-    });
+      await prisma.activityLog.create({
+        data: {
+          userId: req.userId!,
+          action: `Criou o site "${site.name}"`,
+        },
+      });
 
-    res.status(201).json(site);
-  } catch (error) {
-    console.log('Error during creating site: ', error);
-    res.status(500).json({ error: 'Internal server error' });
+      res.status(201).json(site);
+    } catch (error) {
+      console.log('Error during creating site: ', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
-});
+);
 
 router.delete('/:id', authMiddleware, async (req: AuthRequest, res) => {
   const { id } = req.params;
