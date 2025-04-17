@@ -29,4 +29,5 @@ router.get('/:publicId', async (req, res) => {
     res.status(500).json({ message: 'Erro ao carregar documento público' });
   }
 });
+
 export default router;

@@ -20,7 +20,7 @@ app.use('/sites', sitesRouter);
 app.use('/docs', documentRouter);
 app.use('/docs/generate', generatorRouter);
 app.use('/dashboard', dashboardRouter);
-app.get('/public', publicRouter);
+app.use('/public', publicRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

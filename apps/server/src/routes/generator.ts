@@ -7,12 +7,16 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
-  const { siteId, type } = req.body;
+  const { siteId, type, title } = req.body;
 
   try {
     const site = await prisma.site.findUnique({
       where: { id: siteId },
     });
+
+    if (!title) res.status(400).json({ error: 'Title is required' });
+    if (!type) res.status(400).json({ error: 'Type is required' });
+    if (!siteId) res.status(400).json({ error: 'Site ID is required' });
 
     if (!site || site.ownerId != req.userId)
       res.status(403).json({ error: 'Access denied' });
@@ -25,7 +29,7 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
     });
 
     const doc = await prisma.document.create({
-      data: { siteId, type, content },
+      data: { siteId, type, content, title },
     });
 
     await prisma.users.update({
