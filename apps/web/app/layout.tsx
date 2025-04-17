@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${inter.className} bg-white text-black  dark:text-white transition-colors duration-300`}
+        className={`${inter.className} bg-white text-black transition-colors duration-300`}
       >
         {children}
       </body>
