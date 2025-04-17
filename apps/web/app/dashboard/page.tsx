@@ -88,16 +88,19 @@ export default function DashboardPage() {
 
         <div>
           <h2 className="text-xl font-semibold mb-2">Sugestões de Ações</h2>
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col justify-between md:flex-row gap-4">
             <ActionButton
+              className="w-full"
               text="Cadastrar novo site"
               onClick={() => router.push('/sites/new')}
             />
             <ActionButton
+              className="w-full"
               text="Gerar novo documento"
               onClick={() => router.push('/sites')}
             />
             <ActionButton
+              className="w-full"
               text="Conferir status dos termos"
               onClick={() => router.push('/sites')}
             />
