@@ -6,10 +6,10 @@ import { postWithAuth } from '@/lib/api';
 import { SiteType } from '@/lib/api';
 import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
-import Link from 'next/link';
+import { ToastContainer, toast } from 'react-toastify';
+import { notifyError } from '@/hooks/useToast';
 
 export default function NewSitePage() {
-  const [error, setError] = useState('');
   const [site, setSite] = useState<SiteType>({
     name: '',
     domain: '',
@@ -33,7 +33,7 @@ export default function NewSitePage() {
         token
       );
       if (res.error) {
-        setError(res.error);
+        notifyError(res.error);
         return;
       } else {
         router.push('/sites');
@@ -57,14 +57,7 @@ export default function NewSitePage() {
   return (
     <Layout>
       <div className="max-w-xl mx-auto p-6">
-        {error != '' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-center flex flex-col">
-            <span className="font-semibold text-red-600">{error}</span>
-            <Link href="/plan" className="text-blue-600 hover:underline">
-              Adiquira nosso plano pro e crie sites ilimitados
-            </Link>
-          </div>
-        )}
+        <ToastContainer />
         <div className="flex items-center gap-2 mb-6">
           <button
             onClick={() => window.history.back()}

@@ -2,7 +2,6 @@ import './globals.css';
 import { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
 import Footer from '@/components/Footer';
-import { ToastProvider } from '@/components/toast/ToastProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${inter.className} bg-white text-black  transition-colors duration-300`}
       >
-        <ToastProvider>{children}</ToastProvider>
+        {children}
         <Footer />
       </body>
     </html>
