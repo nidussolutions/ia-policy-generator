@@ -6,7 +6,7 @@ import { postWithAuth } from '@/lib/api';
 import { SiteType } from '@/lib/api';
 import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { notifyError } from '@/hooks/useToast';
 
 export default function NewSitePage() {

@@ -6,7 +6,9 @@ import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
 import { notifyError } from '@/hooks/useToast';
+import ConfirmModal from '@/components/ConfirmModal';
 import { fetcher } from '@/lib/api';
+import { useState } from 'react';
 
 type Site = {
   id: string;
@@ -15,6 +17,8 @@ type Site = {
 };
 
 export default function SitesPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deletingSiteId, setDeletingSiteId] = useState<string | null>(null);
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
   const { data, error, isLoading, mutate } = useSWR(
@@ -36,14 +40,20 @@ export default function SitesPage() {
       notifyError('Erro ao deletar site');
     }
   };
-
   const handleDelete = (siteId: string) => {
-    const confirm = window.confirm(
-      'Você tem certeza que deseja deletar este site?'
-    );
-    if (confirm) {
-      confirmDelete(siteId);
-    }
+    setDeletingSiteId(siteId);
+    setModalOpen(true);
+  };
+
+  const handleConfirm = () => {
+    if (deletingSiteId) confirmDelete(deletingSiteId);
+    setModalOpen(false);
+    setDeletingSiteId(null);
+  };
+
+  const handleCancel = () => {
+    setModalOpen(false);
+    setDeletingSiteId(null);
   };
 
   if (isLoading) return <Loading page="a listagem de sites" />;
@@ -51,6 +61,12 @@ export default function SitesPage() {
 
   return (
     <Layout>
+      <ConfirmModal
+        isOpen={modalOpen}
+        message="Você tem certeza que deseja deletar este site?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
       <div className="p-6 max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-4 border-b pb-4">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white">

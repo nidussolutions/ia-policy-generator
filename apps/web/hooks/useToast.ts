@@ -1,10 +1,4 @@
-import ConfirmeButton from '@/components/ConfirmButton';
 import { toast } from 'react-toastify';
-
-type notifyConfirm = {
-  OnConfirm: () => void;
-  OnCancel: () => void;
-};
 
 export const notifyError = (err: string) => {
   toast.error(err, {
