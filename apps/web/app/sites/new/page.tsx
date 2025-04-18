@@ -15,6 +15,7 @@ export default function NewSitePage() {
     domain: '',
     language: '',
     legislation: '',
+    observations: '',
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -54,22 +55,30 @@ export default function NewSitePage() {
     }));
   };
 
+  const handleChangeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setSite((prevSite) => ({
+      ...prevSite,
+      [name]: value,
+    }));
+  };
+
   return (
     <Layout>
-      <div className="max-w-xl mx-auto p-6">
+      <div className="max-w-xl mx-auto p-6 rounded-lg shadow-md">
         <ToastContainer />
-        <div className="flex items-center gap-2 mb-6">
+        <div className="flex items-center gap-2 mb-6 text-gray-700 dark:text-gray-200">
           <button
             onClick={() => window.history.back()}
             className="hover:text-blue-600"
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold">Novo Site</h1>
+          <h1 className="text-2xl font-bold ">Novo Site</h1>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Nome do Site
             </label>
             <input
@@ -83,7 +92,7 @@ export default function NewSitePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Domínio
             </label>
             <input
@@ -97,7 +106,7 @@ export default function NewSitePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Idioma
             </label>
             <input
@@ -111,7 +120,7 @@ export default function NewSitePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Legislação
             </label>
             <input
@@ -123,6 +132,19 @@ export default function NewSitePage() {
               required
               className="w-full mt-1 border rounded px-3 py-2"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              Observações
+            </label>
+            <textarea
+              name="observations"
+              placeholder="ex: Meu site é sobre... Gostaria de... O email padrão é..."
+              value={site.observations}
+              onChange={(e) => handleChangeTextarea(e)}
+              className="w-full mt-1 border rounded px-3 py-2"
+              rows={4}
+            ></textarea>
           </div>
           <button
             type="submit"

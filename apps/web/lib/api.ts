@@ -14,6 +14,7 @@ export type SiteType = {
   language: string;
   legislation: string;
   ownerId?: string;
+  observations?: string;
 };
 
 export type UserType = {

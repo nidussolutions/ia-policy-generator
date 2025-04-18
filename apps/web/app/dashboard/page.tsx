@@ -14,7 +14,7 @@ export default function DashboardPage() {
     name: '',
     email: '',
     lastLogin: '2025-04-16 16:51:42.222',
-    plan: 'Gratuito',
+    plan: 'free',
   });
   const [metrics, setMetrics] = useState({ sites: 0, documentos: 0 });
   const [atividades, setAtividades] = useState<string[]>([]);
@@ -109,12 +109,14 @@ export default function DashboardPage() {
 
         <div>
           <h2 className="text-xl font-semibold mb-2">Últimas Atividades</h2>
-          <ul className="bg-white rounded border divide-y">
+          <ul className="bg-white rounded border divide-y divide-gray-700 dark:bg-gray-800 dark:border-gray-700">
             {atividades.length === 0 ? (
-              <li className="p-4 text-gray-500">Nenhuma atividade recente.</li>
+              <li className="p-4 text-gray-500 dark:text-gray-400">
+                Nenhuma atividade recente.
+              </li>
             ) : (
               atividades.slice(0, 5).map((a, idx) => (
-                <li key={idx} className="p-4 text-gray-700">
+                <li key={idx} className="p-4 text-gray-700 dark:text-gray-200">
                   {a}
                 </li>
               ))
@@ -128,9 +130,11 @@ export default function DashboardPage() {
 
 function Card({ title, value }: { title: string; value: string | number }) {
   return (
-    <div className="p-4 bg-white border rounded shadow text-center hover:shadow-lg transition">
-      <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-1xl font-bold text-gray-800 mt-1">{value}</p>
+    <div className="p-4 bg-white border rounded shadow text-center hover:shadow-lg transition duration-200 dark:bg-gray-800 dark:border-gray-700">
+      <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
+      <p className="text-1xl font-bold text-gray-800 mt-1 dark:text-white">
+        {value}
+      </p>
     </div>
   );
 }
