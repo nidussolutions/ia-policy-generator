@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-white">
+    <footer className="w-full border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-white dark:text-gray-200">
       <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm items-center">
         <div>
           <h3 className="font-semibold mb-2">Legal</h3>
@@ -37,7 +37,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="text-center text-xs text-gray-500 dark:text-gray-600 py-4 border-t border-gray-100 dark:border-gray-800">
+      <div className="text-center text-xs text-gray-500 dark:text-gray-600 py-4 ">
         © {new Date().getFullYear()} SaaS pertecente a Nidus Solutions. Todos
         os direitos reservados.
       </div>

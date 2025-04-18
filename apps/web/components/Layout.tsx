@@ -8,9 +8,11 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="min-h-screen bg-gray-100 bg-white text-black">
+    <div className="min-h-screen bg-gray-100 bg-white text-black dark:bg-gray-950 dark:text-white">
       <Header />
-      <main className="p-6 max-w-5xl mx-auto">{children}</main>
+      <main className="p-6 mt-5 max-w-5xl mx-auto dark:bg-blend-darken dark:bg-gray-900/70 rounded-lg shadow-md">
+        {children}
+      </main>
     </div>
   );
 }

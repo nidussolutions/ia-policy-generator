@@ -65,3 +65,14 @@ export async function putWithAuth(url: string, data: unknown, token: string) {
   if (!res.ok) throw new Error('Error ao atualizar dados');
   return res.json();
 }
+
+export async function deleteWithAuth(url: string, token: string) {
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error('Error ao deletar dados');
+  return res.json();
+}
