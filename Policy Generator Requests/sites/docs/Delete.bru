@@ -1,11 +1,11 @@
 meta {
-  name: List Site
+  name: Delete
   type: http
-  seq: 3
+  seq: 5
 }
 
-get {
-  url: {{sites}}/
+delete {
+  url: {{docs}}/f3d88cc3-d5cf-46ca-9292-c1604218ed14
   body: none
   auth: bearer
 }
@@ -16,8 +16,7 @@ auth:bearer {
 
 body:json {
   {
-    "domain": "nidussolutions.com",
-    "language": "portuguese",
-    "legislation": "LGPD"
+    "siteId": "b128139b-3a3e-4683-b6c3-7927c9907631",
+    "type": "Uso de cookies"
   }
 }

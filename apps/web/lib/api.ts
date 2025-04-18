@@ -5,6 +5,7 @@ export type DocType = {
   content: string;
   siteId: string;
   updatedAt: string;
+  publicId?: string;
 };
 
 export type SiteType = {

@@ -81,7 +81,7 @@ export default function SitesPage() {
         </div>
 
         {data?.length === 0 && (
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400 text-center">
             Você ainda não tem nenhum site cadastrado.
           </p>
         )}
@@ -90,7 +90,7 @@ export default function SitesPage() {
           {data?.map((site: Site) => (
             <div
               key={site.id}
-              className="p-4 bg-white shadow rounded flex justify-between items-center hover:bg-gray-50 transition duration-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+              className="p-2 px-4 bg-white shadow rounded flex justify-between items-center transition duration-200 dark:bg-gray-900 dark:shadow-gray-800"
             >
               <div>
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white">

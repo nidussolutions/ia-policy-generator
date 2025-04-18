@@ -94,29 +94,31 @@ export default function DocumentEditPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow sticky top-0 z-10 px-6 py-4 flex justify-between items-center border-b">
-          <div className="flex items-center gap-2">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <header className="bg-white shadow sticky top-0 z-10 px-6 py-4 flex justify-between items-center border-b dark:border-gray-700 dark:bg-gray-800">
+          <div className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
             <button
               onClick={() => window.history.back()}
-              className="hover:text-blue-600"
+              className="hover:text-blue-600 transition-colors duration-200"
             >
               <ArrowLeft size={20} />
             </button>
-            <h1 className="text-lg font-semibold text-gray-800">
+            <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-200 leading-6">
               Editando:{' '}
-              <span className="font-mono text-gray-600">{data.title}</span>
+              <span className="font-mono text-gray-600 dark:text-gray-400 text-sm">
+                {data.title}
+              </span>
             </h1>
           </div>
 
-          <div className="flex gap-3 items-center text-sm ">
+          <div className="flex gap-3 items-center text-sm dark:text-gray-400 text-gray-600">
             {status === 'saving' && (
-              <span className="flex items-center gap-1 text-blue-500">
+              <span className="flex items-center gap-1 text-blue-500 font-semibold dark:text-blue-400">
                 <Loader2 className="animate-spin" size={16} /> Salvando...
               </span>
             )}
             {status === 'saved' && (
-              <span className="flex items-center gap-1 text-green-600">
+              <span className="flex items-center gap-1 text-green-600 font-semibold dark:text-green-400">
                 <CheckCircle size={16} /> Salvo
               </span>
             )}
@@ -128,29 +130,29 @@ export default function DocumentEditPage() {
             <div className="flex gap-2">
               <button
                 onClick={handleCancel}
-                className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300"
+                className="bg-gray-200 px-4 py-1.5 rounded hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleManualSave}
                 disabled={saving}
-                className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+                className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 disabled:bg-blue-300 transition-colors duration-200 disabled:cursor-not-allowed"
               >
                 Salvar
               </button>
             </div>
             {data.publicId && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-gray-100 p-2 rounded dark:bg-gray-800">
                 <input
                   type="text"
                   readOnly
                   value={`${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`}
-                  className="w-full p-2 border rounded text-sm text-gray-700 bg-gray-100"
+                  className="w-full p-2 border rounded text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200 bg-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   onClick={handleCopyPublicLink}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm transition-colors duration-200 disabled:cursor-not-allowed"
                 >
                   {copied ? 'Copiado' : 'Copiar'}
                 </button>
@@ -161,7 +163,7 @@ export default function DocumentEditPage() {
 
         <main className="p-6">
           <textarea
-            className="w-full h-[500px] p-4 border rounded shadow-sm bg-white text-sm font-mono resize-none"
+            className="w-full h-[500px] p-4 border rounded shadow-sm bg-white text-sm font-mono resize-none dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={content}
             onChange={(e) => handleChange(e.target.value)}
           />

@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${inter.className} bg-white text-black  transition-colors duration-300`}
+        className={`${inter.className} bg-white text-black  transition-colors duration-300 dark:bg-gray-950 dark:text-white mb-8`}
       >
         {children}
         <Footer />

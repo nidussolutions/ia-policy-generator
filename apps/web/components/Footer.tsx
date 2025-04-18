@@ -10,13 +10,30 @@ export default function Footer() {
           <h3 className="font-semibold mb-2">Legal</h3>
           <ul className="space-y-1">
             <li>
-              <Link href="/politica-de-privacidade" className="hover:underline">
+              <Link
+                href="/jur/politica-de-privacidade"
+                className="hover:underline"
+                target="_blank"
+              >
                 Política de Privacidade
               </Link>
             </li>
             <li>
-              <Link href="/termos-de-uso" className="hover:underline">
+              <Link
+                href="/jur/termos-de-uso"
+                className="hover:underline"
+                target="_blank"
+              >
                 Termos de Uso
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/jur/politica-de-cookies"
+                className="hover:underline"
+                target="_blank"
+              >
+                Politica de Cookies
               </Link>
             </li>
           </ul>
