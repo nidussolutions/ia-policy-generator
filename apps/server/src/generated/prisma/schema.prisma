@@ -11,7 +11,7 @@ datasource db {
 model Users {
   id         String    @id @default(uuid())
   customerId String?   @unique
-  identity   String?   @unique
+  identity   String    @unique
   email      String    @unique
   name       String
   plan       String    @default("free")
@@ -20,10 +20,10 @@ model Users {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
+  Subscription Subscription?
   Site         Site[]
   logs         ActivityLog[]
   documents    Document[]
-  Subscription Subscription[]
 }
 
 model Document {
@@ -65,12 +65,12 @@ model ActivityLog {
 
 model Subscription {
   id        String   @id
-  userId    String
+  userId    String   @unique
   plan      String
   startDate DateTime @default(now())
   endDate   DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  custome Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id])
 }

@@ -49,7 +49,6 @@ export async function postWithAuth(url: string, data: unknown, token: string) {
     body: JSON.stringify(data),
   });
 
-  if (!res.ok) throw new Error('Error ao enviar dados');
   return res.json();
 }
 

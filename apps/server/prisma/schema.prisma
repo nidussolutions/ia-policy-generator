@@ -11,7 +11,7 @@ datasource db {
 model Users {
   id         String    @id @default(uuid())
   customerId String?   @unique
-  identity   String?   @unique
+  identity   String    @unique
   email      String    @unique
   name       String
   plan       String    @default("free")

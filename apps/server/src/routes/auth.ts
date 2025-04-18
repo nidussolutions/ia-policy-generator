@@ -8,11 +8,14 @@ const prisma = new PrismaClient();
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
 router.post('/register', async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, identity } = req.body;
 
   try {
     const userExist = await prisma.users.findUnique({ where: { email } });
-    if (userExist) res.status(400).json({ message: 'User already exists' });
+    if (userExist) {
+      res.status(400).json({ message: 'User already exists' });
+      return;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -21,6 +24,7 @@ router.post('/register', async (req, res) => {
         email,
         password: hashedPassword,
         name,
+        identity,
       },
     });
 
@@ -37,6 +41,7 @@ router.post('/register', async (req, res) => {
       },
       token,
     });
+    return;
   } catch (error) {
     console.error('Error during registration:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -48,10 +53,16 @@ router.post('/login', async (req, res) => {
 
   try {
     const user = await prisma.users.findUnique({ where: { email } });
-    if (!user) res.status(400).json({ error: 'User not found' });
+    if (!user) {
+      res.status(400).json({ error: 'User not found' });
+      return;
+    }
 
     const isValidPassword = await bcrypt.compare(password, user!.password);
-    if (!isValidPassword) res.status(400).json({ error: 'Invalid password' });
+    if (!isValidPassword) {
+      res.status(400).json({ error: 'Invalid password' });
+      return;
+    }
 
     const token = jwt.sign({ userId: user!.id }, jwtSecret, {
       expiresIn: '24h',
@@ -63,6 +74,7 @@ router.post('/login', async (req, res) => {
     });
 
     res.status(200).json({ token });
+    return;
   } catch (error) {
     console.log('Erro during login: ', error);
     res.status(500).json({ error: 'Internal server error' });

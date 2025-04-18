@@ -6,8 +6,10 @@ import { postWithAuth } from '@/lib/api';
 import { SiteType } from '@/lib/api';
 import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
+import Link from 'next/link';
 
 export default function NewSitePage() {
+  const [error, setError] = useState('');
   const [site, setSite] = useState<SiteType>({
     name: '',
     domain: '',
@@ -25,12 +27,18 @@ export default function NewSitePage() {
     setLoading(true);
 
     try {
-      await postWithAuth(
+      const res = await postWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/sites`,
         site,
         token
       );
-      router.push('/sites');
+      if (res.error) {
+        setError(res.error);
+        return;
+      } else {
+        router.push('/sites');
+        return;
+      }
     } catch (err) {
       console.error('Erro ao criar site:', err);
     } finally {
@@ -49,6 +57,14 @@ export default function NewSitePage() {
   return (
     <Layout>
       <div className="max-w-xl mx-auto p-6">
+        {error != '' && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-center flex flex-col">
+            <span className="font-semibold text-red-600">{error}</span>
+            <Link href="/plan" className="text-blue-600 hover:underline">
+              Adiquira nosso plano pro e crie sites ilimitados
+            </Link>
+          </div>
+        )}
         <div className="flex items-center gap-2 mb-6">
           <button
             onClick={() => window.history.back()}
