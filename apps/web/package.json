@@ -14,6 +14,7 @@
     "@repo/ui": "*",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/typography": "^0.5.16",
+    "cpf-cnpj-validator": "^1.0.3",
     "framer-motion": "^12.7.4",
     "lucide-react": "^0.488.0",
     "next": "^15.3.0",

@@ -3,29 +3,98 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import { Mail, Lock, User, UserPlus, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff } from 'lucide-react';
+import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { motion } from 'framer-motion';
 
 export default function RegisterPage() {
   const { register } = useAuth();
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
+  const [cpfCnpj, setCpfCnpj] = useState('');
+  const [cpfCnpjError, setCpfCnpjError] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = validateForm();
+    if (!valid) return;
+
     setLoading(true);
     setError('');
 
     try {
-      await register(name, email, password);
+      const error = await register(name, email, password, cpfCnpj);
+      if (error) {
+        setError('Erro ao criar conta. Tente novamente.');
+      }
     } catch {
       setError('Erro ao criar conta. Tente novamente.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const validateForm = () => {
+    let valid = true;
+
+    if (!validateEmail(email)) {
+      setEmailError('E-mail inválido');
+      valid = false;
+    } else {
+      setEmailError('');
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        'A senha deve ter pelo menos 6 caracteres e um caractere especial'
+      );
+      valid = false;
+    } else {
+      setPasswordError('');
+    }
+
+    const digits = cpfCnpj.replace(/\D/g, '');
+    if (digits.length <= 11 && !cpf.isValid(digits)) {
+      setCpfCnpjError('CPF inválido');
+      valid = false;
+    } else if (digits.length > 11 && !cnpj.isValid(digits)) {
+      setCpfCnpjError('CNPJ inválido');
+      valid = false;
+    } else {
+      setCpfCnpjError('');
+    }
+
+    return valid;
+  };
+
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    const regex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+    return regex.test(password);
+  };
+
+  const formatCpfCnpj = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length <= 11) {
+      return cpf.format(digits);
+    } else {
+      return cnpj.format(digits);
+    }
+  };
+
+  const handleCpfCnpjChange = (value: string) => {
+    setCpfCnpj(formatCpfCnpj(value));
   };
 
   return (
@@ -92,10 +161,39 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                className={`w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
+                  emailError ? 'border-red-500' : ''
+                }`}
                 placeholder="seuemail@exemplo.com"
               />
             </div>
+            {emailError && (
+              <p className="text-sm text-red-500 mt-1">{emailError}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              CPF ou CNPJ
+            </label>
+            <div className="relative mt-1">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <User size={18} />
+              </span>
+              <input
+                type="text"
+                value={cpfCnpj}
+                onChange={(e) => handleCpfCnpjChange(e.target.value)}
+                required
+                className={`w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
+                  cpfCnpjError ? 'border-red-500' : ''
+                }`}
+                placeholder="Digite seu CPF ou CNPJ"
+              />
+            </div>
+            {cpfCnpjError && (
+              <p className="text-sm text-red-500 mt-1">{cpfCnpjError}</p>
+            )}
           </div>
 
           <div>
@@ -107,14 +205,27 @@ export default function RegisterPage() {
                 <Lock size={18} />
               </span>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                className={`w-full pl-10 pr-10 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
+                  passwordError ? 'border-red-500' : ''
+                }`}
                 placeholder="Crie uma senha segura"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
+            {passwordError && (
+              <p className="text-sm text-red-500 mt-1">{passwordError}</p>
+            )}
           </div>
 
           <button

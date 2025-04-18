@@ -23,13 +23,19 @@ export default function Header() {
                 href="/dashboard"
                 className="text-gray-700 hover:text-blue-600 font-medium transition dark:text-gray-200 dark:hover:text-blue-400"
               >
-                Dashboard
+                Painel principal
               </Link>
               <Link
                 href="/sites"
                 className="text-gray-700 hover:text-blue-600 font-medium transition dark:text-gray-200 dark:hover:text-blue-400"
               >
                 Sites
+              </Link>
+              <Link
+                href="/profile"
+                className="text-gray-700 hover:text-blue-600 font-medium transition dark:text-gray-200 dark:hover:text-blue-400"
+              >
+                Conta
               </Link>
               <button
                 onClick={logout}

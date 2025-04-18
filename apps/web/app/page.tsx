@@ -16,6 +16,24 @@ const fadeInUp = {
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col items-center justify-center ">
+      <header className="w-full max-w-5xl py-6 px-4 flex items-center justify-center ">
+        <motion.div
+          className="text-2xl font-bold"
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          custom={0.1}
+        >
+          <motion.h1
+            className="text-blue-600 dark:text-blue-500"
+            variants={fadeInUp}
+            custom={0.1}
+          >
+            Legal Forge
+          </motion.h1>
+        </motion.div>
+      </header>
+
       <section
         className="relative w-full flex items-center justify-center text-center py-32 sm:py-48 px-4 bg-fixed bg-[url('/bg-hero.jpg')] bg-cover bg-center dark:bg-blend-darken dark:bg-gray-900/70"
         style={{ backgroundAttachment: 'fixed' }}
@@ -42,7 +60,7 @@ export default function HomePage() {
           </motion.p>
 
           <motion.div variants={fadeInUp} custom={0.3}>
-            <Link href="/auth/register">
+            <Link href="/auth/login">
               <button className="bg-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition cursor-pointer">
                 Comece agora gratuitamente
               </button>

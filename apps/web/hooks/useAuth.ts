@@ -26,7 +26,13 @@ export function useAuth() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (!res.ok) throw new Error('Login falhou');
+      if (!res.ok) {
+        return res.json().then((data) => {
+          if (data.error) {
+            return data;
+          }
+        });
+      }
 
       const data = await res.json();
       localStorage.setItem('token', data.token);
@@ -39,7 +45,12 @@ export function useAuth() {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    identity: string
+  ) => {
     if (!name || !email || !password) {
       throw new Error('Nome, email e senha são obrigatórios');
     }
@@ -49,11 +60,17 @@ export function useAuth() {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password }),
+          body: JSON.stringify({ name, email, password, identity }),
         }
       );
 
-      if (!res.ok) throw new Error('Registro falhou');
+      if (!res.ok) {
+        return res.json().then((data) => {
+          if (data.error) {
+            return data;
+          }
+        });
+      }
 
       const data = await res.json();
       localStorage.setItem('token', data.token);

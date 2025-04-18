@@ -19,7 +19,11 @@ export default function LoginPage() {
     setError('');
 
     try {
-      await login(email, password);
+      const { error } = await login(email, password);
+      if (error) {
+        console.log('Error:', error);
+        setError(error);
+      }
     } catch {
       setError('Erro ao fazer login. Verifique suas credenciais.');
     } finally {
@@ -52,7 +56,7 @@ export default function LoginPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-sm text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200 px-4 py-2 rounded"
+            className="text-sm text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200 px-4 py-2 rounded text-center"
           >
             {error}
           </motion.div>
