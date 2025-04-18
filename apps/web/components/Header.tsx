@@ -32,7 +32,7 @@ export default function Header() {
                 Sites
               </Link>
               <Link
-                href="/profile"
+                href="/dashboard/perfil"
                 className="text-gray-700 hover:text-blue-600 font-medium transition dark:text-gray-200 dark:hover:text-blue-400"
               >
                 Conta
