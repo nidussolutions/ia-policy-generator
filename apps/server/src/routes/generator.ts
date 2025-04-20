@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import { generateAiDocument } from '../service/iaService';
 import { AuthRequest, authMiddleware } from '../middlewares/authMiddlewares';
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '../../generated/prisma';
 import { checkDocumentLimit } from '../middlewares/checkDocumentLimit';
 
 const router = Router();
