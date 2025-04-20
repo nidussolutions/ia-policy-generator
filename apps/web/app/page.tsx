@@ -163,9 +163,7 @@ export default function HomePage() {
             custom={0.2}
           >
             <h3 className="text-2xl font-semibold mb-2 text-blue-600">Pro</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-1">
-              R$ 265 / mês
-            </p>
+            <p className="text-gray-600 dark:text-gray-400 mb-1">R$ 15 / mês</p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               Para projetos profissionais e uso contínuo
             </p>
