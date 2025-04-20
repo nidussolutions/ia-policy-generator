@@ -8,6 +8,10 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   title: 'Legal Forge',
   description: 'Geração de termos e políticas com IA',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

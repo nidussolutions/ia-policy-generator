@@ -15,7 +15,7 @@ const fadeInUp = {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col items-center justify-center ">
+    <main className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col items-center justify-center">
       <header className="w-full max-w-5xl py-6 px-4 flex items-center justify-center ">
         <motion.div
           className="text-2xl font-bold"
@@ -70,7 +70,7 @@ export default function HomePage() {
       </section>
 
       <motion.section
-        className="w-full max-w-5xl py-24 grid grid-cols-1 sm:grid-cols-3 gap-12 text-center"
+        className="w-full max-w-5xl py-24 grid grid-cols-1 sm:grid-cols-3 gap-12 text-center px-6"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -105,7 +105,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="py-24 max-w-4xl w-full"
+        className="py-24 max-w-4xl w-full px-6 text-center"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -198,7 +198,7 @@ export default function HomePage() {
           Crie seus documentos agora mesmo, sem complicação.
         </p>
         <Link href="/auth/login">
-          <button className="bg-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition">
+          <button className="bg-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition cursor-pointer">
             Criar conta grátis
           </button>
         </Link>
