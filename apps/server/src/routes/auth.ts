@@ -81,4 +81,27 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/validatingExpiredToken', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    res.status(401).json({ error: 'Token not provided' });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+
+    if (!decoded) {
+      res.status(401).json({ error: 'Invalid token' });
+      return;
+    }
+
+    res.status(200).json({ valid: true });
+  } catch (error) {
+    console.log('Error during token validation: ', error);
+    res.status(401).json({ valid: false });
+  }
+});
+
 export default router;

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff } from 'lucide-react';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { motion } from 'framer-motion';
+import { fetcher } from '@/lib/api';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -19,6 +20,24 @@ export default function RegisterPage() {
   const [cpfCnpjError, setCpfCnpjError] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetcher(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/validatingExpiredToken`,
+        token
+      )
+        .then((res) => {
+          if (res.valid) {
+            window.location.href = '/dashboard';
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+        });
+    }
+  }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
