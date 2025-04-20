@@ -160,16 +160,6 @@ exports.Prisma.ActivityLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.SubscriptionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  plan: 'plan',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -190,8 +180,7 @@ exports.Prisma.ModelName = {
   Users: 'Users',
   Document: 'Document',
   Site: 'Site',
-  ActivityLog: 'ActivityLog',
-  Subscription: 'Subscription'
+  ActivityLog: 'ActivityLog'
 };
 
 /**
