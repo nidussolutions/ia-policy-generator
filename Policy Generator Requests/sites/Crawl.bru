@@ -7,9 +7,13 @@ meta {
 post {
   url: {{docs}}/crawl?siteId=31d6edbf-be4c-4887-9e1d-cee8e4bc723f
   body: none
-  auth: inherit
+  auth: bearer
 }
 
 params:query {
   siteId: 31d6edbf-be4c-4887-9e1d-cee8e4bc723f
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5M2NhNjYyNS1lNTE3LTRhMmUtODkzYS03NTEwNDliYzMwNDMiLCJpYXQiOjE3NDUxODI4MTksImV4cCI6MTc0NTI2OTIxOX0.GfwRAfq13s1_N20FzXdDe54gm5G5bv1EbkHsvXFiIxc
 }
