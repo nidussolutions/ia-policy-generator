@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: 
+  url: {{auth}}/validatingExpiredToken
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5M2NhNjYyNS1lNTE3LTRhMmUtODkzYS03NTEwNDliYzMwNDMiLCJpYXQiOjE3NDUxNjc3OTcsImV4cCI6MTc0NTI1NDE5N30.TTP5_mVg0SlgcmxiG55ThJvl6n3kWGIgS5kn4qndC5A
 }
