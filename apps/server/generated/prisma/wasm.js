@@ -123,9 +123,19 @@ exports.Prisma.UsersScalarFieldEnum = {
   identity: 'identity',
   email: 'email',
   name: 'name',
-  plan: 'plan',
   password: 'password',
   lastLogin: 'lastLogin',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SiteScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  domain: 'domain',
+  language: 'language',
+  legislation: 'legislation',
+  ownerId: 'ownerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -142,22 +152,28 @@ exports.Prisma.DocumentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SiteScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  domain: 'domain',
-  language: 'language',
-  legislation: 'legislation',
-  ownerId: 'ownerId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.ActivityLogScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   action: 'action',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.PlansScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserPlansScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -178,9 +194,11 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   Users: 'Users',
-  Document: 'Document',
   Site: 'Site',
-  ActivityLog: 'ActivityLog'
+  Document: 'Document',
+  ActivityLog: 'ActivityLog',
+  Plans: 'Plans',
+  UserPlans: 'UserPlans'
 };
 
 /**

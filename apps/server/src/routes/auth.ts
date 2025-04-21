@@ -19,12 +19,23 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const plan = await prisma.plans.findFirst({
+        where: { name: 'Free' },
+    });
+
     const user = await prisma.users.create({
       data: {
         email,
         password: hashedPassword,
         name,
         identity,
+      },
+    });
+
+    await prisma.userPlans.create({
+      data: {
+        userId: user.id,
+        planId: plan!.id,
       },
     });
 

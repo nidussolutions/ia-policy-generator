@@ -14,14 +14,28 @@ model Users {
   identity   String    @unique
   email      String    @unique
   name       String
-  plan       String    @default("free")
   password   String
   lastLogin  DateTime? @default(now())
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
-  Site      Site[]
+  sites     Site[]
   logs      ActivityLog[]
+  documents Document[]
+  userPlans UserPlans[]
+}
+
+model Site {
+  id          String   @id @default(uuid())
+  name        String
+  domain      String
+  language    String
+  legislation String
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner     Users      @relation(fields: [ownerId], references: [id])
   documents Document[]
 }
 
@@ -36,28 +50,37 @@ model Document {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  site  Site   @relation(fields: [siteId], references: [id])
-  Users Users? @relation(fields: [usersId], references: [id])
-}
-
-model Site {
-  id          String   @id @default(uuid())
-  name        String
-  domain      String
-  language    String
-  legislation String
-  ownerId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  owner     Users      @relation(fields: [ownerId], references: [id])
-  docuemnts Document[]
+  site Site   @relation(fields: [siteId], references: [id])
+  user Users? @relation(fields: [usersId], references: [id])
 }
 
 model ActivityLog {
   id        String   @id @default(uuid())
   userId    String
-  user      Users    @relation(fields: [userId], references: [id])
   action    String
   createdAt DateTime @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model Plans {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userPlans UserPlans[]
+}
+
+model UserPlans {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  planId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
+  plan Plans @relation(fields: [planId], references: [id])
 }
