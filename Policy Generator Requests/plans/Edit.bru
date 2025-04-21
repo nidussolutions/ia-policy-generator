@@ -1,0 +1,23 @@
+meta {
+  name: Edit
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{plans}}/1296cf67-6cc5-4aa0-9b73-62a4780d3681
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwYWI0Njg2YS0xN2NlLTQ1YzktODUyYi1lMDI4NTBlN2NhZmUiLCJpYXQiOjE3NDUyNjcwNDIsImV4cCI6MTc0NTM1MzQ0Mn0.W0kum6YPjaAMz83LwvCmq3bugwFxAv08L8NSosShEB4
+}
+
+body:json {
+  {
+    "name": "pro",
+    "price": "price_1RGQfoDvm7Zs1KRlIECUDWT1",
+    "description": "Plano Pro"
+  }
+}

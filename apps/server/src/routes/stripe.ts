@@ -8,7 +8,7 @@ const router = Router();
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
-const domain = process.env.DOMAIN || 'http://localhost:3001';
+const domain = process.env.DOMAIN || 'http://localhost:3000';
 
 router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest, res: Response) => {
     const {planId} = req.body;
@@ -45,8 +45,8 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
                 },
             ],
             mode: 'subscription',
-            success_url: `${domain}/?success=true&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${domain}?canceled=true`,
+            success_url: `${domain}/?status=approved&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${domain}?status=cancelled`,
         })
 
         res.status(200).json({
@@ -63,7 +63,7 @@ router.post('/create-portal-session', async (req, res) => {
     const { session_id } = req.body;
     const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
 
-    const returnUrl = domain || 'http://localhost:3001';
+    const returnUrl = domain || 'http://localhost:3000';
 
     const portalSession = await stripe.billingPortal.sessions.create({
         customer: checkoutSession.customer as string,

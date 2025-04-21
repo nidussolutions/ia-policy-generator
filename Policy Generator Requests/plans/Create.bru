@@ -1,0 +1,23 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{plans}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwYWI0Njg2YS0xN2NlLTQ1YzktODUyYi1lMDI4NTBlN2NhZmUiLCJpYXQiOjE3NDUyNjcwNDIsImV4cCI6MTc0NTM1MzQ0Mn0.W0kum6YPjaAMz83LwvCmq3bugwFxAv08L8NSosShEB4
+}
+
+body:json {
+  {
+    "name":"Plano Pro",
+    "price":"price_1RGQfoDvm7Zs1KRlIECUDWT1",
+    "desciption": "Plano Pro"
+  }
+}
