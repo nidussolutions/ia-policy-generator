@@ -42,6 +42,33 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
     }
 })
 
+router.put('/upgrade', authMiddleware, async (req: AuthRequest, res) => {
+    const {planId} = req.body;
+
+    try {
+        const userPlan = await prisma.userPlans.findUnique({
+            where: {userId: req.userId},
+        });
+
+        if (!userPlan) {
+            res.status(404).json({message: 'User plan not found'});
+            return
+        }
+
+        await prisma.userPlans.update({
+            where: {userId: req.userId},
+            data: {
+                planId,
+            },
+        });
+
+        res.status(200).json({message: 'Plan upgraded successfully'});
+    } catch (error) {
+        console.error('Error during upgrading plan:', error);
+        res.status(500).json({message: 'Internal server error'});
+    }
+})
+
 router.get('/', authMiddleware, async (req: AuthRequest, res) => {
     try {
         const plans = await prisma.plans.findMany();

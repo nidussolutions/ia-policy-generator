@@ -1,11 +1,11 @@
 meta {
-  name: Create
+  name: upgrade
   type: http
-  seq: 2
+  seq: 4
 }
 
-post {
-  url: {{plans}}/
+put {
+  url: {{plans}}/upgrade/
   body: json
   auth: bearer
 }
@@ -16,8 +16,6 @@ auth:bearer {
 
 body:json {
   {
-    "name": "Free",
-    "price": "price_1RGS7kDvm7Zs1KRlYvpOcmwU",
-    "description": "Plano Free"
+  "siteId":"1296cf67-6cc5-4aa0-9b73-62a4780d3681"
   }
 }

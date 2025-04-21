@@ -14,7 +14,12 @@ export default function DashboardPage() {
     name: '',
     email: '',
     lastLogin: '2025-04-16 16:51:42.222',
-    plan: 'free',
+    plan: {
+        id: '1',
+        name: 'Gratuito',
+        description: 'Plano gratuito com funcionalidades básicas.',
+        price: ''
+    },
   });
   const [metrics, setMetrics] = useState({ sites: 0, documentos: 0 });
   const [atividades, setAtividades] = useState<string[]>([]);
@@ -36,7 +41,7 @@ export default function DashboardPage() {
         );
 
         const userJson = await resUser.json();
-        if (!resUser.ok) throw new Error(userJson.message);
+        if (!resUser.ok) new Error(userJson.message);
 
         const resMetrics = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/dashboard/metrics`,
@@ -83,7 +88,7 @@ export default function DashboardPage() {
             title="Último Login"
             value={new Date(userData.lastLogin).toLocaleString()}
           />
-          <Card title="Plano" value={userData?.plan || 'Gratuito'} />
+          <Card title="Plano" value={userData?.plan!.name || 'Gratuito'} />
         </div>
 
         <div>

@@ -18,13 +18,20 @@ export type SiteType = {
   observations?: string;
 };
 
+export type PlanType = {
+    id?: string;
+    name: string;
+    price: string;
+    description: string;
+}
+
 export type UserType = {
   id?: string;
   name: string;
   email: string;
   password?: string;
   lastLogin: string;
-  plan?: string;
+  plan?: PlanType;
   sites?: SiteType[];
 };
 
