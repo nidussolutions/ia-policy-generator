@@ -113,7 +113,7 @@ export function useCheckout() {
             const data = await response.json();
 
             if (data?.message) {
-                alert(data.message);
+                window.location.href = '/cancellation';
             } else {
                 setError('Erro ao cancelar assinatura');
             }
@@ -126,5 +126,5 @@ export function useCheckout() {
         }
     }
 
-    return {startCheckout, loading, error, plans};
+    return {startCheckout, cancelSubscription, loading, error, plans};
 }

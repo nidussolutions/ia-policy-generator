@@ -49,6 +49,11 @@ router.post('/register', async (req, res) => {
                 id: user.id,
                 email: user.email,
                 name: user.name,
+                plan: {
+                    id: plan!.id,
+                    name: plan!.name,
+                    price: plan!.price,
+                }
             },
             token,
         });

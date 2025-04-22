@@ -74,6 +74,36 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
             }
             break;
 
+        case 'customer.subscription.deleted':
+            const subscription = event.data.object as Stripe.Subscription;
+
+            try {
+                const customerId = subscription.customer as string;
+                const user = await prisma.users.findUnique({where: {stripeCustomerId: customerId}});
+
+                if (!user) {
+                    console.error("Usuário com ID de cliente ${customerId} não encontrado");
+                    return
+                }
+
+                const plan = await prisma.plans.findUnique({where: {name: "Free"}});
+
+                if (!plan) {
+                    console.error('Plano Free não encontrado');
+                    return
+                }
+
+                await prisma.userPlans.update({
+                    where: {userId: user.id},
+                    data: {
+                        planId: plan.id,
+                    },
+                });
+            } catch (err: any) {
+                console.error('Erro ao processar customer.subscription.deleted:', err.message);
+            }
+            break;
+
         default:
             console.log(`Unhandled event type ${event.type}`);
     }

@@ -78,7 +78,8 @@ export function useAuth() {
         name: string,
         email: string,
         password: string,
-        identity: string
+        identity: string,
+        redirect?: boolean
     ) => {
         if (!name || !email || !password) {
             throw new Error('Nome, email e senha são obrigatórios');
@@ -105,7 +106,11 @@ export function useAuth() {
             setIsAuthenticated(true);
             localStorage.setItem('token', data.token);
             setToken(data.token);
-            router.push('/dashboard');
+            if (redirect) {
+                router.push('/dashboard/profile');
+            } else{
+                router.push('/dashboard');
+            }
         } catch (error) {
             console.error('Erro ao registrar:', error);
             throw error;

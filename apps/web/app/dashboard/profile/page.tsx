@@ -6,6 +6,8 @@ import {PlanType, putWithAuth} from '@/lib/api';
 import Layout from '@/components/Layout';
 import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
+import {notifyError} from "@/hooks/useToast";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function PerfilPage() {
     const [name, setName] = useState('');
@@ -16,8 +18,9 @@ export default function PerfilPage() {
     const [loading, setLoading] = useState(true); // começa como true!
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
+    const [modalOpen, setModalOpen] = useState(false);
 
-    const {startCheckout} = useCheckout();
+    const {startCheckout, cancelSubscription} = useCheckout();
 
     const token =
         typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -85,12 +88,54 @@ export default function PerfilPage() {
         }
     };
 
+    const confirmDelete = async () => {
+        try {
+            await cancelSubscription();
+            setModalOpen(false);
+        } catch (error) {
+            setError('Erro ao cancelar plano. Tente novamente.');
+        }
+    };
+
+    const handleSubscription = async (planName: string) => {
+        switch (planName) {
+            case 'pro':
+                try {
+                    setModalOpen(true);
+                } catch {
+                    setError('Erro ao cancelar plano. Tente novamente.');
+                }
+                break;
+            case 'free':
+                try {
+                    await startCheckout(plan!.id!);
+                } catch {
+                    setError('Erro ao contratar plano. Tente novamente.');
+                }
+                break;
+            default:
+                setError('Plano inválido.');
+                break;
+        }
+    }
+
+    const handleCancel = () => {
+        setModalOpen(false);
+    };
+
     if (loading || !plan) {
-        return <Loading page="profile" />;
+        return <Loading page="profile"/>;
     }
 
     return (
         <Layout>
+            <ConfirmModal
+                isOpen={modalOpen}
+                message="Você tem certeza que deseja cancelar sua assinatura?"
+                description="Confirmando você pederá não podera mais acessar os sites e documentos criados."
+                onConfirm={confirmDelete}
+                onCancel={handleCancel}
+            />
             <div className="max-w-3xl mx-auto space-y-8">
                 <div className="flex items-center gap-4 mb-6 dark:text-white">
                     <button
@@ -188,7 +233,7 @@ export default function PerfilPage() {
                         </div>
                         <button
                             className={`text-white px-4 py-2 rounded transition cursor-pointer ${plan.name.toLowerCase() === 'pro' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
-                            onClick={() => startCheckout(plan.id!)}
+                            onClick={() => handleSubscription(plan.name.toLowerCase())}
                         >
                             {plan.name.toLowerCase() === 'pro' ? 'Cancelar plano' : 'Contratar Pro'}
                         </button>
