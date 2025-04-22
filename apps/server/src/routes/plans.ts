@@ -71,8 +71,20 @@ router.put('/upgrade', authMiddleware, async (req: AuthRequest, res) => {
 
 router.get('/', authMiddleware, async (req: AuthRequest, res) => {
     try {
-        const plans = await prisma.plans.findMany();
-        res.status(200).json(plans);
+        const plans = await prisma.plans.findMany({
+            orderBy: {
+                createdAt: 'desc',
+            },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+            },
+        });
+
+
+        res.status(200).json({plans});
     } catch (error) {
         console.error('Error fetching plans:', error);
         res.status(500).json({message: 'Internal server error'});

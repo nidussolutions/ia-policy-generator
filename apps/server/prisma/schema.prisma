@@ -65,7 +65,7 @@ model ActivityLog {
 
 model Plans {
   id          String   @id @default(uuid())
-  name        String
+  name        String   @unique
   description String
   price       String   @unique
   createdAt   DateTime @default(now())

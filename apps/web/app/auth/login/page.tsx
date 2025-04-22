@@ -28,7 +28,6 @@ export default function LoginPage() {
     try {
       const { error } = await login(email, password);
       if (error) {
-        console.log('Error:', error);
         setError(error);
       }
     } catch {

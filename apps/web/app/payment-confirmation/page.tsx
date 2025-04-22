@@ -8,7 +8,6 @@ export default function PaymentConfirmationPage() {
     const searchParams = useSearchParams();
 
     const status = searchParams.get('status');
-    const ref = searchParams.get('external_reference') || 'N/A';
 
     const renderStatus = () => {
         switch (status) {
@@ -59,9 +58,6 @@ export default function PaymentConfirmationPage() {
         <main className="min-h-screen bg-[#0c0c0c] text-white flex flex-col justify-center items-center p-6">
             <div className="bg-[#1a1a1a] p-8 rounded-2xl shadow-xl max-w-lg w-full text-center">
                 {renderStatus()}
-                <div className="mt-6 text-sm text-neutral-400">
-                    <p>Reference: <span className="font-mono">{ref}</span></p>
-                </div>
                 <div className="mt-6">
                     <Link href="/dashboard" className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
                         Go to Dashboard

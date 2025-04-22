@@ -10,17 +10,7 @@ import ActionButton from '@/components/ActionButton';
 export default function DashboardPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<UserType>({
-    name: '',
-    email: '',
-    lastLogin: '2025-04-16 16:51:42.222',
-    plan: {
-        id: '1',
-        name: 'Gratuito',
-        description: 'Plano gratuito com funcionalidades básicas.',
-        price: ''
-    },
-  });
+  const [userData, setUserData] = useState<UserType | null>(null);
   const [metrics, setMetrics] = useState({ sites: 0, documentos: 0 });
   const [atividades, setAtividades] = useState<string[]>([]);
 
@@ -79,14 +69,14 @@ export default function DashboardPage() {
   return (
     <Layout>
       <div className="p-6 space-y-6 ">
-        <h1 className="text-3xl font-bold">Olá, {userData.name} 👋</h1>
+        <h1 className="text-3xl font-bold">Olá, {userData!.name} 👋</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card title="Sites Conectados" value={metrics.sites} />
           <Card title="Documentos Gerados" value={metrics.documentos} />
           <Card
             title="Último Login"
-            value={new Date(userData.lastLogin).toLocaleString()}
+            value={new Date(userData!.lastLogin).toLocaleString()}
           />
           <Card title="Plano" value={userData?.plan!.name || 'Gratuito'} />
         </div>

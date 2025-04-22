@@ -10,12 +10,16 @@ import dashboardRouter from './routes/dashboard';
 import publicRouter from './routes/public';
 import plansRouter from './routes/plans';
 import stripeRouter from './routes/stripe';
+import webhookRouter from './routes/webhook';
 
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
+
 app.use(cors());
+app.use('/', webhookRouter)
+
 app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/user', userRouter);

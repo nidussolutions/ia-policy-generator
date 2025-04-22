@@ -1,17 +1,16 @@
 import Stripe from 'stripe';
-import express, {Router, Response} from 'express';
+import  {Router, Response} from 'express';
 import {authMiddleware, AuthRequest} from "../middlewares/authMiddlewares";
 import {PrismaClient} from '../../generated/prisma';
-import plans from "./plans";
 
 const router = Router();
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
+const endpointSecret = "whsec_e38a50e968f4d3a3024ee43b6cab8e7de9e55825bd4025b127140a072ba64061";
 const domain = process.env.DOMAIN || 'http://localhost:3000';
 
 router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest, res: Response) => {
-    const {planId} = req.body;
     const userId = req.userId
 
     console.log(domain)
@@ -26,7 +25,7 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
     }
 
     const plan = await prisma.plans.findUnique({
-        where: {id: planId},
+        where: {name: "Pro"},
     })
 
     if (!plan) {
@@ -36,7 +35,6 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
 
     try {
         const sessions = await stripe.checkout.sessions.create({
-            billing_address_collection: 'auto',
             line_items: [
                 {
                     price: plan.price,
@@ -45,8 +43,9 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
                 },
             ],
             mode: 'subscription',
-            success_url: `${domain}/?status=approved&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${domain}?status=cancelled`,
+            customer_email: user.email,
+            success_url: `${domain}/payment-confirmation?status=approved&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${domain}/payment-confirmation?status=cancelled`,
         })
 
         res.status(200).json({
@@ -60,7 +59,7 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
 });
 
 router.post('/create-portal-session', async (req, res) => {
-    const { session_id } = req.body;
+    const {session_id} = req.body;
     const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
 
     const returnUrl = domain || 'http://localhost:3000';
@@ -72,5 +71,6 @@ router.post('/create-portal-session', async (req, res) => {
 
     res.redirect(303, portalSession.url);
 });
+
 
 export default router;
