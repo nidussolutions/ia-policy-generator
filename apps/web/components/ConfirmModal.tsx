@@ -57,7 +57,7 @@ export default function ConfirmModal(
                                 onClick={onConfirm}
                                 className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 text-white transition cursor-pointer"
                             >
-                                Deletar
+                                Confirmar
                             </button>
                         </div>
                     </motion.div>

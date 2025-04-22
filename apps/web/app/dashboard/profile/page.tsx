@@ -132,7 +132,7 @@ export default function PerfilPage() {
             <ConfirmModal
                 isOpen={modalOpen}
                 message="Você tem certeza que deseja cancelar sua assinatura?"
-                description="Confirmando você pederá não podera mais acessar os sites e documentos criados."
+                description="Confirmando você perde de imediato o acesso aos sites e documentos criados. Casa tenho dúvidas entre em contato com o suporte"
                 onConfirm={confirmDelete}
                 onCancel={handleCancel}
             />
