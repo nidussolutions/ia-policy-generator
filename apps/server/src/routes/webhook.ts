@@ -6,7 +6,7 @@ const router = Router();
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
-const endpointSecret = "whsec_e38a50e968f4d3a3024ee43b6cab8e7de9e55825bd4025b127140a072ba64061";
+const endpointSecret = process.env.STRIPE_HOOK;
 
 router.post('/webhook', express.raw({type: 'application/json'}), async (req: express.Request, res: express.Response): Promise<void> => {
     const sig = req.headers['stripe-signature'] || '';

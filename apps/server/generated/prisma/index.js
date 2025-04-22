@@ -184,7 +184,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/jg/Documentos/LegalForge/apps/server/generated/prisma",
+      "value": "/home/jg/Documentos/legalForge/apps/server/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -198,12 +198,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/jg/Documentos/LegalForge/apps/server/prisma/schema.prisma",
+    "sourceFilePath": "/home/jg/Documentos/legalForge/apps/server/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.6.0",
@@ -212,11 +211,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres:2708@localhost:5432/legalforge?schema=public"
+        "value": null
       }
     }
   },
