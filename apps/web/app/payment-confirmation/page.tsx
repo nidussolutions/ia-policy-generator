@@ -58,7 +58,7 @@ export default function PaymentConfirmationPage() {
     return (
         <main className="min-h-screen bg-[#0c0c0c] text-white flex flex-col justify-center items-center p-6">
             <div className="bg-[#1a1a1a] p-8 rounded-2xl shadow-xl max-w-lg w-full text-center">
-	    		<Suspense falback={<>Loading...</>}>
+	    		<Suspense fallback={<>Loading...</>}>
                 	{renderStatus()}
 				</Suspense>
                 <div className="mt-6">
