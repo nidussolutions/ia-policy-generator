@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from "react";
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Hourglass } from 'lucide-react';
 import Link from "next/link";
@@ -57,7 +58,9 @@ export default function PaymentConfirmationPage() {
     return (
         <main className="min-h-screen bg-[#0c0c0c] text-white flex flex-col justify-center items-center p-6">
             <div className="bg-[#1a1a1a] p-8 rounded-2xl shadow-xl max-w-lg w-full text-center">
-                {renderStatus()}
+	    		<Suspense falback={<>Loading...</>}>
+                	{renderStatus()}
+				</Suspense>
                 <div className="mt-6">
                     <Link href="/dashboard" className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
                         Go to Dashboard
