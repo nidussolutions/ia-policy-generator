@@ -33,8 +33,26 @@ router.get('/', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
         console.log('Error during fetching sites: ', error);
         res.status(500).json({error: 'Internal server error'});
     }
-})
-;
+});
+
+router.get('/:id', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
+    const {id} = req.params;
+    try {
+        const site = await prisma.site.findMany({
+            where: {id},
+        });
+
+        if (!site) {
+            return res.status(404).json({error: 'Site not found'});
+        }
+
+        res.json(site);
+    } catch
+        (error) {
+        console.log('Error during fetching sites: ', error);
+        res.status(500).json({error: 'Internal server error'});
+    }
+});
 
 router.post(
     '/',
@@ -68,6 +86,47 @@ router.post(
         }
     }
 );
+
+router.put('/:id', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
+    const {id} = req.params;
+    const userId = req.userId!;
+    const {domain, language, legislation, name} = req.body;
+
+    try {
+        const site = await prisma.site.findUnique({where: {id}});
+
+        if (!site) {
+            return res.status(404).json({error: 'Site not found'});
+        }
+
+        if (site.ownerId !== userId) {
+            return res.status(403).json({error: 'Você não tem permissão para alterar este site'});
+        }
+
+        const updatedSite = await prisma.site.update({
+            where: {id},
+            data: {
+                domain: domain ? domain : site.domain,
+                language: language ? language : site.language,
+                legislation: legislation ? legislation : site.legislation,
+                name: name ? name : site.name,
+            },
+        });
+
+        await prisma.activityLog.create({
+            data: {
+                userId: req.userId!,
+                action: `Editou o site "${site.name}"`,
+            },
+        });
+
+        res.json(updatedSite);
+    } catch (error) {
+        console.log('Error during updating site: ', error);
+        res.status(500).json({error: 'Internal server error'});
+    }
+
+});
 
 router.delete('/:id', authMiddleware, async (req: AuthRequest, res) => {
     const {id} = req.params;

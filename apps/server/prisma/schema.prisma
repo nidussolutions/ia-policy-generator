@@ -31,6 +31,7 @@ model Site {
   domain      String
   language    String
   legislation String
+  observation String   @default("")
   ownerId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

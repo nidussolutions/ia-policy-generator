@@ -110,7 +110,7 @@ export default function SitesPage() {
                 </Link>
                 <span className="mx-2 text-gray-400">|</span>
                 <Link
-                  href={`/sites/${site.id}/edit`}
+                  href={`/sites/edit/${site.id}`}
                   className="text-yellow-600 hover:underline transition duration-200 dark:text-yellow-500"
                 >
                   Editar
