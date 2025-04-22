@@ -44,23 +44,22 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
                     return
                 }
 
-                const {data} = await stripe.customers.list({
-                    limit: 1,
-                    email: user.email,
-                })
-
-                if (!data.length) {
-                    res.status(400).json({message: 'Cliente não encontrado'});
-                    return;
-                }
-
-
                 await prisma.userPlans.update({
                     where: {userId: user.id},
                     data: {
                         planId: plan.id,
                     },
                 });
+
+                const {data} = await stripe.customers.list({
+                    limit: 1,
+                    email,
+                })
+
+                if (!data.length) {
+                    res.status(400).json({message: 'Cliente não encontrado'});
+                    return;
+                }
 
                 await prisma.users.update({
                     where: {id: user.id},
