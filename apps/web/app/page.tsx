@@ -181,7 +181,7 @@ export default function HomePage() {
                             <button
                                 className="w-full bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                No momento apenas entrando em contato
+                                Adquirir agora
                             </button>
                         </Link>
                     </motion.div>
