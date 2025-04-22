@@ -7,7 +7,7 @@ import {Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff} from 'lucide-react';
 import {cpf, cnpj} from 'cpf-cnpj-validator';
 import {motion} from 'framer-motion';
 import {fetcher} from '@/lib/api';
-import {useSearchParams} from 'next/navigation';
+
 
 export default function RegisterPage() {
     const {register} = useAuth();
@@ -21,8 +21,7 @@ export default function RegisterPage() {
     const [cpfCnpjError, setCpfCnpjError] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const searchParams = useSearchParams();
-    const redirect = searchParams.get('redirect') as unknown as boolean;
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
