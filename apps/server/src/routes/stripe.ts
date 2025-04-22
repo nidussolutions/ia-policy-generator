@@ -42,8 +42,8 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
             ],
             mode: 'subscription',
             customer_email: user.email,
-            success_url: `${domain}/payment-confirmation?status=approved&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${domain}/payment-confirmation?status=cancelled`,
+            success_url: `${domain}/payment-confirmation/approved/{CHECKOUT_SESSION_ID}`,
+            cancel_url: `${domain}/payment-confirmation/cancelled/{CHECKOUT_SESSION_ID}`,
         })
 
         res.status(200).json({
