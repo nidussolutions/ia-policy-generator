@@ -14,6 +14,7 @@ const fadeInUp = {
 };
 
 export default function HomePage() {
+
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col items-center justify-center">
       <header className="w-full max-w-5xl py-6 px-4 flex items-center justify-center ">

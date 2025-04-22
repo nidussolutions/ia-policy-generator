@@ -21,6 +21,7 @@ export default function SitesPage() {
   const [deletingSiteId, setDeletingSiteId] = useState<string | null>(null);
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
+
   const { data, error, isLoading, mutate } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/sites`,
     (url) => fetcher(url, token)

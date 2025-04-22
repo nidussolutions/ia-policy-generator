@@ -92,7 +92,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/validatingExpiredToken', async (req, res) => {
+router.get('/validate', async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
