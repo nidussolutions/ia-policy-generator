@@ -67,7 +67,7 @@ export function useCheckout() {
             });
 
             if (!response.ok) {
-                setError( 'Erro ao iniciar checkout');
+                setError('Erro ao iniciar checkout');
                 console.log(response);
                 return
             }
@@ -83,6 +83,44 @@ export function useCheckout() {
         } catch (err: any) {
             setError(err.message || 'Erro desconhecido');
             console.error('Erro ao iniciar checkout:', err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const cancelSubscription = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/plans/cancel-subscription`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+            if (!response.ok) {
+                setError('Erro ao cancelar assinatura');
+                console.log(response);
+                return
+            }
+
+            const data = await response.json();
+
+            if (data?.message) {
+                alert(data.message);
+            } else {
+                setError('Erro ao cancelar assinatura');
+            }
+
+        } catch (err: any) {
+            setError(err.message || 'Erro desconhecido');
+            console.error('Erro ao cancelar assinatura:', err);
         } finally {
             setLoading(false);
         }

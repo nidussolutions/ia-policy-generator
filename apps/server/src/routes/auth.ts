@@ -100,6 +100,18 @@ router.get('/validate', async (req, res) => {
         return;
     }
 
+    if (token.length < 10) {
+        res.status(401).json({error: 'Invalid token'});
+        return;
+    }
+
+    if (!jwtSecret) {
+        res.status(500).json({error: 'JWT secret not defined'});
+        return;
+    }
+
+    console.log(token);
+
     try {
         const decoded = jwt.verify(token, jwtSecret);
 

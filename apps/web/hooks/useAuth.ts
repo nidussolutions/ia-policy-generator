@@ -36,6 +36,8 @@ export function useAuth() {
 
         const {valid} = await res.json();
 
+        console.log('Token valid:', valid);
+
         if (!valid) {
             localStorage.removeItem('token');
             setToken(null);
