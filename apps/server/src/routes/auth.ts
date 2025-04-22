@@ -28,7 +28,8 @@ router.post('/register', async (req, res) => {
                 email,
                 password: hashedPassword,
                 name,
-                identity,
+                // removendo as pontuações do CPF ou CNPJ
+                identity: identity.replace(/\D/g, ''),
             },
         });
 
