@@ -20,7 +20,7 @@ router.get('/profile', authMiddleware, async (req: AuthRequest, res) => {
         const {password, ...userData} = user!;
         const data = {
             ...userData,
-            plan: currentPlan?.plan,
+            plan: currentPlan?.plan || null,
         }
 
         res.status(200).json(data);

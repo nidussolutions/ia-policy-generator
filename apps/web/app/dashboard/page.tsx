@@ -78,7 +78,7 @@ export default function DashboardPage() {
             title="Último Login"
             value={new Date(userData!.lastLogin).toLocaleString()}
           />
-          <Card title="Plano" value={userData?.plan!.name || 'Gratuito'} />
+          <Card title="Plano" value={userData?.plan!.name || 'Free'} />
         </div>
 
         <div>

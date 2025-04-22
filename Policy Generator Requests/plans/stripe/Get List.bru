@@ -1,11 +1,11 @@
 meta {
-  name: upgrade
+  name: Get List
   type: http
-  seq: 4
+  seq: 2
 }
 
-put {
-  url: {{plans}}/upgrade/
+post {
+  url: {{plans}}/create-checkout-session
   body: json
   auth: bearer
 }
@@ -16,6 +16,6 @@ auth:bearer {
 
 body:json {
   {
-  "planId":"9d64711d-8b61-4818-aba1-a5f3f76eaa34"
+    "planId":"1296cf67-6cc5-4aa0-9b73-62a4780d3681"
   }
 }

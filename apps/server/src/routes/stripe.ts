@@ -13,8 +13,6 @@ const domain = process.env.DOMAIN || 'http://localhost:3000';
 router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest, res: Response) => {
     const userId = req.userId
 
-    console.log(domain)
-
     const user = await prisma.users.findUnique({
         where: {id: userId},
     })

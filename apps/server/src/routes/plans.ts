@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import {PrismaClient} from '../../generated/prisma';
 import {authMiddleware, AuthRequest} from "../middlewares/authMiddlewares";
+import {updatePlan} from "../service/plans";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -44,23 +45,21 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
 
 router.put('/upgrade', authMiddleware, async (req: AuthRequest, res) => {
     const {planId} = req.body;
+    const userId = req.userId;
 
     try {
-        const userPlan = await prisma.userPlans.findUnique({
-            where: {userId: req.userId},
-        });
-
-        if (!userPlan) {
-            res.status(404).json({message: 'User plan not found'});
+        if(!planId) {
+            res.status(400).json({message: 'Plan ID is required'});
             return
         }
 
-        await prisma.userPlans.update({
-            where: {userId: req.userId},
-            data: {
-                planId,
-            },
-        });
+        if(!userId) {
+            res.status(400).json({message: 'User ID is required'});
+            return
+        }
+
+        await updatePlan(userId, planId);
+
 
         res.status(200).json({message: 'Plan upgraded successfully'});
     } catch (error) {

@@ -28,18 +28,32 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
             try {
                 const email = session.customer_email;
                 if (!email) {
-                    throw new Error('Email do cliente não encontrado na sessão');
+                    new Error('Email do cliente não encontrado na sessão');
+                    return
                 }
 
                 const user = await prisma.users.findUnique({where: {email}});
                 if (!user) {
-                    throw new Error(`Usuário com email ${email} não encontrado`);
+                    new Error("Usuário com email ${email} não encontrado");
+                    return
                 }
 
                 const plan = await prisma.plans.findUnique({where: {name: "Pro"}});
                 if (!plan) {
-                    throw new Error('Plano Pro não encontrado');
+                    new Error('Plano Pro não encontrado');
+                    return
                 }
+
+                const {data} = await stripe.customers.list({
+                    limit: 1,
+                    email: user.email,
+                })
+
+                if (!data.length) {
+                    res.status(400).json({message: 'Cliente não encontrado'});
+                    return;
+                }
+
 
                 await prisma.userPlans.update({
                     where: {userId: user.id},
@@ -48,7 +62,14 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
                     },
                 });
 
-                console.log(`Usuário ${email} atualizado para o plano Pro com sucesso.`);
+                await prisma.users.update({
+                    where: {id: user.id},
+                    data: {
+                        customerId: data[0].id,
+                    }
+                })
+
+
             } catch (err: any) {
                 console.error('Erro ao processar checkout.session.completed:', err.message);
             }
