@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function PaymentConfirmationPage() {
     const searchParams = useSearchParams();
     const status = searchParams.get('status');
-    const router = useRoute();
+    const router = useRouter();
 
     const renderStatus = () => {
         switch (status) {
