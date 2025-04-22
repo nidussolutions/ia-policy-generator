@@ -1,14 +1,14 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Hourglass } from 'lucide-react';
-import { useRouter } from 'next/router';
 import Link from "next/link";
 
 export default function PaymentConfirmationPage() {
     const searchParams = useSearchParams();
     const status = searchParams.get('status');
-    const router = useRouter();
 
     const renderStatus = () => {
         switch (status) {
@@ -54,10 +54,6 @@ export default function PaymentConfirmationPage() {
                 );
         }
     };
-
-    if(router.isFallback){
-      return <div>Loading...</div>
-    }
 
     return (
         <main className="min-h-screen bg-[#0c0c0c] text-white flex flex-col justify-center items-center p-6">
