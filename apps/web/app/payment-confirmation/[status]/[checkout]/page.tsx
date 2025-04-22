@@ -3,8 +3,6 @@
 import {useParams} from 'next/navigation';
 import {CheckCircle, XCircle, Hourglass} from 'lucide-react';
 import Link from "next/link";
-import Layout from "@/components/Layout";
-import Header from "@/components/Header";
 
 export default function PaymentConfirmationPage() {
     const {status} = useParams() as { status: string };

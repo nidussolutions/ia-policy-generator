@@ -11,7 +11,6 @@ import {ArrowLeft} from "lucide-react";
 
 export default function EditSitePage() {
     const {siteId} = useParams() as { siteId: string };
-    const router = useRouter();
     const [site, setSite] = useState<SiteType | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [success, setSuccess] = useState('');

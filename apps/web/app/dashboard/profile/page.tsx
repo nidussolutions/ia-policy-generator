@@ -6,7 +6,6 @@ import {PlanType, putWithAuth} from '@/lib/api';
 import Layout from '@/components/Layout';
 import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
-import {notifyError} from "@/hooks/useToast";
 import ConfirmModal from "@/components/ConfirmModal";
 
 export default function PerfilPage() {
@@ -94,6 +93,7 @@ export default function PerfilPage() {
             setModalOpen(false);
         } catch (error) {
             setError('Erro ao cancelar plano. Tente novamente.');
+            console.log(error);
         }
     };
 

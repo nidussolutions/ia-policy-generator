@@ -81,7 +81,13 @@ router.post('/cancel-subscription', authMiddleware, async (req: AuthRequest, res
 
         const subscription = subscriptions.data[0];
 
-        await stripe.subscriptions.cancel(subscription.id);
+        await stripe.subscriptions.cancel(
+            subscription.id,
+            {
+                prorate: true,
+
+            }
+        );
 
         res.status(200).json({message: 'Assinatura cancelada com sucesso'});
     } catch (error) {
@@ -94,7 +100,7 @@ router.post('/create-portal-session', async (req, res) => {
     const {session_id} = req.body;
     const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
 
-    const returnUrl = domain || 'http://localhost:3000';
+    const returnUrl = domain || process.env.DOMAIN;
 
     const portalSession = await stripe.billingPortal.sessions.create({
         customer: checkoutSession.customer as string,

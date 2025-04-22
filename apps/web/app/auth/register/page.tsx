@@ -7,8 +7,6 @@ import {Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff} from 'lucide-react';
 import {cpf, cnpj} from 'cpf-cnpj-validator';
 import {motion} from 'framer-motion';
 import {fetcher} from '@/lib/api';
-import {tree} from "next/dist/build/templates/app-page";
-
 
 export default function RegisterPage() {
     const {register} = useAuth();

@@ -4,12 +4,18 @@ meta {
   seq: 6
 }
 
-delete {
-  url: {{sites}}/2c7234ed-f162-44b0-93f4-6479e11f55d3
-  body: none
+put {
+  url: {{sites}}/0e8a4ce4-c468-4883-9f5c-4f22624a6083
+  body: json
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YmJjNDNlNi0wYjdjLTQyZjUtYjQ0Zi0zYzg4MjhiYjc2OGMiLCJpYXQiOjE3NDQ4MjE0MjcsImV4cCI6MTc0NDkwNzgyN30.iDt3EgGbeC43COJraaGSBkhCRqw1OapYhNifjLnC2jc
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYmY2OGY2NC0wY2QzLTQwNTItOTE3OC1jZmVmOWYzZmUwYzQiLCJpYXQiOjE3NDUzNDkyNjEsImV4cCI6MTc0NTQzNTY2MX0.l2csihUenoXgOGy5ebohSszmLQwcsIjtpHXo6v-4yYk
+}
+
+body:json {
+  {
+    "name":"Nidus"
+  }
 }

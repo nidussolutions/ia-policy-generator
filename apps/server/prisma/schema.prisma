@@ -72,15 +72,17 @@ model Plans {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  userPlans UserPlans[]
+  UserPlans UserPlans[]
 }
 
 model UserPlans {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  planId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id                   String    @id @default(uuid())
+  userId               String    @unique
+  planId               String
+  downgradeToPlanId    String?
+  downgradeScheduledAt DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now())
 
   user Users @relation(fields: [userId], references: [id])
   plan Plans @relation(fields: [planId], references: [id])

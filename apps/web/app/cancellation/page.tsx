@@ -3,8 +3,6 @@
 import {useState} from 'react';
 import {XCircle} from 'lucide-react';
 import Link from 'next/link';
-import Layout from "@/components/Layout";
-import Header from "@/components/Header";
 
 export default function CancellationPage() {
     const [feedback, setFeedback] = useState('');
