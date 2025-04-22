@@ -6,7 +6,7 @@ const router = Router();
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
-const endpointSecret = process.env.STRIPE_HOOK || ''; 
+const endpointSecret = process.env.STRIPE_HOOK as string;
 
 router.post('/webhook', express.raw({type: 'application/json'}), async (req: express.Request, res: express.Response): Promise<void> => {
     const sig = req.headers['stripe-signature'] || '';
@@ -28,19 +28,19 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
             try {
                 const email = session.customer_email;
                 if (!email) {
-                    new Error('Email do cliente não encontrado na sessão');
+                    console.error('Email do cliente não encontrado na sessão');
                     return
                 }
 
                 const user = await prisma.users.findUnique({where: {email}});
                 if (!user) {
-                    new Error("Usuário com email ${email} não encontrado");
+                    console.error("Usuário com email ${email} não encontrado");
                     return
                 }
 
                 const plan = await prisma.plans.findUnique({where: {name: "Pro"}});
                 if (!plan) {
-                    new Error('Plano Pro não encontrado');
+                    console.error('Plano Pro não encontrado');
                     return
                 }
 
@@ -65,7 +65,7 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
                 await prisma.users.update({
                     where: {id: user.id},
                     data: {
-                        customerId: data[0].id,
+                        stripeCustomerId: data[0].id,
                     }
                 })
 

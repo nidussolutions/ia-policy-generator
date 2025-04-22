@@ -1455,7 +1455,7 @@ export namespace Prisma {
 
   export type UsersMinAggregateOutputType = {
     id: string | null
-    customerId: string | null
+    stripeCustomerId: string | null
     identity: string | null
     email: string | null
     name: string | null
@@ -1467,7 +1467,7 @@ export namespace Prisma {
 
   export type UsersMaxAggregateOutputType = {
     id: string | null
-    customerId: string | null
+    stripeCustomerId: string | null
     identity: string | null
     email: string | null
     name: string | null
@@ -1479,7 +1479,7 @@ export namespace Prisma {
 
   export type UsersCountAggregateOutputType = {
     id: number
-    customerId: number
+    stripeCustomerId: number
     identity: number
     email: number
     name: number
@@ -1493,7 +1493,7 @@ export namespace Prisma {
 
   export type UsersMinAggregateInputType = {
     id?: true
-    customerId?: true
+    stripeCustomerId?: true
     identity?: true
     email?: true
     name?: true
@@ -1505,7 +1505,7 @@ export namespace Prisma {
 
   export type UsersMaxAggregateInputType = {
     id?: true
-    customerId?: true
+    stripeCustomerId?: true
     identity?: true
     email?: true
     name?: true
@@ -1517,7 +1517,7 @@ export namespace Prisma {
 
   export type UsersCountAggregateInputType = {
     id?: true
-    customerId?: true
+    stripeCustomerId?: true
     identity?: true
     email?: true
     name?: true
@@ -1602,7 +1602,7 @@ export namespace Prisma {
 
   export type UsersGroupByOutputType = {
     id: string
-    customerId: string | null
+    stripeCustomerId: string | null
     identity: string
     email: string
     name: string
@@ -1631,7 +1631,7 @@ export namespace Prisma {
 
   export type UsersSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    customerId?: boolean
+    stripeCustomerId?: boolean
     identity?: boolean
     email?: boolean
     name?: boolean
@@ -1648,7 +1648,7 @@ export namespace Prisma {
 
   export type UsersSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    customerId?: boolean
+    stripeCustomerId?: boolean
     identity?: boolean
     email?: boolean
     name?: boolean
@@ -1660,7 +1660,7 @@ export namespace Prisma {
 
   export type UsersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    customerId?: boolean
+    stripeCustomerId?: boolean
     identity?: boolean
     email?: boolean
     name?: boolean
@@ -1672,7 +1672,7 @@ export namespace Prisma {
 
   export type UsersSelectScalar = {
     id?: boolean
-    customerId?: boolean
+    stripeCustomerId?: boolean
     identity?: boolean
     email?: boolean
     name?: boolean
@@ -1682,7 +1682,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "identity" | "email" | "name" | "password" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
+  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "stripeCustomerId" | "identity" | "email" | "name" | "password" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
   export type UsersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sites?: boolean | Users$sitesArgs<ExtArgs>
     logs?: boolean | Users$logsArgs<ExtArgs>
@@ -1703,7 +1703,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      customerId: string | null
+      stripeCustomerId: string | null
       identity: string
       email: string
       name: string
@@ -2139,7 +2139,7 @@ export namespace Prisma {
    */
   interface UsersFieldRefs {
     readonly id: FieldRef<"Users", 'String'>
-    readonly customerId: FieldRef<"Users", 'String'>
+    readonly stripeCustomerId: FieldRef<"Users", 'String'>
     readonly identity: FieldRef<"Users", 'String'>
     readonly email: FieldRef<"Users", 'String'>
     readonly name: FieldRef<"Users", 'String'>
@@ -8123,7 +8123,7 @@ export namespace Prisma {
 
   export const UsersScalarFieldEnum: {
     id: 'id',
-    customerId: 'customerId',
+    stripeCustomerId: 'stripeCustomerId',
     identity: 'identity',
     email: 'email',
     name: 'name',
@@ -8277,7 +8277,7 @@ export namespace Prisma {
     OR?: UsersWhereInput[]
     NOT?: UsersWhereInput | UsersWhereInput[]
     id?: StringFilter<"Users"> | string
-    customerId?: StringNullableFilter<"Users"> | string | null
+    stripeCustomerId?: StringNullableFilter<"Users"> | string | null
     identity?: StringFilter<"Users"> | string
     email?: StringFilter<"Users"> | string
     name?: StringFilter<"Users"> | string
@@ -8293,7 +8293,7 @@ export namespace Prisma {
 
   export type UsersOrderByWithRelationInput = {
     id?: SortOrder
-    customerId?: SortOrderInput | SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
     identity?: SortOrder
     email?: SortOrder
     name?: SortOrder
@@ -8309,7 +8309,7 @@ export namespace Prisma {
 
   export type UsersWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    customerId?: string
+    stripeCustomerId?: string
     identity?: string
     email?: string
     AND?: UsersWhereInput | UsersWhereInput[]
@@ -8324,11 +8324,11 @@ export namespace Prisma {
     logs?: ActivityLogListRelationFilter
     documents?: DocumentListRelationFilter
     userPlans?: UserPlansListRelationFilter
-  }, "id" | "customerId" | "identity" | "email">
+  }, "id" | "stripeCustomerId" | "identity" | "email">
 
   export type UsersOrderByWithAggregationInput = {
     id?: SortOrder
-    customerId?: SortOrderInput | SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
     identity?: SortOrder
     email?: SortOrder
     name?: SortOrder
@@ -8346,7 +8346,7 @@ export namespace Prisma {
     OR?: UsersScalarWhereWithAggregatesInput[]
     NOT?: UsersScalarWhereWithAggregatesInput | UsersScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Users"> | string
-    customerId?: StringNullableWithAggregatesFilter<"Users"> | string | null
+    stripeCustomerId?: StringNullableWithAggregatesFilter<"Users"> | string | null
     identity?: StringWithAggregatesFilter<"Users"> | string
     email?: StringWithAggregatesFilter<"Users"> | string
     name?: StringWithAggregatesFilter<"Users"> | string
@@ -8677,7 +8677,7 @@ export namespace Prisma {
 
   export type UsersCreateInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -8693,7 +8693,7 @@ export namespace Prisma {
 
   export type UsersUncheckedCreateInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -8709,7 +8709,7 @@ export namespace Prisma {
 
   export type UsersUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -8725,7 +8725,7 @@ export namespace Prisma {
 
   export type UsersUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -8741,7 +8741,7 @@ export namespace Prisma {
 
   export type UsersCreateManyInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -8753,7 +8753,7 @@ export namespace Prisma {
 
   export type UsersUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -8765,7 +8765,7 @@ export namespace Prisma {
 
   export type UsersUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -9205,7 +9205,7 @@ export namespace Prisma {
 
   export type UsersCountOrderByAggregateInput = {
     id?: SortOrder
-    customerId?: SortOrder
+    stripeCustomerId?: SortOrder
     identity?: SortOrder
     email?: SortOrder
     name?: SortOrder
@@ -9217,7 +9217,7 @@ export namespace Prisma {
 
   export type UsersMaxOrderByAggregateInput = {
     id?: SortOrder
-    customerId?: SortOrder
+    stripeCustomerId?: SortOrder
     identity?: SortOrder
     email?: SortOrder
     name?: SortOrder
@@ -9229,7 +9229,7 @@ export namespace Prisma {
 
   export type UsersMinOrderByAggregateInput = {
     id?: SortOrder
-    customerId?: SortOrder
+    stripeCustomerId?: SortOrder
     identity?: SortOrder
     email?: SortOrder
     name?: SortOrder
@@ -10178,7 +10178,7 @@ export namespace Prisma {
 
   export type UsersCreateWithoutSitesInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10193,7 +10193,7 @@ export namespace Prisma {
 
   export type UsersUncheckedCreateWithoutSitesInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10256,7 +10256,7 @@ export namespace Prisma {
 
   export type UsersUpdateWithoutSitesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -10271,7 +10271,7 @@ export namespace Prisma {
 
   export type UsersUncheckedUpdateWithoutSitesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -10329,7 +10329,7 @@ export namespace Prisma {
 
   export type UsersCreateWithoutDocumentsInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10344,7 +10344,7 @@ export namespace Prisma {
 
   export type UsersUncheckedCreateWithoutDocumentsInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10408,7 +10408,7 @@ export namespace Prisma {
 
   export type UsersUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -10423,7 +10423,7 @@ export namespace Prisma {
 
   export type UsersUncheckedUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -10438,7 +10438,7 @@ export namespace Prisma {
 
   export type UsersCreateWithoutLogsInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10453,7 +10453,7 @@ export namespace Prisma {
 
   export type UsersUncheckedCreateWithoutLogsInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10484,7 +10484,7 @@ export namespace Prisma {
 
   export type UsersUpdateWithoutLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -10499,7 +10499,7 @@ export namespace Prisma {
 
   export type UsersUncheckedUpdateWithoutLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -10554,7 +10554,7 @@ export namespace Prisma {
 
   export type UsersCreateWithoutUserPlansInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10569,7 +10569,7 @@ export namespace Prisma {
 
   export type UsersUncheckedCreateWithoutUserPlansInput = {
     id?: string
-    customerId?: string | null
+    stripeCustomerId?: string | null
     identity: string
     email: string
     name: string
@@ -10623,7 +10623,7 @@ export namespace Prisma {
 
   export type UsersUpdateWithoutUserPlansInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -10638,7 +10638,7 @@ export namespace Prisma {
 
   export type UsersUncheckedUpdateWithoutUserPlansInput = {
     id?: StringFieldUpdateOperationsInput | string
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     identity?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string

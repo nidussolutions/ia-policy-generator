@@ -1,10 +1,10 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
-import { useSearchParams } from 'next/navigation';
-import { CheckCircle, XCircle, Hourglass } from 'lucide-react';
+import {Suspense} from "react";
+import {useSearchParams} from 'next/navigation';
+import {CheckCircle, XCircle, Hourglass} from 'lucide-react';
 import Link from "next/link";
+import Layout from "@/components/Layout";
 
 export default function PaymentConfirmationPage() {
     const searchParams = useSearchParams();
@@ -15,7 +15,7 @@ export default function PaymentConfirmationPage() {
             case 'approved':
                 return (
                     <div className="text-center text-green-500">
-                        <CheckCircle size={64} className="mx-auto mb-4" />
+                        <CheckCircle size={64} className="mx-auto mb-4"/>
                         <h2 className="text-2xl font-semibold mb-2">Payment Confirmed!</h2>
                         <p>Your subscription has been activated successfully.</p>
                     </div>
@@ -23,7 +23,7 @@ export default function PaymentConfirmationPage() {
             case 'pending':
                 return (
                     <div className="text-center text-yellow-500">
-                        <Hourglass size={64} className="mx-auto mb-4 animate-pulse" />
+                        <Hourglass size={64} className="mx-auto mb-4 animate-pulse"/>
                         <h2 className="text-2xl font-semibold mb-2">Payment Pending</h2>
                         <p>We’re waiting for the payment confirmation. Please check again later.</p>
                     </div>
@@ -32,7 +32,7 @@ export default function PaymentConfirmationPage() {
             case 'failure':
                 return (
                     <div className="text-center text-red-500">
-                        <XCircle size={64} className="mx-auto mb-4" />
+                        <XCircle size={64} className="mx-auto mb-4"/>
                         <h2 className="text-2xl font-semibold mb-2">Payment Failed</h2>
                         <p>Something went wrong. Please try again or contact support.</p>
                     </div>
@@ -40,7 +40,7 @@ export default function PaymentConfirmationPage() {
             case 'cancelled':
                 return (
                     <div className="text-center text-red-500">
-                        <XCircle size={64} className="mx-auto mb-4" />
+                        <XCircle size={64} className="mx-auto mb-4"/>
                         <h2 className="text-2xl font-semibold mb-2">Payment Cancelled</h2>
                         <p>Your payment was cancelled. Please try again.</p>
                     </div>
@@ -56,15 +56,20 @@ export default function PaymentConfirmationPage() {
     };
 
     return (
-        <main className="min-h-screen bg-[#0c0c0c] text-white flex flex-col justify-center items-center p-6">
-            <div className="bg-[#1a1a1a] p-8 rounded-2xl shadow-xl max-w-lg w-full text-center">
-                {renderStatus()}
-                <div className="mt-6">
-                    <Link href="/dashboard" className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
-                        Go to Dashboard
-                    </Link>
-                </div>
-            </div>
-        </main>
+        <Suspense fallback={<div>Loading...</div>}>
+            <Layout>
+                <main className="text-white flex flex-col justify-center items-center p-6">
+                    <div className="p-8 rounded-2xl shadow-xl max-w-lg w-full text-center bg-gray-800 dark:bg-gray-900">
+                        {renderStatus()}
+                        <div className="mt-6">
+                            <Link href="/dashboard"
+                                  className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                Go to Dashboard
+                            </Link>
+                        </div>
+                    </div>
+                </main>
+            </Layout>
+        </Suspense>
     );
 }

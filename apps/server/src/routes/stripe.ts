@@ -56,6 +56,40 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
     }
 });
 
+router.post('/cancel-subscription', authMiddleware, async (req: AuthRequest, res: Response) => {
+    const userId = req.userId
+
+    const user = await prisma.users.findUnique({
+        where: {id: userId},
+    })
+
+    if (!user) {
+        res.status(400).json({message: 'Usuário não encontrado'});
+        return;
+    }
+
+    try {
+        const subscriptions = await stripe.subscriptions.list({
+            customer: user.stripeCustomerId!,
+            status: 'active',
+        });
+
+        if (subscriptions.data.length === 0) {
+            res.status(400).json({message: 'Assinatura não encontrada'});
+            return;
+        }
+
+        const subscription = subscriptions.data[0];
+
+        await stripe.subscriptions.cancel(subscription.id);
+
+        res.status(200).json({message: 'Assinatura cancelada com sucesso'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: 'Erro ao cancelar assinatura'});
+    }
+})
+
 router.post('/create-portal-session', async (req, res) => {
     const {session_id} = req.body;
     const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
