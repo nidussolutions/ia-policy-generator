@@ -38,5 +38,3 @@ yarn-error.log*
 *.pem
 
 /apps/server/generated/
-/.idea
-.idea/dataSources.xml
