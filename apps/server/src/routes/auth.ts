@@ -110,8 +110,6 @@ router.get('/validate', async (req, res) => {
         return;
     }
 
-    console.log(token);
-
     try {
         const decoded = jwt.verify(token, jwtSecret);
 

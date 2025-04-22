@@ -7,45 +7,40 @@ export function useAuth() {
     const router = useRouter();
     const [token, setToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('token') || null;
-        setToken(storedToken);
+        const storedToken = localStorage.getItem('token');
 
-        if (storedToken) {
-            verification().catch((err) => {
+        if (!storedToken) {
+            setLoading(false);
+            return;
+        }
+
+        // Validação do token com backend
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/validate`, {
+            headers: {
+                Authorization: `Bearer ${storedToken}`,
+            },
+        })
+            .then(async (res) => {
+                if (res.ok) {
+                    setIsAuthenticated(true);
+                    setToken(storedToken);
+                } else {
+                    localStorage.removeItem('token');
+                    setIsAuthenticated(false);
+                    setToken(null);
+                }
+            })
+            .catch((err) => {
                 console.error('Erro ao validar token:', err);
+                localStorage.removeItem('token');
                 setIsAuthenticated(false);
-            });
-        } else {
-            setIsAuthenticated(true);
-        }
-
+                setToken(null);
+            })
+            .finally(() => setLoading(false));
     }, []);
-
-    const verification = async () => {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/validate`,
-            {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        const {valid} = await res.json();
-
-        console.log('Token valid:', valid);
-
-        if (!valid) {
-            localStorage.removeItem('token');
-            setToken(null);
-            setIsAuthenticated(false);
-        }
-
-        setIsAuthenticated(true);
-    }
 
     const login = async (email: string, password: string) => {
         if (!email || !password) {
@@ -124,5 +119,5 @@ export function useAuth() {
         router.push('/auth/login');
     };
 
-    return {token, login, logout, register, isAuthenticated};
+    return {token, login, logout, register, isAuthenticated, loading};
 }
