@@ -11,38 +11,39 @@ export function useAuth() {
     useEffect(() => {
         const storedToken = localStorage.getItem('token') || null;
         setToken(storedToken);
-        const verification = async () => {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/auth/validate`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${storedToken}`,
-                    },
-                }
-            );
-
-            if (!res.ok) {
-                localStorage.removeItem('token');
-                setToken(null);
-                router.push('/auth/login');
-            }
-
-            setIsAuthenticated(true);
-        }
 
         if (storedToken) {
             verification().catch((err) => {
                 console.error('Erro ao validar token:', err);
                 localStorage.removeItem('token');
                 setToken(null);
-                router.push('/auth/login');
+                setIsAuthenticated(true);
             });
         } else {
-            router.push('/auth/login');
+            setIsAuthenticated(false);
         }
 
     }, []);
+
+    const verification = async () => {
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/validate`,
+            {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (!res.ok) {
+            localStorage.removeItem('token');
+            setToken(null);
+            setIsAuthenticated(false);
+        }
+
+        setIsAuthenticated(true);
+    }
 
     const login = async (email: string, password: string) => {
         if (!email || !password) {
