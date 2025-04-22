@@ -68,18 +68,20 @@ export default function PaymentConfirmationPage() {
     };
 
     return (
-        <Layout>
-            <main className="text-white flex flex-col justify-center items-center p-6">
-                <div className="p-8 rounded-2xl shadow-xl max-w-lg w-full text-center bg-gray-800 dark:bg-gray-900">
-                    {renderStatus()}
-                    <div className="mt-6">
-                        <Link href="/dashboard"
-                              className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
-                            Go to Dashboard
-                        </Link>
+        <Suspense>
+            <Layout>
+                <main className="text-white flex flex-col justify-center items-center p-6">
+                    <div className="p-8 rounded-2xl shadow-xl max-w-lg w-full text-center bg-gray-800 dark:bg-gray-900">
+                        {renderStatus()}
+                        <div className="mt-6">
+                            <Link href="/dashboard"
+                                  className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                Go to Dashboard
+                            </Link>
+                        </div>
                     </div>
-                </div>
-            </main>
-        </Layout>
+                </main>
+            </Layout>
+        </Suspense>
     );
 }
