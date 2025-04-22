@@ -15,12 +15,10 @@ export function useAuth() {
         if (storedToken) {
             verification().catch((err) => {
                 console.error('Erro ao validar token:', err);
-                localStorage.removeItem('token');
-                setToken(null);
-                setIsAuthenticated(true);
+                setIsAuthenticated(false);
             });
         } else {
-            setIsAuthenticated(false);
+            setIsAuthenticated(true);
         }
 
     }, []);
@@ -36,7 +34,9 @@ export function useAuth() {
             }
         );
 
-        if (!res.ok) {
+        const {valid} = await res.json();
+
+        if (!valid) {
             localStorage.removeItem('token');
             setToken(null);
             setIsAuthenticated(false);
