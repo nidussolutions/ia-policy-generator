@@ -1,15 +1,13 @@
 'use client';
 
-export const dynamic = 'force-static'
-
-import {useSearchParams} from 'next/navigation';
+import {useParams} from 'next/navigation';
 import {CheckCircle, XCircle, Hourglass} from 'lucide-react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 
 export default function PaymentConfirmationPage() {
-    const searchParams = useSearchParams();
-    const status = searchParams.get('status');
+    const { status } = useParams() as { status: string };
+
 
     const renderStatus = () => {
         switch (status) {
