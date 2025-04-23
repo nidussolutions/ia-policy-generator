@@ -26,17 +26,17 @@ export function useAuth() {
                     });
 
                     const data = await res.json();
-                    if (!res.ok || !data.token) throw new Error('Refresh token inválido');
+                    if (!res.ok || !data.token) return ('Refresh token inválido') as string;
 
                     localStorage.setItem('token', data.token);
                     setToken(data.token);
                     setIsAuthenticated(true);
                 } else {
                     const res = await fetch(`${API_URL}/auth/validate-token`, {
-                        headers: { Authorization: `Bearer ${storedToken}` },
+                        headers: {Authorization: `Bearer ${storedToken}`},
                     });
 
-                    if (!res.ok) throw new Error('Token expirado');
+                    if (!res.ok) return ('Token expirado') as string
 
                     setToken(storedToken);
                     setIsAuthenticated(true);
@@ -45,17 +45,18 @@ export function useAuth() {
                 localStorage.removeItem('token');
                 setToken(null);
                 setIsAuthenticated(false);
+                console.error(error);
             } finally {
                 setLoading(false);
             }
         };
 
-        validateOrRefreshToken();
+        validateOrRefreshToken().finally()
     }, [API_URL, router]);
 
 
     const login = useCallback(async (email: string, password: string) => {
-        if (!email || !password) throw new Error('Email e senha são obrigatórios');
+        if (!email || !password) return ('Email e senha são obrigatórios');
 
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
@@ -65,7 +66,9 @@ export function useAuth() {
             });
 
             const data = await res.json();
-            if (!res.ok) return(data?.error || 'Erro ao logar') as string;
+            if (!res.ok) {
+                return (data?.error || 'Erro ao logar') as string;
+            }
 
             localStorage.setItem('token', data.token);
             localStorage.setItem('refreshToken', data.refreshToken);
@@ -73,6 +76,7 @@ export function useAuth() {
             setIsAuthenticated(true);
             router.push('/dashboard');
         } catch (error) {
+            console.error('Erro no login:', error);
             throw error;
         }
     }, [API_URL, router]);
@@ -86,7 +90,7 @@ export function useAuth() {
             redirect?: boolean
         ) => {
             if (!name || !email || !password)
-                throw new Error('Nome, email e senha são obrigatórios');
+                return ('Nome, email e senha são obrigatórios');
 
             try {
                 const res = await fetch(`${API_URL}/auth/register`, {
@@ -96,7 +100,7 @@ export function useAuth() {
                 });
 
                 const data = await res.json();
-                if (!res.ok) throw new Error(data?.error || 'Erro ao registrar');
+                if (!res.ok) return (data?.error || 'Erro ao registrar') as string;
 
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('refreshToken', data.refreshToken);
