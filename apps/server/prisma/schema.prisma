@@ -23,6 +23,7 @@ model Users {
   logs         ActivityLog[]
   documents    Document[]
   userPlans    UserPlans[]
+  invoices     Invoice[]
   subscription Subscription?
 }
 
@@ -87,6 +88,19 @@ model UserPlans {
 
   user Users @relation(fields: [userId], references: [id])
   plan Plans @relation(fields: [planId], references: [id])
+}
+
+model Invoice {
+  id              String    @id @default(uuid())
+  stripeInvoiceId String    @unique
+  userId          String    @unique
+  amountDue       Int
+  amountPaid      Int
+  status          String
+  dueDate         DateTime?
+  createdAt       DateTime  @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
 }
 
 model Subscription {

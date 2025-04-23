@@ -137,6 +137,37 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req, res
 
             break;
 
+        case 'invoice.finalized':
+            const finalizedInvoice = event.data.object as Stripe.Invoice;
+
+            try {
+                const customerId = finalizedInvoice.customer as string;
+                const user = await prisma.users.findUnique({where: {stripeCustomerId: customerId}});
+
+                if (!user) {
+                    console.error(`Usuário com stripeCustomerId ${customerId} não encontrado`);
+                    break;
+                }
+
+                await prisma.invoice.create({
+                    data: {
+                        stripeInvoiceId: finalizedInvoice.id!,
+                        userId: user.id,
+                        amountDue: finalizedInvoice.amount_due,
+                        amountPaid: finalizedInvoice.amount_paid,
+                        status: finalizedInvoice.status!,
+                        dueDate: finalizedInvoice.due_date ? new Date(finalizedInvoice.due_date * 1000) : null,
+                        createdAt: new Date(finalizedInvoice.created * 1000),
+                    }
+                });
+
+                console.log(`Fatura ${finalizedInvoice.id} salva com sucesso.`);
+            } catch (err: any) {
+                console.error('Erro ao salvar fatura:', err.message);
+            }
+            break;
+
+
         case 'customer.subscription.updated':
             const updatedSub = event.data.object as Stripe.Subscription;
 

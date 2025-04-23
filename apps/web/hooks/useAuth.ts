@@ -17,7 +17,14 @@ export function useAuth() {
 
         const validateOrRefreshToken = async () => {
             try {
-                if (!storedToken) {
+                const res = await fetch(`${API_URL}/auth/validate-token`, {
+                    headers: {Authorization: `Bearer ${storedToken}`},
+                });
+
+                const data = await res.json();
+                if (!res.ok || !data.valid) return ('Token inválido') as string;
+
+                if (data.error === 'Token expired') {
                     const res = await fetch(`${API_URL}/auth/refresh-token`, {
                         credentials: 'include',
                         method: 'POST',
@@ -31,16 +38,10 @@ export function useAuth() {
                     localStorage.setItem('token', data.token);
                     setToken(data.token);
                     setIsAuthenticated(true);
-                } else {
-                    const res = await fetch(`${API_URL}/auth/validate-token`, {
-                        headers: {Authorization: `Bearer ${storedToken}`},
-                    });
-
-                    if (!res.ok) return ('Token expirado') as string
-
-                    setToken(storedToken);
-                    setIsAuthenticated(true);
                 }
+
+                setToken(storedToken);
+                setIsAuthenticated(true);
             } catch (error) {
                 localStorage.removeItem('token');
                 setToken(null);
