@@ -5,30 +5,32 @@ import jwt from 'jsonwebtoken';
 
 const router = Router();
 const prisma = new PrismaClient();
-const jwtSecret = process.env.JWT_SECRET || 'secret';
 
-router.post('/register', async (req, res) => {
+const jwtSecret = process.env.JWT_SECRET || 'secret';
+const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || 'refreshSecret';
+
+const generateAccessToken = (userId: string) =>
+    jwt.sign({userId}, jwtSecret, {expiresIn: '15min'});
+
+const generateRefreshToken = (userId: string) =>
+    jwt.sign({userId}, jwtRefreshSecret, {expiresIn: '7d'});
+
+router.post('/register', async (req, res): Promise<any> => {
     const {email, password, name, identity} = req.body;
 
     try {
         const userExist = await prisma.users.findUnique({where: {email}});
-        if (userExist) {
-            res.status(400).json({message: 'User already exists'});
-            return;
-        }
+        if (userExist) return res.status(400).json({message: 'User already exists'});
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const plan = await prisma.plans.findFirst({
-            where: {name: 'Free'},
-        });
+        const plan = await prisma.plans.findFirst({where: {name: 'Free'}});
 
         const user = await prisma.users.create({
             data: {
                 email,
                 password: hashedPassword,
                 name,
-                // removendo as pontuações do CPF ou CNPJ
                 identity: identity.replace(/\D/g, ''),
             },
         });
@@ -40,9 +42,8 @@ router.post('/register', async (req, res) => {
             },
         });
 
-        const token = jwt.sign({userId: user.id}, jwtSecret, {
-            expiresIn: '24h',
-        });
+        const accessToken = generateAccessToken(user.id);
+        const refreshToken = generateRefreshToken(user.id);
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -54,80 +55,77 @@ router.post('/register', async (req, res) => {
                     id: plan!.id,
                     name: plan!.name,
                     price: plan!.price,
-                }
+                },
             },
-            token,
+            token: accessToken,
+            refreshToken,
         });
-        return;
     } catch (error) {
         console.error('Error during registration:', error);
         res.status(500).json({message: 'Internal server error'});
     }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res): Promise<any> => {
     const {email, password} = req.body;
 
     try {
         const user = await prisma.users.findUnique({where: {email}});
-        if (!user) {
-            res.status(400).json({error: 'User not found'});
-            return;
-        }
+        if (!user) return res.status(400).json({error: 'User not found'});
 
-        const isValidPassword = await bcrypt.compare(password, user!.password);
-        if (!isValidPassword) {
-            res.status(400).json({error: 'Invalid password'});
-            return;
-        }
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) return res.status(400).json({error: 'Invalid password'});
 
-        const token = jwt.sign({userId: user!.id}, jwtSecret, {
-            expiresIn: '24h',
-        });
+        const accessToken = generateAccessToken(user.id);
+        const refreshToken = generateRefreshToken(user.id);
 
         await prisma.users.update({
-            where: {id: user!.id},
+            where: {id: user.id},
             data: {lastLogin: new Date()},
         });
 
-        res.status(200).json({token});
-        return;
+        res.status(200).json({token: accessToken, refreshToken});
     } catch (error) {
-        console.log('Erro during login: ', error);
+        console.log('Error during login:', error);
         res.status(500).json({error: 'Internal server error'});
     }
 });
 
-router.get('/validate', async (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
+router.get('/validate-token', async (req, res): Promise<any> => {
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-        res.status(401).json({error: 'Token not provided'});
-        return;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({valid: false, error: 'Token not provided'});
     }
 
-    if (token.length < 10) {
-        res.status(401).json({error: 'Invalid token'});
-        return;
-    }
-
-    if (!jwtSecret) {
-        res.status(500).json({error: 'JWT secret not defined'});
-        return;
-    }
+    const token = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, jwtSecret);
+        const decoded = jwt.verify(token, jwtSecret) as { userId: string, iat: number, exp: number };
 
-        if (!decoded) {
-            res.status(401).json({error: 'Invalid token'});
-            return;
+        return res.status(200).json({valid: true, userId: decoded.userId});
+    } catch (error: any) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({valid: false, error: 'Token expired'});
         }
 
-        res.status(200).json({valid: true});
+        return res.status(401).json({valid: false, error: 'Invalid token'});
+    }
+});
+
+router.post('/refresh-token', async (req, res): Promise<any> => {
+    const {refreshToken} = req.body;
+
+    if (!refreshToken) return res.status(401).json({error: 'Refresh token not provided'});
+
+    try {
+        const decoded = jwt.verify(refreshToken, jwtRefreshSecret) as { userId: string };
+
+        const newAccessToken = generateAccessToken(decoded.userId);
+        res.status(200).json({token: newAccessToken});
     } catch (error) {
-        console.log('Error during token validation: ', error);
-        res.status(401).json({valid: false});
+        console.error('Error verifying refresh token:', error);
+        res.status(403).json({error: 'Invalid or expired refresh token'});
     }
 });
 
