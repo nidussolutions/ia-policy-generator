@@ -23,21 +23,19 @@ export default function Subscription({plan, subscription, handleSubscription}: S
                         <strong>Tipo:</strong> {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
                     </p>
                 </div>
-                {subscription &&
-                    <button
-                        onClick={() => handleSubscription(plan.name)}
-                        className={`px-4 py-2 cursor-pointer rounded text-white font-medium transition ${
-                            plan.name === "Free" ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800'
-                                : subscription.cancelAtPeriodEnd ? 'bg-yellow-600 hover:accent-yellow-600 dark:accent-yellow-600 dark:hover:accent-yellow-800'
-                                    : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
-                        }`}
-                    >
-                        {plan.name === "Free" ? 'Assinar'
-                            : subscription.cancelAtPeriodEnd ? 'Reativar Assinatura'
-                                : 'Cancelar Assinatura'
-                        }
-                    </button>
-                }
+                <button
+                    onClick={() => handleSubscription(plan.name)}
+                    className={`px-4 py-2 cursor-pointer rounded text-white font-medium transition ${
+                        plan.name === "Free" ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800'
+                            : subscription?.cancelAtPeriodEnd ? 'bg-yellow-600 hover:accent-yellow-600 dark:accent-yellow-600 dark:hover:accent-yellow-800'
+                                : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
+                    }`}
+                >
+                    {plan.name === "Free" ? 'Assinar'
+                        : subscription?.cancelAtPeriodEnd ? 'Reativar Assinatura'
+                            : 'Cancelar Assinatura'
+                    }
+                </button>
             </div>
 
             {subscription && (

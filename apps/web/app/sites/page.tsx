@@ -65,7 +65,7 @@ export default function SitesPage() {
         <Layout>
             <ConfirmModal
                 isOpen={modalOpen}
-                message="Você tem certeza que deseja deletar este site?"
+                type="deleteSite"
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
             />

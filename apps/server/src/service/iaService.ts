@@ -12,7 +12,7 @@ type GenerateInput = {
   language: string;
   legislation: string;
   observations?: string;
-  crawl: string;
+  crawl?: string;
 };
 
 export async function generateAiDocument(
