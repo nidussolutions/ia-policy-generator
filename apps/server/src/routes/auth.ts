@@ -12,7 +12,7 @@ const jwtSecret = process.env.JWT_SECRET || 'secret';
 const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || 'refreshSecret';
 
 const generateAccessToken = (userId: string) =>
-    jwt.sign({userId}, jwtSecret, {expiresIn: '15min'});
+    jwt.sign({userId}, jwtSecret, {expiresIn: '60d'});
 
 const generateRefreshToken = (userId: string) =>
     jwt.sign({userId}, jwtRefreshSecret, {expiresIn: '7d'});

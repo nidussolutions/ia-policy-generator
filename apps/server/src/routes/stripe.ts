@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import  {Router, Response} from 'express';
+import {Router, Response} from 'express';
 import {authMiddleware, AuthRequest} from "../middlewares/authMiddlewares";
 import {PrismaClient} from '../../generated/prisma';
 
@@ -10,50 +10,53 @@ const stripe = new Stripe(process.env.STRIPE_SECRET!);
 const domain = process.env.DOMAIN || 'http://localhost:3000';
 
 router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest, res: Response) => {
-    const userId = req.userId
+        const userId = req.userId
 
-    const user = await prisma.users.findUnique({
-        where: {id: userId},
-    })
-
-    if (!user) {
-        res.status(400).json({message: 'Usuário não encontrado'});
-        return;
-    }
-
-    const plan = await prisma.plans.findUnique({
-        where: {name: "Pro"},
-    })
-
-    if (!plan) {
-        res.status(400).json({message: 'Plano não encontrado'});
-        return;
-    }
-
-    try {
-        const sessions = await stripe.checkout.sessions.create({
-            line_items: [
-                {
-                    price: plan.price,
-                    quantity: 1,
-
-                },
-            ],
-            mode: 'subscription',
-            customer: user.stripeCustomerId!,
-            success_url: `${domain}/payment-confirmation/approved/{CHECKOUT_SESSION_ID}`,
-            cancel_url: `${domain}/payment-confirmation/cancelled/{CHECKOUT_SESSION_ID}`,
+        const user = await prisma.users.findUnique({
+            where: {id: userId},
         })
 
-        res.status(200).json({
-            sessionId: sessions.id,
-            url: sessions.url,
+        if (!user) {
+            res.status(400).json({message: 'Usuário não encontrado'});
+            return;
+        }
+
+        const plan = await prisma.plans.findUnique({
+            where: {name: "Pro"},
         })
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({message: 'Erro ao criar sessão de checkout'});
+
+        if (!plan) {
+            res.status(400).json({message: 'Plano não encontrado'});
+            return;
+        }
+
+        try {
+            const sessions = await stripe.checkout.sessions.create({
+                line_items: [
+                    {
+                        price: plan.price,
+                        quantity: 1,
+
+                    },
+                ],
+                mode: 'subscription',
+                customer: user.stripeCustomerId!,
+                success_url: `${domain}/payment-confirmation/approved/{CHECKOUT_SESSION_ID}`,
+                cancel_url: `${domain}/payment-confirmation/cancelled/{CHECKOUT_SESSION_ID}`,
+            })
+
+            res.status(200).json({
+                sessionId: sessions.id,
+                url: sessions.url,
+            })
+        } catch
+            (error) {
+            console.error(error);
+            res.status(500).json({message: 'Erro ao criar sessão de checkout'});
+        }
     }
-});
+)
+;
 
 router.post('/cancel-subscription', authMiddleware, async (req: AuthRequest, res: Response) => {
     const userId = req.userId
@@ -80,10 +83,10 @@ router.post('/cancel-subscription', authMiddleware, async (req: AuthRequest, res
 
         const subscription = subscriptions.data[0];
 
-        await stripe.subscriptions.cancel(
+        await stripe.subscriptions.update(
             subscription.id,
             {
-                prorate: true,
+                cancel_at_period_end: true
             }
         );
 

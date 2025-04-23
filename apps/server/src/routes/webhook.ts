@@ -80,7 +80,12 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req, res
                     },
                 });
 
-                await prisma.subscription.delete({where: {stripeSubscriptionId: subscription.id}});
+                await prisma.subscription.update({
+                    where: {stripeSubscriptionId: subscription.id},
+                    data: {
+                        status: "cancelled"
+                    }
+                })
 
             } catch (err: any) {
                 console.error('Erro ao processar customer.subscription.deleted:', err.message);
@@ -111,23 +116,15 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req, res
                     })
                 }
 
-                await prisma.subscription.upsert({
-                    where: {stripeSubscriptionId: newSub.id},
-                    update: {
-                        status: newSub.status,
-                        currentPeriodStart: new Date(newSub.items.data[0].current_period_start * 1000),
-                        currentPeriodEnd: new Date(newSub.items.data[0].current_period_end * 1000),
-                        cancelAtPeriodEnd: newSub.cancel_at_period_end,
-                        updatedAt: new Date(),
-                    },
-                    create: {
+                await prisma.subscription.create({
+                    data: {
                         stripeSubscriptionId: newSub.id,
                         userId: user.id,
                         status: newSub.status,
                         currentPeriodStart: new Date(newSub.items.data[0].current_period_start * 1000),
                         currentPeriodEnd: new Date(newSub.items.data[0].current_period_end * 1000),
                         cancelAtPeriodEnd: newSub.cancel_at_period_end,
-                    },
+                    }
                 });
 
                 console.log('Assinatura salva com sucesso');

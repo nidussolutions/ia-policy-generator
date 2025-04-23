@@ -7,6 +7,8 @@ import Layout from '@/components/Layout';
 import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
 import ConfirmModal from "@/components/ConfirmModal";
+import {loadStripe} from '@stripe/stripe-js';
+
 
 export default function PerfilPage() {
     const [name, setName] = useState('');

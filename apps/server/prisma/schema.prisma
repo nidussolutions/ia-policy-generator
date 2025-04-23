@@ -24,7 +24,7 @@ model Users {
   documents    Document[]
   userPlans    UserPlans[]
   invoices     Invoice[]
-  subscription Subscription?
+  subscription Subscription[]
 }
 
 model Site {
@@ -93,7 +93,7 @@ model UserPlans {
 model Invoice {
   id              String    @id @default(uuid())
   stripeInvoiceId String    @unique
-  userId          String    @unique
+  userId          String
   amountDue       Int
   amountPaid      Int
   status          String
@@ -106,7 +106,7 @@ model Invoice {
 model Subscription {
   id                   String   @id @default(uuid())
   stripeSubscriptionId String   @unique
-  userId               String   @unique
+  userId               String
   status               String
   currentPeriodStart   DateTime
   currentPeriodEnd     DateTime
