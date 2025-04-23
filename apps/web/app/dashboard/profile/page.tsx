@@ -1,25 +1,27 @@
 'use client';
 
-import {useEffect, useState} from 'react';
-import {Loader2, Mail, Lock, User, ArrowLeft} from 'lucide-react';
-import {PlanType, putWithAuth} from '@/lib/api';
+import React, {useEffect, useState} from 'react';
+import {Loader2, Mail, Lock, User, ArrowLeft, ArrowRight} from 'lucide-react';
+import {InvoicesType, PlanType, putWithAuth, SubscriptionType} from '@/lib/api';
 import Layout from '@/components/Layout';
 import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
 import ConfirmModal from "@/components/ConfirmModal";
-import {loadStripe} from '@stripe/stripe-js';
-
 
 export default function PerfilPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [plan, setPlan] = useState<PlanType | null>(null);
+    const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
+    const [invoices, setInvoices] = useState<InvoicesType[]>([]);
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(true); // começa como true!
+    const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
 
     const {startCheckout, cancelSubscription} = useCheckout();
 
@@ -34,12 +36,9 @@ export default function PerfilPage() {
 
         const fetchData = async () => {
             try {
-                const resUser = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/user/profile`,
-                    {
-                        headers: {Authorization: `Bearer ${token}`},
-                    }
-                );
+                const resUser = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {
+                    headers: {Authorization: `Bearer ${token}`},
+                });
 
                 const userJson = await resUser.json();
                 setName(userJson.name);
@@ -52,9 +51,36 @@ export default function PerfilPage() {
             }
         };
 
-        fetchData();
-    }, [token]);
+        fetchData().finally();
+        fetchSubscription().finally();
+        fetchInvoices().finally();
+    }, [token, page]);
 
+    const fetchSubscription = async () => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/subscription`, {
+                headers: {Authorization: `Bearer ${token}`},
+            });
+            const data = await res.json();
+            setSubscription(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchInvoices = async () => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/invoices?page=${page}&limit=5`, {
+                headers: {Authorization: `Bearer ${token}`},
+            });
+            const data = await res.json();
+
+            setInvoices((prev) => (page === 1 ? data.invoices : [...prev, ...data.invoices]));
+            setHasMore(data.pagination.totalPages > page);
+        } catch (error) {
+            console.error(error);
+        }
+    };
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -62,25 +88,20 @@ export default function PerfilPage() {
         setError('');
 
         if (password && (password.length < 6 || !/[^A-Za-z0-9]/.test(password))) {
-            setError(
-                'A senha deve ter pelo menos 6 caracteres e um caractere especial.'
-            );
+            setError('A senha deve ter pelo menos 6 caracteres e um caractere especial.');
             setLoading(false);
             return;
         }
 
         try {
-            const res = await putWithAuth(
-                `${process.env.NEXT_PUBLIC_API_URL}/user/profile`,
-                {
-                    name,
-                    email,
-                    password: password || undefined,
-                },
-                token
-            );
+            const res = await putWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {
+                name,
+                email,
+                password: password || undefined,
+            }, token);
 
-            if (!res.id) throw new Error();
+            if (!res.id) return setError('Erro ao atualizar perfil. Tente novamente.');
+
             setSuccess('Informações atualizadas com sucesso!');
         } catch {
             setError('Erro ao atualizar perfil. Tente novamente.');
@@ -100,30 +121,20 @@ export default function PerfilPage() {
     };
 
     const handleSubscription = async (planName: string) => {
-        switch (planName) {
-            case 'pro':
-                try {
-                    setModalOpen(true);
-                } catch {
-                    setError('Erro ao cancelar plano. Tente novamente.');
-                }
-                break;
-            case 'free':
-                try {
-                    await startCheckout(plan!.id!);
-                } catch {
-                    setError('Erro ao contratar plano. Tente novamente.');
-                }
-                break;
-            default:
-                setError('Plano inválido.');
-                break;
-        }
-    }
+        if (!plan) return;
 
-    const handleCancel = () => {
-        setModalOpen(false);
+        try {
+            if (planName === 'pro') {
+                setModalOpen(true);
+            } else {
+                await startCheckout(plan.id!);
+            }
+        } catch {
+            setError('Erro ao processar plano. Tente novamente.');
+        }
     };
+
+    const handleCancel = () => setModalOpen(false);
 
     if (loading || !plan) {
         return <Loading page="profile"/>;
@@ -134,37 +145,29 @@ export default function PerfilPage() {
             <ConfirmModal
                 isOpen={modalOpen}
                 message="Você tem certeza que deseja cancelar sua assinatura?"
-                description="Confirmando você perde de imediato o acesso aos sites e documentos criados. Casa tenho dúvidas entre em contato com o suporte"
+                description="Confirmando você perde de imediato o acesso aos sites e documentos criados. Caso tenha dúvidas, entre em contato com o suporte."
                 onConfirm={confirmDelete}
                 onCancel={handleCancel}
             />
+
             <div className="max-w-3xl mx-auto space-y-8">
                 <div className="flex items-center gap-4 mb-6 dark:text-white">
-                    <button
-                        className="flex items-center"
-                        onClick={() => window.history.back()}
-                    >
-                        <ArrowLeft
-                            size={24}
-                            className="text-gray-500 cursor-pointer dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
-                        />
+                    <button onClick={() => window.history.back()}>
+                        <ArrowLeft size={24}
+                                   className="text-gray-500 hover:text-gray-700 dark:text-white dark:hover:text-gray-300"/>
                     </button>
                     <h1 className="text-3xl font-bold">Meu Perfil</h1>
                 </div>
 
-                <form
-                    onSubmit={handleUpdate}
-                    className="space-y-6 bg-white dark:bg-gray-900 p-6 rounded-xl shadow"
-                >
+                <form onSubmit={handleUpdate} className="space-y-6 bg-white dark:bg-gray-900 p-6 rounded-xl shadow">
                     {error && <p className="text-red-500">{error}</p>}
                     {success && <p className="text-green-600">{success}</p>}
 
                     <div>
                         <label className="block text-sm font-medium mb-1">Nome</label>
                         <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <User size={18}/>
-                            </span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><User
+                                size={18}/></span>
                             <input
                                 type="text"
                                 className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
@@ -178,9 +181,8 @@ export default function PerfilPage() {
                     <div>
                         <label className="block text-sm font-medium mb-1">Email</label>
                         <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Mail size={18}/>
-                            </span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><Mail
+                                size={18}/></span>
                             <input
                                 type="email"
                                 className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
@@ -191,12 +193,12 @@ export default function PerfilPage() {
                         </div>
                     </div>
 
+                    {/* Senha */}
                     <div>
                         <label className="block text-sm font-medium mb-1">Nova Senha</label>
                         <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Lock size={18}/>
-                            </span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><Lock
+                                size={18}/></span>
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 className="w-full pl-10 pr-12 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
@@ -224,29 +226,105 @@ export default function PerfilPage() {
                     </button>
                 </form>
 
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-2">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-4">
                     <div className="flex justify-between items-center">
                         <div>
-                            <h2 className="text-lg font-semibold">Plano Atual</h2>
-                            <p>
-                                <strong>Tipo:</strong>{' '}
-                                {`${plan.name.charAt(0).toUpperCase()}${plan.name.slice(1)}`}
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Plano Atual</h2>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">
+                                <strong>Tipo:</strong> {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
                             </p>
                         </div>
+
                         <button
-                            className={`text-white px-4 py-2 rounded transition cursor-pointer ${plan.name.toLowerCase() === 'pro' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
-                            onClick={() => handleSubscription(plan.name.toLowerCase())}
+                            onClick={() => handleSubscription(plan.name)}
+                            className={`px-4 py-2 rounded text-white font-medium transition ${
+                                plan.name === 'pro' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
+                            }`}
                         >
-                            {plan.name.toLowerCase() === 'pro' ? 'Cancelar plano' : 'Contratar Pro'}
+                            {plan.name === 'pro' ? 'Cancelar plano' : 'Contratar Pro'}
                         </button>
                     </div>
+
+                    {subscription && (
+                        <div className="pt-2 text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                            <p>
+                                <strong>Status:</strong> {subscription.status === 'active' ? 'Ativo' : subscription.status}
+                            </p>
+                            <p>
+                                <strong>Válido até:</strong>{' '}
+                                {subscription.currentPeriodEnd
+                                    ? new Date(subscription.currentPeriodEnd).toLocaleDateString()
+                                    : '---'}
+                            </p>
+                        </div>
+                    )}
                 </div>
 
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-4">
                     <h2 className="text-lg font-semibold">Faturamento</h2>
-                    <p className="text-sm text-gray-500">
-                        Histórico de pagamentos e faturas será exibido aqui futuramente.
-                    </p>
+                    {invoices.length > 0 ? (
+                        <>
+                            <div className="space-y-4">
+                                {invoices.map((invoice) => (
+                                    <div key={invoice.id}
+                                         className="border border-gray-700 rounded-2xl p-4 bg-zinc-900 shadow-sm">
+                                        <div className="flex justify-between items-center text-sm text-gray-300">
+                                            <div>
+                                                <p className="text-xs text-gray-500">ID da Fatura</p>
+                                                <p className="font-medium">{invoice.id}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-gray-500">Criado dia</p>
+                                                <p className="font-medium">{new Date(invoice.createdAt!).toLocaleDateString()}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-gray-500">Status</p>
+                                                <span
+                                                    className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                                                        invoice.status === "paid"
+                                                            ? "bg-green-600"
+                                                            : invoice.status === "open"
+                                                                ? "bg-yellow-600"
+                                                                : "bg-red-600"
+                                                    } text-white`}>
+                                                    {invoice.status}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-gray-500">Valor</p>
+                                                <p className="font-semibold text-white">R$ {(invoice.amountPaid / 100).toFixed(2)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex justify-between pt-4">
+                                <button
+                                    onClick={() => {
+                                        setPage((prev) => Math.max(prev - 1, 1));
+                                        setInvoices([]);
+                                    }}
+                                    disabled={page === 1}
+                                    className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
+                                >
+                                    <ArrowLeft size={16}/> Anterior
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setPage((prev) => prev + 1);
+                                        setInvoices([]);
+                                    }}
+                                    disabled={!hasMore}
+                                    className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
+                                >
+                                    Próximo <ArrowRight size={16}/>
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <p className="text-gray-400 text-sm">Nenhuma fatura encontrada.</p>
+                    )}
                 </div>
             </div>
         </Layout>
