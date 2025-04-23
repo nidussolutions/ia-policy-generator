@@ -7,8 +7,17 @@ import Layout from '@/components/Layout';
 import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
 import ConfirmModal from "@/components/ConfirmModal";
+import {useRouter} from "next/navigation";
+
+const statusLabel: Record<string, string> = {
+    active: 'Ativo',
+    canceled: 'Cancelado',
+    incomplete: 'Incompleto',
+    unpaid: 'Não pago',
+};
 
 export default function PerfilPage() {
+    const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [plan, setPlan] = useState<PlanType | null>(null);
@@ -30,57 +39,36 @@ export default function PerfilPage() {
 
     useEffect(() => {
         if (!token) {
-            window.location.href = '/auth/login';
-            return;
+            router.push('/auth/login');
         }
 
         const fetchData = async () => {
             try {
-                const resUser = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {
-                    headers: {Authorization: `Bearer ${token}`},
-                });
+                const [resUser, resSubscription, resInvoices] = await Promise.all([
+                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {headers: {Authorization: `Bearer ${token}`}}),
+                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/subscription`, {headers: {Authorization: `Bearer ${token}`}}),
+                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/invoices?page=${page}&limit=5`, {headers: {Authorization: `Bearer ${token}`}})
+                ]);
 
                 const userJson = await resUser.json();
+                const subscriptionJson = await resSubscription.json();
+                const invoicesJson = await resInvoices.json();
+
                 setName(userJson.name);
                 setEmail(userJson.email);
                 setPlan(userJson.plan || null);
+                setSubscription(subscriptionJson);
+                setInvoices((prev) => (page === 1 ? invoicesJson.invoices : [...prev, ...invoicesJson.invoices]));
+                setHasMore(invoicesJson.pagination.totalPages > page);
             } catch (err) {
                 console.error(err);
             } finally {
                 setLoading(false);
             }
         };
+        fetchData();
+    }, [token, page, router]);
 
-        fetchData().finally();
-        fetchSubscription().finally();
-        fetchInvoices().finally();
-    }, [token, page]);
-
-    const fetchSubscription = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/subscription`, {
-                headers: {Authorization: `Bearer ${token}`},
-            });
-            const data = await res.json();
-            setSubscription(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const fetchInvoices = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/invoices?page=${page}&limit=5`, {
-                headers: {Authorization: `Bearer ${token}`},
-            });
-            const data = await res.json();
-
-            setInvoices((prev) => (page === 1 ? data.invoices : [...prev, ...data.invoices]));
-            setHasMore(data.pagination.totalPages > page);
-        } catch (error) {
-            console.error(error);
-        }
-    };
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -193,7 +181,6 @@ export default function PerfilPage() {
                         </div>
                     </div>
 
-                    {/* Senha */}
                     <div>
                         <label className="block text-sm font-medium mb-1">Nova Senha</label>
                         <div className="relative">
@@ -248,7 +235,7 @@ export default function PerfilPage() {
                     {subscription && (
                         <div className="pt-2 text-sm text-gray-700 dark:text-gray-300 space-y-1">
                             <p>
-                                <strong>Status:</strong> {subscription.status === 'active' ? 'Ativo' : subscription.status}
+                                <strong>Status:</strong> {statusLabel[subscription.status] || subscription.status}
                             </p>
                             <p>
                                 <strong>Válido até:</strong>{' '}
