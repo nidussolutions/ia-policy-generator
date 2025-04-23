@@ -65,7 +65,7 @@ export function useAuth() {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data?.error || 'Erro ao logar');
+            if (!res.ok) return(data?.error || 'Erro ao logar') as string;
 
             localStorage.setItem('token', data.token);
             localStorage.setItem('refreshToken', data.refreshToken);
@@ -73,7 +73,6 @@ export function useAuth() {
             setIsAuthenticated(true);
             router.push('/dashboard');
         } catch (error) {
-            console.error('Erro no login:', error);
             throw error;
         }
     }, [API_URL, router]);

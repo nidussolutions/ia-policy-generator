@@ -2,9 +2,11 @@ import {Router} from 'express';
 import {PrismaClient} from '../../generated/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import Stripe from "stripe";
 
 const router = Router();
 const prisma = new PrismaClient();
+const stripe = new Stripe(process.env.STRIPE_SECRET as string);
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || 'refreshSecret';
@@ -41,6 +43,24 @@ router.post('/register', async (req, res): Promise<any> => {
                 planId: plan!.id,
             },
         });
+
+        if (!user) return res.status(400).json({message: 'Error creating user'});
+
+        const customer = await stripe.customers.create({
+            email,
+            name,
+            metadata: {
+                userId: user.id,
+                identity: identity.replace(/\D/g, ''),
+            },
+        })
+
+        await prisma.users.update({
+            where: {id: user.id},
+            data: {
+                stripeCustomerId: customer.id,
+            }
+        })
 
         const accessToken = generateAccessToken(user.id);
         const refreshToken = generateRefreshToken(user.id);

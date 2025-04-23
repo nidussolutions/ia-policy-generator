@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 const endpointSecret = process.env.STRIPE_HOOK as string;
 
-router.post('/webhook', express.raw({type: 'application/json'}), async (req: express.Request, res: express.Response): Promise<void> => {
+router.post('/webhook', express.raw({type: 'application/json'}), async (req, res): Promise<void> => {
     const sig = req.headers['stripe-signature'] || '';
 
     let event;
@@ -26,21 +26,19 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
             const session = event.data.object as Stripe.Checkout.Session;
 
             try {
-                const email = session.customer_email;
-                if (!email) {
-                    console.error('Email do cliente não encontrado na sessão');
-                    return
-                }
-
-                const user = await prisma.users.findUnique({where: {email}});
-                if (!user) {
-                    console.error("Usuário com email ${email} não encontrado");
-                    return
-                }
-
+                const customer = session.customer as string;
                 const plan = await prisma.plans.findUnique({where: {name: "Pro"}});
                 if (!plan) {
                     console.error('Plano Pro não encontrado');
+                    return
+                }
+
+                const user = await prisma.users.findUnique({
+                    where: {stripeCustomerId: customer},
+                });
+
+                if (!user) {
+                    console.error(`Usuário com stripeCustomerId ${customer} não encontrado`);
                     return
                 }
 
@@ -50,24 +48,6 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
                         planId: plan.id,
                     },
                 });
-
-                const {data} = await stripe.customers.list({
-                    limit: 1,
-                    email,
-                })
-
-                if (!data.length) {
-                    res.status(400).json({message: 'Cliente não encontrado'});
-                    return;
-                }
-
-                await prisma.users.update({
-                    where: {id: user.id},
-                    data: {
-                        stripeCustomerId: data[0].id,
-                    }
-                })
-
 
             } catch (err: any) {
                 console.error('Erro ao processar checkout.session.completed:', err.message);
@@ -99,9 +79,77 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req: exp
                         planId: plan.id,
                     },
                 });
+
+                await prisma.subscription.delete({where: {stripeSubscriptionId: subscription.id}});
+
             } catch (err: any) {
                 console.error('Erro ao processar customer.subscription.deleted:', err.message);
             }
+            break;
+
+        case 'customer.subscription.created':
+            const newSub = event.data.object as Stripe.Subscription;
+
+            try {
+                const customerId = newSub.customer as string;
+
+                const user = await prisma.users.findUnique({
+                    where: {stripeCustomerId: customerId},
+                });
+
+                if (!user) {
+                    console.error(`Usuário com stripeCustomerId ${customerId} não encontrado`);
+                    break;
+                }
+
+                if (!user.stripeCustomerId) {
+                    await prisma.users.update({
+                        where: {id: user.id},
+                        data: {
+                            stripeCustomerId: customerId,
+                        }
+                    })
+                }
+
+                await prisma.subscription.upsert({
+                    where: {stripeSubscriptionId: newSub.id},
+                    update: {
+                        status: newSub.status,
+                        currentPeriodStart: new Date(newSub.items.data[0].current_period_start * 1000),
+                        currentPeriodEnd: new Date(newSub.items.data[0].current_period_end * 1000),
+                        cancelAtPeriodEnd: newSub.cancel_at_period_end,
+                        updatedAt: new Date(),
+                    },
+                    create: {
+                        stripeSubscriptionId: newSub.id,
+                        userId: user.id,
+                        status: newSub.status,
+                        currentPeriodStart: new Date(newSub.items.data[0].current_period_start * 1000),
+                        currentPeriodEnd: new Date(newSub.items.data[0].current_period_end * 1000),
+                        cancelAtPeriodEnd: newSub.cancel_at_period_end,
+                    },
+                });
+
+                console.log('Assinatura salva com sucesso');
+            } catch (err: any) {
+                console.error('Erro ao salvar assinatura:', err.message);
+            }
+
+            break;
+
+        case 'customer.subscription.updated':
+            const updatedSub = event.data.object as Stripe.Subscription;
+
+            await prisma.subscription.update({
+                where: {stripeSubscriptionId: updatedSub.id},
+                data: {
+                    status: updatedSub.status,
+                    currentPeriodStart: new Date(updatedSub.items.data[0].current_period_start * 1000),
+                    currentPeriodEnd: new Date(updatedSub.items.data[0].current_period_end * 1000),
+                    cancelAtPeriodEnd: updatedSub.cancel_at_period_end,
+                    updatedAt: new Date(),
+                },
+            });
             break;
 
         default:

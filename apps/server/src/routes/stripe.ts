@@ -7,7 +7,6 @@ const router = Router();
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
-const endpointSecret = "whsec_e38a50e968f4d3a3024ee43b6cab8e7de9e55825bd4025b127140a072ba64061";
 const domain = process.env.DOMAIN || 'http://localhost:3000';
 
 router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest, res: Response) => {
@@ -41,7 +40,7 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
                 },
             ],
             mode: 'subscription',
-            customer_email: user.email,
+            customer: user.stripeCustomerId!,
             success_url: `${domain}/payment-confirmation/approved/{CHECKOUT_SESSION_ID}`,
             cancel_url: `${domain}/payment-confirmation/cancelled/{CHECKOUT_SESSION_ID}`,
         })
@@ -85,7 +84,6 @@ router.post('/cancel-subscription', authMiddleware, async (req: AuthRequest, res
             subscription.id,
             {
                 prorate: true,
-
             }
         );
 
