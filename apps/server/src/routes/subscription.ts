@@ -16,11 +16,9 @@ router.get("/", authMiddleware, async (req: AuthRequest, res): Promise<any> => {
             },
             select: {
                 id: true,
-                stripeSubscriptionId: true,
                 status: true,
                 currentPeriodEnd: true,
-                currentPeriodStart: true,
-                createdAt: true,
+                cancelAtPeriodEnd: true,
             },
         });
 

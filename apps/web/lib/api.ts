@@ -47,11 +47,9 @@ export type InvoicesType = {
 
 export type SubscriptionType = {
     id: string;
-    stripeSubscriptionId: string;
     status: string;
     currentPeriodEnd: string;
-    currentPeriodStart: string;
-    createdAt: string;
+    cancelAtPeriodEnd: boolean;
 }
 
 export async function fetcher(url: string, token: string) {

@@ -86,9 +86,10 @@ router.post('/cancel-subscription', authMiddleware, async (req: AuthRequest, res
         await stripe.subscriptions.update(
             subscription.id,
             {
-                cancel_at_period_end: true
+                cancel_at_period_end: !subscription.cancel_at_period_end,
             }
         );
+
 
         res.status(200).json({message: 'Assinatura cancelada com sucesso'});
     } catch (error) {

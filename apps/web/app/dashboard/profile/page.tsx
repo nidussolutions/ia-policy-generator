@@ -8,25 +8,19 @@ import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
 import ConfirmModal from "@/components/ConfirmModal";
 import {useRouter} from "next/navigation";
-
-const statusLabel: Record<string, string> = {
-    active: 'Ativo',
-    canceled: 'Cancelado',
-    incomplete: 'Incompleto',
-    unpaid: 'Não pago',
-};
+import Invoices from "@/components/Invoices";
+import Subscription from "@/components/Subscription";
+import Profile from "@/components/Profile";
 
 export default function PerfilPage() {
     const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [invoices, setInvoices] = useState<InvoicesType[]>([]);
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
     const [page, setPage] = useState(1);
@@ -69,35 +63,6 @@ export default function PerfilPage() {
         fetchData();
     }, [token, page, router]);
 
-    const handleUpdate = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setSuccess('');
-        setError('');
-
-        if (password && (password.length < 6 || !/[^A-Za-z0-9]/.test(password))) {
-            setError('A senha deve ter pelo menos 6 caracteres e um caractere especial.');
-            setLoading(false);
-            return;
-        }
-
-        try {
-            const res = await putWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {
-                name,
-                email,
-                password: password || undefined,
-            }, token);
-
-            if (!res.id) return setError('Erro ao atualizar perfil. Tente novamente.');
-
-            setSuccess('Informações atualizadas com sucesso!');
-        } catch {
-            setError('Erro ao atualizar perfil. Tente novamente.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const confirmDelete = async () => {
         try {
             await cancelSubscription();
@@ -112,7 +77,7 @@ export default function PerfilPage() {
         if (!plan) return;
 
         try {
-            if (planName === 'pro') {
+            if (planName === 'Pro') {
                 setModalOpen(true);
             } else {
                 await startCheckout(plan.id!);
@@ -147,172 +112,33 @@ export default function PerfilPage() {
                     <h1 className="text-3xl font-bold">Meu Perfil</h1>
                 </div>
 
-                <form onSubmit={handleUpdate} className="space-y-6 bg-white dark:bg-gray-900 p-6 rounded-xl shadow">
-                    {error && <p className="text-red-500">{error}</p>}
-                    {success && <p className="text-green-600">{success}</p>}
+                <Profile
+                    name={name}
+                    email={email}
+                    password={password}
+                    setName={setName}
+                    setEmail={setEmail}
+                    setPassword={setPassword}
+                    error={error}
+                    setError={setError}
+                    token={token}
+                    setLoading={setLoading}
+                    loading={loading}
+                />
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Nome</label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><User
-                                size={18}/></span>
-                            <input
-                                type="text"
-                                className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
+                <Subscription
+                    plan={plan}
+                    subscription={subscription}
+                    handleSubscription={handleSubscription}
+                />
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Email</label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><Mail
-                                size={18}/></span>
-                            <input
-                                type="email"
-                                className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Nova Senha</label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><Lock
-                                size={18}/></span>
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                className="w-full pl-10 pr-12 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Deixe em branco para não alterar"
-                            />
-                            <button
-                                type="button"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-blue-600"
-                                onClick={() => setShowPassword((prev) => !prev)}
-                            >
-                                {showPassword ? 'Ocultar' : 'Ver'}
-                            </button>
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
-                    >
-                        {loading && <Loader2 className="w-4 h-4 animate-spin"/>}
-                        Salvar Alterações
-                    </button>
-                </form>
-
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-4">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Plano Atual</h2>
-                            <p className="text-sm text-gray-700 dark:text-gray-300">
-                                <strong>Tipo:</strong> {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
-                            </p>
-                        </div>
-
-                        <button
-                            onClick={() => handleSubscription(plan.name)}
-                            className={`px-4 py-2 rounded text-white font-medium transition ${
-                                plan.name === 'pro' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
-                            }`}
-                        >
-                            {plan.name === 'pro' ? 'Cancelar plano' : 'Contratar Pro'}
-                        </button>
-                    </div>
-
-                    {subscription && (
-                        <div className="pt-2 text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                            <p>
-                                <strong>Status:</strong> {statusLabel[subscription.status] || subscription.status}
-                            </p>
-                            <p>
-                                <strong>Válido até:</strong>{' '}
-                                {subscription.currentPeriodEnd
-                                    ? new Date(subscription.currentPeriodEnd).toLocaleDateString()
-                                    : '---'}
-                            </p>
-                        </div>
-                    )}
-                </div>
-
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-4">
-                    <h2 className="text-lg font-semibold">Faturamento</h2>
-                    {invoices.length > 0 ? (
-                        <>
-                            <div className="space-y-4">
-                                {invoices.map((invoice) => (
-                                    <div key={invoice.id}
-                                         className="border border-gray-700 rounded-2xl p-4 bg-zinc-900 shadow-sm">
-                                        <div className="flex justify-between items-center text-sm text-gray-300">
-                                            <div>
-                                                <p className="text-xs text-gray-500">ID da Fatura</p>
-                                                <p className="font-medium">{invoice.id}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-gray-500">Criado dia</p>
-                                                <p className="font-medium">{new Date(invoice.createdAt!).toLocaleDateString()}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-gray-500">Status</p>
-                                                <span
-                                                    className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                                                        invoice.status === "paid"
-                                                            ? "bg-green-600"
-                                                            : invoice.status === "open"
-                                                                ? "bg-yellow-600"
-                                                                : "bg-red-600"
-                                                    } text-white`}>
-                                                    {invoice.status}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-gray-500">Valor</p>
-                                                <p className="font-semibold text-white">R$ {(invoice.amountPaid / 100).toFixed(2)}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="flex justify-between pt-4">
-                                <button
-                                    onClick={() => {
-                                        setPage((prev) => Math.max(prev - 1, 1));
-                                        setInvoices([]);
-                                    }}
-                                    disabled={page === 1}
-                                    className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
-                                >
-                                    <ArrowLeft size={16}/> Anterior
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setPage((prev) => prev + 1);
-                                        setInvoices([]);
-                                    }}
-                                    disabled={!hasMore}
-                                    className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
-                                >
-                                    Próximo <ArrowRight size={16}/>
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        <p className="text-gray-400 text-sm">Nenhuma fatura encontrada.</p>
-                    )}
-                </div>
+                <Invoices
+                    invoices={invoices}
+                    setPage={setPage}
+                    page={page}
+                    hasMore={hasMore}
+                    setInvoices={setInvoices}
+                />
             </div>
         </Layout>
     );
