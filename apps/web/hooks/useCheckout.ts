@@ -13,7 +13,6 @@ export function useCheckout() {
     const [plans, setPlans] = useState<PlanType[] | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-
     useEffect(() => {
         const token = localStorage.getItem('token');
 
@@ -88,7 +87,7 @@ export function useCheckout() {
         }
     }
 
-    const cancelSubscription = async () => {
+    const cancelSubscription = async (type: boolean) => {
         setLoading(true);
         setError(null);
 
@@ -113,7 +112,11 @@ export function useCheckout() {
             const data = await response.json();
 
             if (data?.message) {
-                window.location.href = '/cancellation';
+                if (type) {
+                    window.location.href = '/cancellation';
+                } else {
+                    window.location.reload();
+                }
             } else {
                 setError('Erro ao cancelar assinatura');
             }

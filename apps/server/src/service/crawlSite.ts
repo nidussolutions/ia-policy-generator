@@ -16,12 +16,10 @@ export async function crawlSite(
     }
 
     if (visited.has(domain)) {
-      console.log(`Already visited: ${domain}`);
       return '';
     }
 
     visited.add(domain);
-    console.log(`Accessing: ${domain}`);
 
     const { data: html, status } = await axios.get(domain, { timeout: 10000 });
     if (status !== 200) {

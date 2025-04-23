@@ -63,7 +63,7 @@ export default function DocumentPage() {
     <Layout>
       <ConfirmModal
         isOpen={modalOpen}
-        message="Você tem certeza que deseja deletar este site?"
+        type="deleteDoc"
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />

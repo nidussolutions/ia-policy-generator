@@ -47,7 +47,7 @@ router.post(
                 language: site.language,
                 observations,
                 plan: currentPlan?.name?.toLowerCase() || 'free',
-                crawl: await crawlSite(site.domain),
+                // crawl: await crawlSite(site.domain),
             });
 
             const doc = await prisma.document.create({

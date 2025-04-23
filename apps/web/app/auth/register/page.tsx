@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useAuth} from '@/hooks/useAuth';
 import Link from 'next/link';
 import {Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff} from 'lucide-react';

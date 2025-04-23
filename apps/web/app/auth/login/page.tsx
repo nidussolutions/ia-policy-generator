@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Mail, Lock, LogIn, Loader2 } from 'lucide-react';
@@ -26,7 +26,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const { error } = await login(email, password);
+      const error = await login(email, password);
       if (error) {
         setError(error);
       }

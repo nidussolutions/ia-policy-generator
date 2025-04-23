@@ -19,10 +19,12 @@ model Users {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  sites     Site[]
-  logs      ActivityLog[]
-  documents Document[]
-  userPlans UserPlans[]
+  sites        Site[]
+  logs         ActivityLog[]
+  documents    Document[]
+  userPlans    UserPlans[]
+  invoices     Invoice[]
+  subscription Subscription[]
 }
 
 model Site {
@@ -86,4 +88,31 @@ model UserPlans {
 
   user Users @relation(fields: [userId], references: [id])
   plan Plans @relation(fields: [planId], references: [id])
+}
+
+model Invoice {
+  id              String    @id @default(uuid())
+  stripeInvoiceId String    @unique
+  userId          String
+  amountDue       Int
+  amountPaid      Int
+  status          String
+  dueDate         DateTime?
+  createdAt       DateTime  @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id                   String   @id @default(uuid())
+  stripeSubscriptionId String   @unique
+  userId               String
+  status               String
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user Users @relation(fields: [userId], references: [id])
 }

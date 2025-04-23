@@ -1,11 +1,11 @@
 meta {
-  name: profile
+  name: cancel-subscription
   type: http
-  seq: 1
+  seq: 3
 }
 
-get {
-  url: {{user}}/profile
+post {
+  url: {{plans}}/cancel-subscription
   body: none
   auth: bearer
 }
