@@ -5,13 +5,11 @@ meta {
 }
 
 post {
-  url: {{plans}}/create-checkout-session
-  body: json
-  auth: inherit
+  url: {{plans}}/cancel-subscription
+  body: none
+  auth: bearer
 }
 
-body:json {
-  {
-    "planId":"1296cf67-6cc5-4aa0-9b73-62a4780d3681"
-  }
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3MGRlM2YwNi1mMjQ3LTQyYzYtYTZiMi0wOGVhZDY0NzVmZTIiLCJpYXQiOjE3NDU0MzM0NDAsImV4cCI6MTc1MDYxNzQ0MH0.K8CF5VYo0lMNKXTlZb8OnovGsht9JiVsHtGppzjkNwg
 }
