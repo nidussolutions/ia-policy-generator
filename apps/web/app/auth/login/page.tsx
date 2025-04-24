@@ -1,145 +1,141 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import React, {useEffect, useState} from 'react';
+import {useAuth} from '@/hooks/useAuth';
 import Link from 'next/link';
-import { Mail, Lock, LogIn, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import {Mail, Lock, LogIn, Loader2} from 'lucide-react';
+import {motion} from 'framer-motion';
+import {useRouter} from 'next/navigation';
+
+// Animation variants
+const containerVariants = {
+    hidden: {},
+    visible: {transition: {staggerChildren: 0.12}},
+};
+
+const itemVariants = {
+    hidden: {opacity: 0, y: 20},
+    visible: {opacity: 1, y: 0, transition: {type: 'spring', stiffness: 100, damping: 12}},
+};
 
 export default function LoginPage() {
-  const { login } = useAuth();
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+    const {login} = useAuth();
+    const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      router.push('/dashboard');
-    }
-  }, [router]);
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) router.push('/dashboard');
+    }, [router]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        try {
+            const err = await login(email, password);
+            if (err) setError(err);
+            else router.push('/dashboard');
+        } catch {
+            setError('Error logging in. Please check your credentials.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    try {
-      const error = await login(email, password);
-      if (error) {
-        setError(error);
-      } else {
-        // After successful login, redirect to dashboard
-        router.push('/dashboard');
-      }
-    } catch {
-      setError('Error logging in. Please check your credentials.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 px-4">
-        <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="w-full max-w-md space-y-6 p-8 bg-white dark:bg-gray-900 shadow-xl rounded-2xl"
-        >
-          <div className="text-center">
-            <Link
-                href="/"
-                className="flex justify-center items-center gap-2 text-3xl font-extrabold text-blue-600 dark:text-blue-400"
+    return (
+        <main
+            className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] px-4">
+            <motion.div
+                className="w-full max-w-md p-8 bg-[#1E0359]/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-[#8C0368]/20"
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
             >
-              <LogIn className="w-7 h-7" />
-              Legal Forge
-            </Link>
-            <h2 className="mt-4 text-xl font-semibold text-gray-800 dark:text-white">
-              Access Your Account
-            </h2>
-          </div>
+                {/* Logo & Title */}
+                <motion.div className="text-center mb-6" variants={itemVariants}>
+                    <Link href="/" className="inline-flex items-center gap-2 text-3xl font-extrabold text-[#A429A6]">
+                        <LogIn className="w-7 h-7"/>
+                        Legal Forge
+                    </Link>
+                    <h2 className="mt-4 text-xl font-semibold text-gray-200">
+                        Access Your Account
+                    </h2>
+                </motion.div>
 
-          {error && (
-              <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-sm text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200 px-4 py-2 rounded text-center"
-              >
-                {error}
-              </motion.div>
-          )}
+                {/* Error Message */}
+                {error && (
+                    <motion.div
+                        className="mb-4 text-sm text-red-400 bg-red-900/30 px-4 py-2 rounded-lg text-center"
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
+                    >
+                        {error}
+                    </motion.div>
+                )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email
-              </label>
-              <div className="relative mt-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <Mail size={18} />
+                {/* Form */}
+                <motion.form onSubmit={handleLogin} className="space-y-6" variants={containerVariants}>
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                        <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <Mail size={18}/>
               </span>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                    placeholder="youremail@example.com"
-                    aria-label="Email address"
-                />
-              </div>
-            </div>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                placeholder="youremail@example.com"
+                                className="w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border border-transparent focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500"
+                            />
+                        </div>
+                    </motion.div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Password
-              </label>
-              <div className="relative mt-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <Lock size={18} />
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                        <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <Lock size={18}/>
               </span>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                    placeholder="Your password"
-                    aria-label="Password"
-                />
-              </div>
-            </div>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                placeholder="Your password"
+                                className="w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border border-transparent focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500"
+                            />
+                        </div>
+                    </motion.div>
 
-            <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Logging in...
-                  </>
-              ) : (
-                  'Log In'
-              )}
-            </button>
-          </form>
+                    <motion.button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-full font-medium bg-[#8C0368] hover:bg-[#A429A6] transition-transform disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                        variants={itemVariants}
+                    >
+                        {loading ? (
+                            <>
+                                <Loader2 className="w-5 h-5 animate-spin"/> Logging in...
+                            </>
+                        ) : (
+                            'Log In'
+                        )}
+                    </motion.button>
+                </motion.form>
 
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{' '}
-            <Link
-                href="/auth/register"
-                className="text-blue-600 hover:underline dark:text-blue-400"
-            >
-              Sign up
-            </Link>
-          </p>
-        </motion.div>
-      </div>
-  );
+                <motion.p className="mt-6 text-center text-sm text-gray-400" variants={itemVariants}>
+                    Don't have an account?{' '}
+                    <Link href="/auth/register" className="text-[#A429A6] hover:underline">
+                        Sign up
+                    </Link>
+                </motion.p>
+            </motion.div>
+        </main>
+    );
 }

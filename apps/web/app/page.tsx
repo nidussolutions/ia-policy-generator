@@ -4,208 +4,237 @@ import Link from 'next/link';
 import {motion} from 'framer-motion';
 import {ShieldCheck, Globe, Code2} from 'lucide-react';
 
-const fadeInUp = {
-    hidden: {opacity: 0, y: 30},
-    visible: (delay = 0) => ({
-        opacity: 1,
-        y: 0,
-        transition: {delay, duration: 0.6, ease: 'easeOut'},
-    }),
+const containerVariants = {
+    hidden: {},
+    visible: {transition: {staggerChildren: 0.1}},
+};
+
+const itemVariants = {
+    hidden: {opacity: 0, y: 20},
+    visible: {opacity: 1, y: 0, transition: {type: 'spring', stiffness: 100, damping: 12}},
 };
 
 export default function HomePage() {
-
     return (
         <main
-            className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col items-center justify-center">
-            <header className="w-full max-w-5xl py-6 px-4 flex items-center justify-center ">
-                <motion.div
-                    className="text-2xl font-bold"
-                    initial="hidden"
-                    animate="visible"
-                    variants={fadeInUp}
-                    custom={0.1}
-                >
-                    <motion.h1
-                        className="text-blue-600 dark:text-blue-500"
-                        variants={fadeInUp}
-                        custom={0.1}
-                    >
-                        Legal Forge
-                    </motion.h1>
-                </motion.div>
+            className="min-h-screen flex flex-col bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200">
+            {/* Navbar */}
+            <header className="w-full max-w-6xl mx-auto flex items-center justify-between py-6 px-4">
+                <div className="text-2xl font-bold text-white">Legal Forge</div>
+                <nav className="hidden md:flex space-x-8 text-gray-300 ">
+                    <Link href="#features" className="hover:text-white transition">Features</Link>
+                    <Link href="#pricing" className="hover:text-white transition">Pricing</Link>
+                    <Link href="#about" className="hover:text-white transition">About Us</Link>
+                </nav>
+                <div className="flex items-center space-x-4">
+                    <Link href="/auth/login">
+                        <motion.button
+                            whileHover={{scale: 1.05}}
+                            className="px-6 py-2 bg-[#8C0368] rounded-full font-medium shadow-lg backdrop-blur-sm"
+                            variants={itemVariants}
+                        >
+                            Get Started
+                        </motion.button>
+                    </Link>
+                    <Link href="/contact">
+                        <motion.button
+                            whileHover={{scale: 1.05}}
+                            className="px-6 py-2 border border-gray-500 rounded-full font-medium hover:border-white transition"
+                            variants={itemVariants}
+                        >
+                            Talk to an Expert
+                        </motion.button>
+                    </Link>
+                </div>
             </header>
 
-            <section
-                className="relative w-full flex items-center justify-center text-center py-32 sm:py-48 px-4 bg-fixed bg-[url('/bg-hero.jpg')] bg-cover bg-center dark:bg-blend-darken dark:bg-gray-900/70"
-                style={{backgroundAttachment: 'fixed'}}
-            >
-                <motion.div
-                    className="max-w-2xl"
+            {/* Hero */}
+            <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-16">
+                <motion.p
+                    className="uppercase mb-4 text-sm tracking-wider text-[#8C0368]/80"
                     initial="hidden"
                     animate="visible"
-                    variants={fadeInUp}
-                    custom={0.1}
+                    variants={itemVariants}
                 >
-                    <motion.h1 className="text-4xl sm:text-5xl font-bold text-white">
-                        Generate legal policies for your website with artificial intelligence
-                    </motion.h1>
-
-                    <motion.p
-                        className="text-lg text-white/80 mt-6 mb-10"
-                        variants={fadeInUp}
-                        custom={0.2}
-                    >
-                        In seconds, generate documents like Privacy Policy, Terms of Service, and Cookie Banners,
-                        tailored and compliant with LGPD and GDPR.
-                    </motion.p>
-
-                    <motion.div variants={fadeInUp} custom={0.3}>
-                        <Link href="/auth/login">
-                            <button
-                                className="bg-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition cursor-pointer">
-                                Get started for free
-                            </button>
-                        </Link>
-                    </motion.div>
-                </motion.div>
+                    We have already generated more than 1K documents.
+                </motion.p>
+                <motion.h1
+                    className="text-4xl md:text-6xl font-extrabold mb-6 max-w-3xl leading-tight"
+                    initial="hidden"
+                    animate="visible"
+                    variants={itemVariants}
+                >
+                    Generate legal policies for your website with AI
+                </motion.h1>
+                <motion.p
+                    className="max-w-xl text-gray-400 mb-8"
+                    initial="hidden"
+                    animate="visible"
+                    variants={itemVariants}
+                >
+                    In seconds, create Privacy Policies, Terms of Service, and Cookie Banners that are fully compliant
+                    with LGPD & GDPR.
+                </motion.p>
+                <div className="flex space-x-4">
+                    <Link href="/auth/login">
+                        <motion.button
+                            className="px-8 py-3 bg-[#8C0368] rounded-full font-medium shadow-lg backdrop-blur-sm hover:scale-105 transition-transform"
+                            initial="hidden"
+                            animate="visible"
+                            variants={itemVariants}
+                        >
+                            Get Started for Free
+                        </motion.button>
+                    </Link>
+                    <Link href="/contact">
+                        <motion.button
+                            className="px-8 py-3 border border-gray-500 rounded-full font-medium hover:border-white transition-transform"
+                            initial="hidden"
+                            animate="visible"
+                            variants={itemVariants}
+                        >
+                            Talk to an Expert
+                        </motion.button>
+                    </Link>
+                </div>
             </section>
 
+            {/* Features Section */}
             <motion.section
-                className="w-full max-w-5xl py-24 grid grid-cols-1 sm:grid-cols-3 gap-12 text-center px-6"
+                id="features"
+                className="w-full max-w-6xl mx-auto py-24 px-4"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{once: true}}
-                variants={fadeInUp}
-                custom={0.2}
+                variants={containerVariants}
             >
-                {[
-                    {
-                        title: '100% Customizable',
-                        desc: 'Tailor the documents to your business, website, or app with precision.',
-                        icon: (
-                            <ShieldCheck className="mx-auto mb-4 w-10 h-10 text-blue-500"/>
-                        ),
-                    },
-                    {
-                        title: 'Compliant with LGPD and GDPR',
-                        desc: 'We generate documents based on the latest privacy laws.',
-                        icon: <Globe className="mx-auto mb-4 w-10 h-10 text-green-500"/>,
-                    },
-                    {
-                        title: 'Easy Integration',
-                        desc: 'Use a public link or embed the content directly on your site.',
-                        icon: <Code2 className="mx-auto mb-4 w-10 h-10 text-purple-500"/>,
-                    },
-                ].map((item, index) => (
-                    <motion.div key={index} variants={fadeInUp} custom={index * 0.2}>
-                        {item.icon}
-                        <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                        <p className="text-gray-600 dark:text-gray-400">{item.desc}</p>
-                    </motion.div>
-                ))}
-            </motion.section>
-
-            <motion.section
-                className="py-24 max-w-4xl w-full px-6 text-center"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{once: true}}
-                variants={fadeInUp}
-                custom={0.3}
-            >
-                <h2 className="text-3xl font-bold text-center mb-6">How it works?</h2>
-                <ol className="space-y-4 list-decimal list-inside text-gray-700 dark:text-gray-300 text-lg">
-                    <li>Create an account quickly</li>
-                    <li>Add your website or app</li>
-                    <li>Generate documents with a click</li>
-                    <li>Copy the public link or embed it on your site</li>
-                </ol>
-            </motion.section>
-
-            <motion.section
-                className="w-full max-w-5xl py-24 px-6"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{once: true}}
-                variants={fadeInUp}
-                custom={0.3}
-            >
-                <h2 className="text-3xl font-bold text-center mb-12">
-                    Choose your plan
-                </h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white"
+                           variants={itemVariants}>
+                    Features
+                </motion.h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-12">
                     <motion.div
-                        className="border rounded-2xl p-6 shadow-sm bg-white dark:bg-gray-800"
-                        variants={fadeInUp}
-                        custom={0.1}
-                    >
-                        <h3 className="text-2xl font-semibold mb-2">Free</h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-1">$ 0 / month</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            Ideal for testing the platform
-                        </p>
-                        <ul className="space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                            <li>✔️ 1 document generated</li>
-                            <li>✔️ 1 site added</li>
-                            <li>✔️ 1,000 characters of AI</li>
-                            <li>✔️ Basic AI</li>
+                        className="flex flex-col items-center text-center p-6 backdrop-blur-md bg-[#1E0359]/30 rounded-2xl"
+                        variants={itemVariants}>
+                        <ShieldCheck className="w-12 h-12 mb-4 text-[#8C0368]"/>
+                        <h3 className="text-xl font-semibold mb-2 text-white">100% Customizable</h3>
+                        <p className="text-gray-300">Tailor documents precisely to your business needs.</p>
+                    </motion.div>
+                    <motion.div
+                        className="flex flex-col items-center text-center p-6 backdrop-blur-md bg-[#1E0359]/30 rounded-2xl"
+                        variants={itemVariants}>
+                        <Globe className="w-12 h-12 mb-4 text-[#A429A6]"/>
+                        <h3 className="text-xl font-semibold mb-2 text-white">LGPD & GDPR Compliant</h3>
+                        <p className="text-gray-300">Stay up to date with global privacy regulations.</p>
+                    </motion.div>
+                    <motion.div
+                        className="flex flex-col items-center text-center p-6 backdrop-blur-md bg-[#1E0359]/30 rounded-2xl"
+                        variants={itemVariants}>
+                        <Code2 className="w-12 h-12 mb-4 text-[#471ED9]"/>
+                        <h3 className="text-xl font-semibold mb-2 text-white">Easy Integration</h3>
+                        <p className="text-gray-300">Embed or link directly – no coding required.</p>
+                    </motion.div>
+                </div>
+            </motion.section>
+
+            {/* Pricing Section */}
+            <motion.section
+                id="pricing"
+                className="w-full max-w-6xl mx-auto py-24 px-4 bg-[#030526]/30 backdrop-blur-lg rounded-2xl shadow-lg"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{once: true}}
+                variants={containerVariants}
+            >
+                <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white"
+                           variants={itemVariants}>
+                    Pricing
+                </motion.h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                    <motion.div className="p-8 bg-[#1E0359]/30 rounded-2xl text-center" variants={itemVariants}>
+                        <h3 className="text-2xl font-semibold mb-2 text-white">Free</h3>
+                        <p className="text-lg font-bold mb-4 text-[#8C0368]">$0 / month</p>
+                        <ul className="space-y-2 text-gray-300 mb-6">
+                            <li>1 document</li>
+                            <li>1 site</li>
+                            <li>1,000 characters</li>
+                            <li>Basic AI</li>
                         </ul>
                         <Link href="/auth/register">
-                            <button
-                                className="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-medium py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition cursor-pointer">
-                                Start for free
-                            </button>
+                            <motion.button
+                                className="w-full py-3 bg-[#8C0368] rounded-full font-medium hover:scale-105 transition-transform"
+                                variants={itemVariants}>
+                                Start for Free
+                            </motion.button>
                         </Link>
                     </motion.div>
 
-                    <motion.div
-                        className="border-2 border-blue-600 rounded-2xl p-6 shadow-md bg-white dark:bg-gray-900"
-                        variants={fadeInUp}
-                        custom={0.2}
-                    >
-                        <h3 className="text-2xl font-semibold mb-2 text-blue-600">Pro</h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-1">$ 5 / month</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            For professional projects and continuous use
-                        </p>
-                        <ul className="space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                            <li>✔️ Unlimited documents</li>
-                            <li>✔️ Up to 10 sites added</li>
-                            <li>✔️ No limit on AI characters</li>
-                            <li>✔️ Advanced AI</li>
+                    <motion.div className="p-8 bg-[#1E0359]/30 rounded-2xl text-center border-2 border-[#A429A6]"
+                                variants={itemVariants}>
+                        <h3 className="text-2xl font-semibold mb-2 text-white">Pro</h3>
+                        <p className="text-lg font-bold mb-4 text-[#A429A6]">$5 / month</p>
+                        <ul className="space-y-2 text-gray-300 mb-6">
+                            <li>Unlimited documents</li>
+                            <li>Up to 10 sites</li>
+                            <li>No character limits</li>
+                            <li>Advanced AI</li>
                         </ul>
-                        <Link href={{pathname: '/auth/register', query: {redirect: true}}}>
-                            <button
-                                className="w-full bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Subscribe now
-                            </button>
+                        <Link href="/auth/register?redirect=true">
+                            <motion.button
+                                className="w-full py-3 bg-[#A429A6] rounded-full font-medium hover:scale-105 transition-transform"
+                                variants={itemVariants}>
+                                Subscribe Now
+                            </motion.button>
                         </Link>
                     </motion.div>
                 </div>
             </motion.section>
 
+            {/* About Us Section */}
             <motion.section
-                className="text-center py-24"
+                id="about"
+                className="w-full max-w-6xl mx-auto py-24 px-4"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{once: true}}
-                variants={fadeInUp}
-                custom={0.4}
+                variants={containerVariants}
             >
-                <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
-                <p className="mb-8 text-gray-600 dark:text-gray-400">
-                    Create your documents now, hassle-free.
-                </p>
-                <Link href="/auth/login">
-                    <button
-                        className="bg-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition cursor-pointer">
-                        Create a free account
-                    </button>
-                </Link>
+                <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white"
+                           variants={itemVariants}>
+                    About Us
+                </motion.h2>
+                <motion.p className="max-w-2xl mx-auto text-center text-gray-300 mb-8" variants={itemVariants}>
+                    Legal Forge was born with the mission of simplifying the creation of legal policies for websites and
+                    applications, using artificial intelligence to deliver accurate, updated and personalized documents
+                    in seconds.
+                </motion.p>
+                <div className="flex justify-center gap-14 items-center">
+                    {[
+                        {name: 'João Gustavo', role: 'CEO & Founder', image: '/team/joao.png'},
+                        {name: 'Thiago Viana', role: 'CMO & Founder', image: '/team/thiago.png'},
+                    ].map((member, idx) => (
+                        <motion.div key={idx} className="text-center" variants={itemVariants}>
+                            <div className="w-24 h-24 mx-auto mb-4 rounded-full">
+                                <img
+                                    alt={member.name}
+                                    src={member.image}
+                                    className="w-full h-full rounded-full object-cover"
+                                />
+                            </div>
+                            <h4 className="text-lg font-semibold text-white">{member.name}</h4>
+                            <p className="text-gray-400">{member.role}</p>
+                        </motion.div>
+                    ))}
+                </div>
             </motion.section>
+
+            {/* Mockup Preview (coming soon) */}
+            {/*
+      <section className="mt-16 w-full max-w-4xl mx-auto px-4">
+        <img src="/mockup.png" alt="Dashboard preview" className="w-full rounded-2xl shadow-2xl border border-[#1E0359]" />
+      </section>
+      */}
+
         </main>
     );
 }

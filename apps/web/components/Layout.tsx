@@ -1,25 +1,24 @@
 'use client';
 
-import React from "react";
+import React from 'react';
 import Header from './Header';
-import {MotionConfig, motion} from "framer-motion";
-import {ThemeProvider} from "@/components/ThemeContext";
+import { MotionConfig, motion } from 'framer-motion';
 
 interface Props {
     children: React.ReactNode;
 }
 
-export default function Layout({children}: Props) {
+export default function Layout({ children }: Props) {
     return (
-        <div className="min-h-screen bg-gray-100 bg-white text-black dark:bg-gray-950 dark:text-white mb-8">
-            <Header/>
-            <MotionConfig transition={{duration: 0.5}}>
+        <div className="min-h-screen bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200">
+            <Header />
+            <MotionConfig transition={{ duration: 0.5 }}>
                 <motion.main
                     key="page-transition"
-                    initial={{opacity: 0}}
-                    animate={{opacity: 1}}
-                    exit={{opacity: 0}}
-                    className="p-6 mt-8 max-w-5xl mx-auto dark:bg-blend-darken dark:bg-gray-900/30 rounded-lg shadow-md"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="p-6 mt-8 max-w-5xl mx-auto bg-[#1E0359]/30 backdrop-blur-lg rounded-2xl shadow-2xl"
                 >
                     {children}
                 </motion.main>

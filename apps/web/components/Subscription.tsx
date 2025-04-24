@@ -39,11 +39,13 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
         (url: string) => fetcher(url, token!)
     );
 
+
     useEffect(() => {
         if (data) {
             setSubscription(data.subscription);
             if (data.subscription) {
-                setType(data.subscription.cancelAtPeriodEnd);
+                console.log(data);
+                setType(!data.subscription.cancelAtPeriodEnd);
             }
         }
 
@@ -65,13 +67,14 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
         } catch (error) {
             console.error("Failed to update invoices profile:", error);
         } finally {
+            console.log("Update complete");
+            console.log(data);
             setLoadingUpdate(false);
         }
     };
 
     const getButtonProps = () => {
         if (!plan) return null;
-
 
         if (plan.name === "Free") {
             return {
@@ -100,25 +103,22 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
             initial={{opacity: 0, y: 10}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-6"
+            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-6"
         >
             <div className="flex justify-between items-start flex-wrap gap-4">
                 <div>
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        Current Plan
-                    </h2>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                    <h2 className="text-lg font-semibold text-white">Current Plan</h2>
+                    <p className="text-sm text-gray-300">
                         <strong>Type:</strong>{" "}
                         {plan ? plan.name.charAt(0).toUpperCase() + plan.name.slice(1) : "Loading..."}
                     </p>
                 </div>
 
-                <div className="flex flex-col flex-end items-end justify-between gap-2">
+                <div className="flex flex-col items-end justify-between gap-2">
                     <button
                         onClick={handleUpdate}
                         disabled={loadingUpdate}
-                        className="flex items-center gap-2 text-sm text-blue-500 hover:underline disabled:opacity-50 cursor-pointer"
-                        aria-label="Update invoices profile"
+                        className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
                     >
                         {loadingUpdate ? (
                             <>
@@ -133,53 +133,48 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
 
                     <button
                         disabled={isLoading || !subscription}
-                        className={`text-sm text-blue-500 hover:underline disabled:opacity-50 ${subscription ? "cursor-pointer" : "cursor-not-allowed"}`}
-                        onClick={() => {
-                        }}
-                        aria-label="Change payment method"
+                        className={`text-sm text-fuchsia-400 hover:underline disabled:opacity-50 ${
+                            subscription ? "cursor-pointer" : "cursor-not-allowed"
+                        }`}
                     >
                         Change payment method
                     </button>
                 </div>
             </div>
 
-            {error || userError && <p className="text-red-500 text-sm">Error loading subscription.</p>}
-            {isLoading || loadingUser && <p className="text-gray-400 text-sm">Loading subscription...</p>}
+            {(error || userError) && <p className="text-red-500 text-sm">Error loading subscription.</p>}
+            {(isLoading || loadingUser) && <p className="text-gray-400 text-sm">Loading subscription...</p>}
 
             {subscription ? (
-                <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                    <p
-                        className={`inline-block px-2 py-1 rounded-sm text-xs font-semibold text-white ${
-                            subscription.status !== "active"
-                                ? "bg-red-600"
-                                : subscription.cancelAtPeriodEnd
-                                    ? "bg-yellow-600"
-                                    : "bg-green-600"
-                        }`}
-                    >
-                        <strong>Status:</strong>{" "}
-                        {subscription.cancelAtPeriodEnd
-                            ? "Active - Not Renewing"
-                            : statusLabel[subscription.status] || subscription.status}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <div className="text-sm text-gray-300 space-y-1">
+      <span
+          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${
+              subscription.status !== "active"
+                  ? "bg-red-600"
+                  : subscription.cancelAtPeriodEnd
+                      ? "bg-yellow-600"
+                      : "bg-green-600"
+          }`}
+      >
+        {subscription.cancelAtPeriodEnd
+            ? "Active - Not Renewing"
+            : statusLabel[subscription.status] || subscription.status}
+      </span>
+                    <p className="text-sm text-gray-400 mt-1">
                         <strong>{subscription.cancelAtPeriodEnd ? "Ends on" : "Next charge on"}:</strong>{" "}
                         {subscription.currentPeriodEnd ? formatDate(subscription.currentPeriodEnd) : "---"}
                     </p>
                 </div>
             ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    No active subscription at the moment.
-                </p>
+                <p className="text-sm text-gray-400">No active subscription at the moment.</p>
             )}
 
             {plan && buttonProps && (
                 <motion.button
                     whileTap={{scale: 0.95}}
-                    whileHover={{scale: 1.02}}
+                    whileHover={{scale: 1.03}}
                     onClick={() => handleSubscription(plan.name)}
-                    className={`px-4 py-2 rounded text-white font-medium transition ${buttonProps.className}`}
-                    aria-label={buttonProps.label}
+                    className={`px-4 py-2 rounded-xl text-white font-medium transition shadow-lg ${buttonProps.className}`}
                 >
                     {buttonProps.label}
                 </motion.button>

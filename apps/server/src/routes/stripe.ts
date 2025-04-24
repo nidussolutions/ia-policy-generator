@@ -240,9 +240,14 @@ router.patch('/update-subscription-profile', authMiddleware, async (req: AuthReq
                 status: 'active',
             })
 
+            if (!subscriptionActive.length || subscriptionActive[0].items.data.length === 0) {
+                return res.status(200).json({message: 'User not subscribed'});
+            }
+
             const newPlan = await prisma.plans.findUnique({
                 where: {price: subscriptionActive[0].items.data[0].price.id},
             })
+
 
             await prisma.userPlans.update({
                 where: {userId: user.id},
