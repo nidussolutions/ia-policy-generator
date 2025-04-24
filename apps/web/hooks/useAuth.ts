@@ -1,7 +1,7 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import {useEffect, useState, useCallback} from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
 
 export function useAuth() {
     const router = useRouter();
@@ -18,22 +18,22 @@ export function useAuth() {
         const validateOrRefreshToken = async () => {
             try {
                 const res = await fetch(`${API_URL}/auth/validate-token`, {
-                    headers: {Authorization: `Bearer ${storedToken}`},
+                    headers: { Authorization: `Bearer ${storedToken}` },
                 });
 
                 const data = await res.json();
-                if (!res.ok || !data.valid) return ('Token inválido') as string;
+                if (!res.ok || !data.valid) return ('Invalid token') as string;
 
                 if (data.error === 'Token expired') {
                     const res = await fetch(`${API_URL}/auth/refresh-token`, {
                         credentials: 'include',
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({refreshToken: storedRefreshToken}),
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ refreshToken: storedRefreshToken }),
                     });
 
                     const data = await res.json();
-                    if (!res.ok || !data.token) return ('Refresh token inválido') as string;
+                    if (!res.ok || !data.token) return ('Invalid refresh token') as string;
 
                     localStorage.setItem('token', data.token);
                     setToken(data.token);
@@ -55,20 +55,19 @@ export function useAuth() {
         validateOrRefreshToken().finally()
     }, [API_URL, router]);
 
-
     const login = useCallback(async (email: string, password: string) => {
-        if (!email || !password) return ('Email e senha são obrigatórios');
+        if (!email || !password) return ('Email and password are required');
 
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email, password}),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await res.json();
             if (!res.ok) {
-                return (data?.error || 'Erro ao logar') as string;
+                return (data?.error || 'Login error') as string;
             }
 
             localStorage.setItem('token', data.token);
@@ -77,7 +76,7 @@ export function useAuth() {
             setIsAuthenticated(true);
             router.push('/dashboard');
         } catch (error) {
-            console.error('Erro no login:', error);
+            console.error('Login error:', error);
             throw error;
         }
     }, [API_URL, router]);
@@ -91,17 +90,17 @@ export function useAuth() {
             redirect?: boolean
         ) => {
             if (!name || !email || !password)
-                return ('Nome, email e senha são obrigatórios');
+                return ('Name, email, and password are required');
 
             try {
                 const res = await fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({name, email, password, identity}),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, identity }),
                 });
 
                 const data = await res.json();
-                if (!res.ok) return (data?.error || 'Erro ao registrar') as string;
+                if (!res.ok) return (data?.error || 'Registration error') as string;
 
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('refreshToken', data.refreshToken);
@@ -110,7 +109,7 @@ export function useAuth() {
 
                 router.push(redirect ? '/dashboard/profile' : '/dashboard');
             } catch (error) {
-                console.error('Erro no registro:', error);
+                console.error('Registration error:', error);
                 throw error;
             }
         },

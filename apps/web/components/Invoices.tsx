@@ -53,7 +53,7 @@ export default function Invoices() {
             className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-4"
         >
             <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold">Faturamento</h2>
+                <h2 className="text-lg font-semibold">Billing</h2>
                 <button
                     onClick={handleUpdate}
                     className="flex items-center gap-2 text-sm text-blue-500 hover:underline disabled:opacity-50"
@@ -61,18 +61,18 @@ export default function Invoices() {
                 >
                     {loadingUpdate ? (
                         <>
-                            <RefreshCw className="animate-spin" size={16} /> Atualizando...
+                            <RefreshCw className="animate-spin" size={16} /> Updating...
                         </>
                     ) : (
                         <>
-                            <RefreshCw size={16} /> Atualizar
+                            <RefreshCw size={16} /> Update
                         </>
                     )}
                 </button>
             </div>
 
-            {error && <p className="text-red-500">Erro ao carregar faturas.</p>}
-            {(isLoading || loadingPageChange) && <p className="text-gray-400 text-sm">Carregando faturas...</p>}
+            {error && <p className="text-red-500">Error loading invoices.</p>}
+            {(isLoading || loadingPageChange) && <p className="text-gray-400 text-sm">Loading invoices...</p>}
 
             {!isLoading && invoices.length > 0 ? (
                 <>
@@ -88,12 +88,12 @@ export default function Invoices() {
                                     className="border border-gray-700 rounded-2xl p-4 shadow-sm"
                                 >
                                     <div className="flex justify-center gap-2 items-center mb-4">
-                                        <p className="text-xs text-gray-500">ID da Fatura</p>
+                                        <p className="text-xs text-gray-500">Invoice ID</p>
                                         <p className="text-xs">{invoice.id}</p>
                                     </div>
                                     <div className="flex justify-between items-center text-sm text-gray-300">
                                         <div className="flex flex-col gap-1">
-                                            <p className="text-xs text-gray-500">Criado dia</p>
+                                            <p className="text-xs text-gray-500">Created on</p>
                                             <p className="font-medium">{new Date(invoice.createdAt!).toLocaleDateString()}</p>
                                         </div>
                                         <div className="flex flex-col gap-1">
@@ -110,7 +110,7 @@ export default function Invoices() {
                                             </span>
                                         </div>
                                         <div className="flex flex-col gap-1">
-                                            <p className="text-xs text-gray-500">Valor</p>
+                                            <p className="text-xs text-gray-500">Amount</p>
                                             <p className="font-semibold text-white">R$ {(invoice.amountPaid / 100).toFixed(2)}</p>
                                         </div>
                                     </div>
@@ -125,22 +125,22 @@ export default function Invoices() {
                             disabled={page === 1 || isValidating}
                             className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
                         >
-                            <ArrowLeft size={16} /> Anterior
+                            <ArrowLeft size={16} /> Previous
                         </button>
                         <span className="text-xs text-gray-500">
-                            Página {page} de {totalPages}
+                            Page {page} of {totalPages}
                         </span>
                         <button
                             onClick={() => changePage(page + 1)}
                             disabled={!hasMore || isValidating}
                             className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
                         >
-                            Próximo <ArrowRight size={16} />
+                            Next <ArrowRight size={16} />
                         </button>
                     </div>
                 </>
             ) : (
-                !isLoading && <p className="text-gray-400 text-sm">Nenhuma fatura encontrada.</p>
+                !isLoading && <p className="text-gray-400 text-sm">No invoices found.</p>
             )}
         </motion.div>
     );

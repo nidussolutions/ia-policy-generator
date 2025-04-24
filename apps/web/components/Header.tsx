@@ -3,11 +3,9 @@
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
-import { useTheme } from '@/components/ThemeContext';
 
 export default function Header() {
   const { isAuthenticated, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
 
   return (
       <motion.header
@@ -41,7 +39,7 @@ export default function Header() {
                         href="/dashboard"
                         className="text-gray-700 hover:text-blue-600 font-medium transition dark:text-gray-200 dark:hover:text-blue-400"
                     >
-                      Painel principal
+                      Dashboard
                     </Link>
                   </motion.div>
 
@@ -67,7 +65,7 @@ export default function Header() {
                         href="/dashboard/profile"
                         className="text-gray-700 hover:text-blue-600 font-medium transition dark:text-gray-200 dark:hover:text-blue-400"
                     >
-                      Conta
+                      Account
                     </Link>
                   </motion.div>
 
@@ -80,25 +78,11 @@ export default function Header() {
                         onClick={logout}
                         className="text-red-500 hover:underline font-medium transition cursor-pointer dark:text-red-400 dark:hover:underline"
                     >
-                      Sair
+                      Logout
                     </button>
                   </motion.div>
                 </>
             )}
-
-            <motion.button
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6, duration: 0.4 }}
-                onClick={toggleTheme}
-                className="p-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              {theme === 'dark' ? (
-                  <span role="img" aria-label="sun">🌞</span> // Ícone de sol
-              ) : (
-                  <span role="img" aria-label="moon">🌙</span> // Ícone de lua
-              )}
-            </motion.button>
           </motion.div>
         </div>
       </motion.header>

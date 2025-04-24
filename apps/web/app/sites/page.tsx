@@ -5,12 +5,12 @@ import useSWR from 'swr';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import { notifyError } from '@/hooks/useToast';
+import {notifyError} from '@/hooks/useToast';
 import ConfirmModal from '@/components/ConfirmModal';
-import { fetcher } from '@/lib/api';
-import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { motion } from 'framer-motion';
+import {fetcher} from '@/lib/api';
+import {useState} from 'react';
+import {useAuth} from '@/hooks/useAuth';
+import {motion} from 'framer-motion';
 
 type Site = {
     id: string;
@@ -21,9 +21,9 @@ type Site = {
 export default function SitesPage() {
     const [modalOpen, setModalOpen] = useState(false);
     const [deletingSiteId, setDeletingSiteId] = useState<string | null>(null);
-    const { token, loading: authLoading } = useAuth();
+    const {token, loading: authLoading} = useAuth();
 
-    const { data, error, isLoading, mutate } = useSWR(
+    const {data, error, isLoading, mutate} = useSWR(
         token ? `${process.env.NEXT_PUBLIC_API_URL}/sites` : null,
         (url) => fetcher(url, token!)
     );
@@ -38,8 +38,8 @@ export default function SitesPage() {
             });
             mutate();
         } catch (error) {
-            console.error('Erro ao deletar site:', error);
-            notifyError('Erro ao deletar site');
+            console.error('Error deleting site:', error);
+            notifyError('Error deleting site');
         }
     };
 
@@ -59,8 +59,8 @@ export default function SitesPage() {
         setDeletingSiteId(null);
     };
 
-    if (authLoading || isLoading) return <Loading page="a listagem de sites" />;
-    if (error) return <Error page="a listagem de sites" err={error} />;
+    if (authLoading || isLoading) return <Loading page="sites listing"/>;
+    if (error) return <Error page="sites listing" err={error}/>;
 
     return (
         <Layout>
@@ -73,25 +73,25 @@ export default function SitesPage() {
             <div className="p-6 max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-4 border-b pb-4">
                     <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-                        Seus Sites
+                        Your Sites
                     </h1>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <motion.div whileHover={{scale: 1.05}} whileTap={{scale: 0.95}}>
                         <Link
                             href="/sites/new"
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
                         >
-                            + Novo Site
+                            + New Site
                         </Link>
                     </motion.div>
                 </div>
 
                 {data?.length === 0 && (
                     <motion.p
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{opacity: 0, y: 10}}
+                        animate={{opacity: 1, y: 0}}
                         className="text-gray-600 dark:text-gray-400 text-center"
                     >
-                        Você ainda não tem nenhum site cadastrado.
+                        You don't have any sites registered yet.
                     </motion.p>
                 )}
 
@@ -102,9 +102,9 @@ export default function SitesPage() {
                     {data?.map((site: Site, idx: number) => (
                         <motion.div
                             key={site.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: idx * 0.05 }}
+                            initial={{opacity: 0, y: 10}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{delay: idx * 0.05}}
                             className="p-2 px-4 bg-white shadow rounded flex justify-between items-center transition duration-200 dark:bg-gray-900 dark:shadow-gray-800"
                         >
                             <div>
@@ -120,21 +120,21 @@ export default function SitesPage() {
                                     href={`/sites/${site.id}/`}
                                     className="text-blue-600 hover:underline transition duration-200 dark:text-blue-500"
                                 >
-                                    Acessar
+                                    Access
                                 </Link>
                                 <span className="mx-2 text-gray-400">|</span>
                                 <Link
                                     href={`/sites/edit/${site.id}`}
                                     className="text-yellow-600 hover:underline transition duration-200 dark:text-yellow-500"
                                 >
-                                    Editar
+                                    Edit
                                 </Link>
                                 <span className="mx-2 text-gray-400">|</span>
                                 <button
                                     onClick={() => handleDelete(site.id)}
                                     className="text-red-600 hover:underline transition duration-200 dark:text-red-500"
                                 >
-                                    Deletar
+                                    Delete
                                 </button>
                             </div>
                         </motion.div>

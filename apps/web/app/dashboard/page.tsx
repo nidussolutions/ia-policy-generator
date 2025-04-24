@@ -14,8 +14,9 @@ export default function DashboardPage() {
     const { token, isAuthenticated, loading: authLoading } = useAuth();
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState<UserType | null>(null);
-    const [metrics, setMetrics] = useState({ sites: 0, documentos: 0 });
-    const [atividades, setAtividades] = useState<string[]>([]);
+    const [metrics, setMetrics] = useState({ sites: 0, documents: 0 });
+    const [activities, setActivities] = useState<string[]>([]);
+    const [error, setError] = useState<string>('');
 
     useEffect(() => {
         if (authLoading) return;
@@ -30,7 +31,7 @@ export default function DashboardPage() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
-                if (resUser.status === 401) throw new Error('Token expirado');
+                if (resUser.status === 401) throw new Error('Token expired');
                 const userJson = await resUser.json();
                 if (!resUser.ok) throw new Error(userJson.message);
 
@@ -46,9 +47,10 @@ export default function DashboardPage() {
 
                 setUserData(userJson);
                 setMetrics(metricsJson);
-                setAtividades(logsJson.logs || []);
+                setActivities(logsJson.logs || []);
             } catch (err: any) {
-                console.error('Erro ao carregar dados do dashboard:', err.message);
+                console.error('Error loading dashboard data:', err.message);
+                setError('There was an error loading your dashboard data. Please try again.');
                 localStorage.removeItem('token');
                 router.push('/auth/login');
             } finally {
@@ -60,6 +62,7 @@ export default function DashboardPage() {
     }, [authLoading, isAuthenticated, token, router]);
 
     if (authLoading || loading) return <Loading page="dashboard" />;
+    if (error) return <div className="text-center text-red-500">{error}</div>;
     if (!userData) return null;
 
     return (
@@ -76,14 +79,14 @@ export default function DashboardPage() {
                     transition={{ delay: 0.2 }}
                     className="text-3xl font-bold"
                 >
-                    Olá, {userData.name} 👋
+                    Hello, {userData.name} 👋
                 </motion.h1>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <AnimatedCard title="Sites Conectados" value={metrics.sites} />
-                    <AnimatedCard title="Documentos Gerados" value={metrics.documentos} />
-                    <AnimatedCard title="Último Login" value={new Date(userData.lastLogin).toLocaleString()} />
-                    <AnimatedCard title="Plano" value={userData?.plan?.name || 'Free'} />
+                    <AnimatedCard title="Connected Sites" value={metrics.sites} />
+                    <AnimatedCard title="Generated Documents" value={metrics.documents} />
+                    <AnimatedCard title="Last Login" value={new Date(userData.lastLogin).toLocaleString()} />
+                    <AnimatedCard title="Plan" value={userData?.plan?.name || 'Free'} />
                 </div>
 
                 <motion.div
@@ -91,11 +94,11 @@ export default function DashboardPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                 >
-                    <h2 className="text-xl font-semibold mb-2">Sugestões de Ações</h2>
+                    <h2 className="text-xl font-semibold mb-2">Suggested Actions</h2>
                     <div className="flex flex-col justify-between md:flex-row gap-4">
-                        <ActionButton className="w-full" text="Cadastrar novo site" onClick={() => router.push('/sites/new')} />
-                        <ActionButton className="w-full" text="Gerar novo documento" onClick={() => router.push('/sites')} />
-                        <ActionButton className="w-full" text="Conferir status dos termos" onClick={() => router.push('/sites')} />
+                        <ActionButton className="w-full" text="Register a new site" onClick={() => router.push('/sites/new')} />
+                        <ActionButton className="w-full" text="Generate a new document" onClick={() => router.push('/sites')} />
+                        <ActionButton className="w-full" text="Check terms status" onClick={() => router.push('/sites')} />
                     </div>
                 </motion.div>
 
@@ -104,12 +107,12 @@ export default function DashboardPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
                 >
-                    <h2 className="text-xl font-semibold mb-2">Últimas Atividades</h2>
+                    <h2 className="text-xl font-semibold mb-2">Recent Activities</h2>
                     <ul className="bg-white rounded border divide-y divide-gray-700 dark:bg-gray-800 dark:border-gray-700">
-                        {atividades.length === 0 ? (
-                            <li className="p-4 text-gray-500 dark:text-gray-400">Nenhuma atividade recente.</li>
+                        {activities.length === 0 ? (
+                            <li className="p-4 text-gray-500 dark:text-gray-400">No recent activities.</li>
                         ) : (
-                            atividades.slice(0, 5).map((a, idx) => (
+                            activities.slice(0, 5).map((a, idx) => (
                                 <motion.li
                                     key={idx}
                                     initial={{ opacity: 0 }}

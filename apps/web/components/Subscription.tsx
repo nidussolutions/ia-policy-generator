@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 
 type SubscriptionProps = {
     plan: { name: string };
@@ -12,13 +12,13 @@ type SubscriptionProps = {
 };
 
 const statusLabel: Record<string, string> = {
-    active: "Ativo",
-    canceled: "Cancelado",
-    incomplete: "Incompleto",
-    unpaid: "Não pago",
+    active: "Active",
+    canceled: "Canceled",
+    incomplete: "Incomplete",
+    unpaid: "Unpaid",
 };
 
-const Subscription = ({ plan, subscription, handleSubscription }: SubscriptionProps) => {
+const Subscription = ({plan, subscription, handleSubscription}: SubscriptionProps) => {
     const getButtonClass = () => {
         if (plan.name === "Free")
             return "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800";
@@ -28,13 +28,13 @@ const Subscription = ({ plan, subscription, handleSubscription }: SubscriptionPr
     };
 
     const getButtonLabel = () => {
-        if (plan.name === "Free") return "Assinar";
-        if (subscription?.cancelAtPeriodEnd) return "Reativar Assinatura";
-        return "Cancelar Assinatura";
+        if (plan.name === "Free") return "Subscribe";
+        if (subscription?.cancelAtPeriodEnd) return "Reactivate Subscription";
+        return "Cancel Subscription";
     };
 
     const formatDate = (dateString: string) =>
-        new Date(dateString).toLocaleDateString("pt-BR", {
+        new Date(dateString).toLocaleDateString("en-US", {
             day: "2-digit",
             month: "long",
             year: "numeric",
@@ -42,24 +42,24 @@ const Subscription = ({ plan, subscription, handleSubscription }: SubscriptionPr
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            initial={{opacity: 0, y: 10}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.4}}
             className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-4"
         >
             <div className="flex justify-between items-center">
                 <div>
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        Plano Atual
+                        Current Plan
                     </h2>
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                        <strong>Tipo:</strong>{" "}
+                        <strong>Type:</strong>{" "}
                         {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
                     </p>
                 </div>
                 <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    whileHover={{ scale: 1.02 }}
+                    whileTap={{scale: 0.95}}
+                    whileHover={{scale: 1.02}}
                     onClick={() => handleSubscription(plan.name)}
                     className={`px-4 py-2 rounded text-white font-medium transition ${getButtonClass()}`}
                     aria-label={getButtonLabel()}
@@ -81,14 +81,14 @@ const Subscription = ({ plan, subscription, handleSubscription }: SubscriptionPr
                     >
                         <strong>Status:</strong>{" "}
                         {subscription.cancelAtPeriodEnd
-                            ? "Ativo - Não Renovar"
+                            ? "Active - Not Renewing"
                             : statusLabel[subscription.status] || subscription.status}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                         <strong>
                             {subscription.cancelAtPeriodEnd
-                                ? "Finaliza em"
-                                : "Próxima cobrança em"}
+                                ? "Ends on"
+                                : "Next charge on"}
                         </strong>{" "}
                         {subscription.currentPeriodEnd
                             ? formatDate(subscription.currentPeriodEnd)
@@ -97,7 +97,7 @@ const Subscription = ({ plan, subscription, handleSubscription }: SubscriptionPr
                 </div>
             ) : (
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    Nenhuma assinatura ativa no momento.
+                    No active subscription at the moment.
                 </p>
             )}
         </motion.div>

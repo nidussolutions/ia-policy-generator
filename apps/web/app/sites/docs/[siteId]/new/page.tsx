@@ -21,7 +21,7 @@ export default function NewDoc() {
         observations: '',
     });
 
-    if (!token) return router.push('/auth/login'); // temp
+    if (!token) return router.push('/auth/login'); // Redirect if not authenticated
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,7 +35,7 @@ export default function NewDoc() {
             );
             router.push(`/sites/${siteId}`);
         } catch (err) {
-            console.error('Erro ao gerar documento', err);
+            console.error('Error generating document', err);
         } finally {
             setLoading(false);
         }
@@ -61,7 +61,7 @@ export default function NewDoc() {
                     <button onClick={() => window.history.back()}>
                         <ArrowLeft size={20}/>
                     </button>
-                    <h1 className="text-2xl font-bold">Novo Documento</h1>
+                    <h1 className="text-2xl font-bold">New Document</h1>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <motion.div
@@ -70,11 +70,11 @@ export default function NewDoc() {
                         transition={{delay: 0.1}}
                     >
                         <label className="block text-sm font-medium text-gray-700">
-                            Titulo de documento
+                            Document Title
                         </label>
                         <input
                             name="title"
-                            placeholder="ex: Termo de uso"
+                            placeholder="e.g., Terms of Use"
                             type="text"
                             value={doc.title}
                             onChange={handleChange}
@@ -89,11 +89,11 @@ export default function NewDoc() {
                         transition={{delay: 0.2}}
                     >
                         <label className="block text-sm font-medium text-gray-700">
-                            Tipo de documento
+                            Document Type
                         </label>
                         <input
                             name="type"
-                            placeholder="ex: Termo de uso"
+                            placeholder="e.g., Terms of Use"
                             type="text"
                             value={doc.type}
                             onChange={handleChange}
@@ -108,11 +108,11 @@ export default function NewDoc() {
                         transition={{delay: 0.3}}
                     >
                         <label className="block text-sm font-medium text-gray-700">
-                            Observações
+                            Observations
                         </label>
                         <input
                             name="observations"
-                            placeholder="ex: Adicionar o email fulano@gmail.com"
+                            placeholder="e.g., Add the email example@gmail.com"
                             type="text"
                             value={doc.observations}
                             onChange={handleChange}
@@ -131,12 +131,12 @@ export default function NewDoc() {
                             disabled={loading}
                             className="bg-blue-600 w-full text-white px-4 py-2 rounded hover:bg-blue-700"
                         >
-                            {loading ? 'Gerando...' : 'Gerar'}
+                            {loading ? 'Generating...' : 'Generate'}
                         </button>
                         {loading && (
                             <span className="text-gray-600 text-sm">
-                Esse processo pode demorar até 90 segundos
-              </span>
+                                This process may take up to 90 seconds.
+                            </span>
                         )}
                     </motion.div>
                 </form>
