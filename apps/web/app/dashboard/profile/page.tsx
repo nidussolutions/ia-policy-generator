@@ -4,14 +4,14 @@ import React, {useEffect, useState} from 'react';
 import {ArrowLeft} from 'lucide-react';
 import {PlanType} from '@/lib/api';
 import Layout from '@/components/Layout';
-import {useCheckout} from "@/hooks/useCheckout";
-import Loading from "@/components/Loading";
-import ConfirmModal from "@/components/ConfirmModal";
-import {useRouter} from "next/navigation";
-import Invoices from "@/components/Invoices";
-import Subscription from "@/components/Subscription";
-import Profile from "@/components/Profile";
-import {motion} from "framer-motion";
+import Loading from '@/components/Loading';
+import ConfirmModal from '@/components/ConfirmModal';
+import {useRouter} from 'next/navigation';
+import Invoices from '@/components/Invoices';
+import Subscription from '@/components/Subscription';
+import Profile from '@/components/Profile';
+import {motion} from 'framer-motion';
+import {useCheckout} from '@/hooks/useCheckout';
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -25,7 +25,6 @@ export default function ProfilePage() {
     const [modalOpen, setModalOpen] = useState(false);
 
     const {startCheckout, cancelSubscription} = useCheckout();
-
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
     useEffect(() => {
@@ -33,128 +32,116 @@ export default function ProfilePage() {
             router.push('/auth/login');
             return;
         }
-
-        const fetchData = async () => {
+        const fetchProfile = async () => {
             try {
-                const [resUser] = await Promise.all([
-                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {headers: {Authorization: `Bearer ${token}`}}),
-                ]);
-
-                const userJson = await resUser.json();
-
-                setName(userJson.name);
-                setEmail(userJson.email);
-                setPlan(userJson.plan || null);
-            } catch (err) {
-                console.error('Error fetching data:', err);
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/user/profile`,
+                    {headers: {Authorization: `Bearer ${token}`}}
+                );
+                const data = await res.json();
+                setName(data.name);
+                setEmail(data.email);
+                setPlan(data.plan || null);
+            } catch {
                 setError('Error loading data');
             } finally {
                 setLoading(false);
             }
         };
-
-        fetchData();
+        fetchProfile();
     }, [token, router]);
 
     const confirmDelete = async () => {
         try {
             await cancelSubscription(type);
             setModalOpen(false);
-        } catch (error) {
+        } catch {
             setError('Error cancelling the plan. Please try again.');
-            console.log(error);
         }
     };
 
     const handleSubscription = async (planName: string) => {
         if (!plan) return;
-
         try {
-            if (planName === 'Pro') {
-                setModalOpen(true);
-            } else {
-                await startCheckout(plan.id!);
-            }
+            if (planName === 'Pro') setModalOpen(true);
+            else await startCheckout(plan.id!);
         } catch {
             setError('Error processing plan. Please try again.');
         }
     };
 
-    const handleCancel = () => setModalOpen(false);
-
-    if (loading || !plan) {
-        return <Loading page="profile"/>;
-    }
+    if (loading || !plan) return <Loading page="profile"/>;
 
     return (
-        <Layout>
+        <>
             <ConfirmModal
                 isOpen={modalOpen}
                 type={type ? 'resumeSubscription' : 'cancelSubscription'}
                 onConfirm={confirmDelete}
-                onCancel={handleCancel}
+                onCancel={() => setModalOpen(false)}
             />
+            <Layout>
 
-            <motion.div
-                className="max-w-3xl mx-auto space-y-8"
-                initial={{opacity: 0, y: 20}}
-                animate={{opacity: 1, y: 0}}
-                transition={{duration: 0.5, ease: 'easeOut'}}
-            >
+
                 <motion.div
-                    className="flex items-center gap-4 dark:text-white"
-                    initial={{opacity: 0, x: -20}}
-                    animate={{opacity: 1, x: 0}}
-                    transition={{delay: 0.1, duration: 0.4}}
+                    className="max-w-3xl mx-auto space-y-8 p-6"
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{duration: 0.5, ease: 'easeOut'}}
                 >
-                    <button onClick={() => window.history.back()}>
-                        <ArrowLeft
-                            size={24}
-                            className="text-gray-500 hover:text-gray-700 dark:text-white dark:hover:text-gray-300 transition-colors duration-200 cursor-pointer"
+                    {/* Back & Title */}
+                    <motion.div
+                        className="flex items-center gap-4"
+                        initial={{opacity: 0, x: -20}}
+                        animate={{opacity: 1, x: 0}}
+                        transition={{delay: 0.1, duration: 0.4}}
+                    >
+                        <button onClick={() => router.back()}>
+                            <ArrowLeft className="w-6 h-6 text-gray-200 hover:text-[#8C0368] transition-colors"/>
+                        </button>
+                        <h1 className="text-3xl font-bold text-white">My Profile</h1>
+                    </motion.div>
+
+                    {/* Profile Form */}
+                    <motion.div
+                        initial={{opacity: 0, y: 20}}
+                        animate={{opacity: 1, y: 0}}
+                        transition={{delay: 0.2, duration: 0.5}}
+                    >
+                        <Profile
+                            name={name}
+                            email={email}
+                            password={password}
+                            setName={setName}
+                            setEmail={setEmail}
+                            setPassword={setPassword}
+                            error={error}
+                            setError={setError}
+                            token={token}
+                            setLoading={setLoading}
+                            loading={loading}
                         />
-                    </button>
-                    <h1 className="text-3xl font-bold">My Profile</h1>
-                </motion.div>
+                    </motion.div>
 
-                <motion.div
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{delay: 0.2, duration: 0.5}}
-                >
-                    <Profile
-                        name={name}
-                        email={email}
-                        password={password}
-                        setName={setName}
-                        setEmail={setEmail}
-                        setPassword={setPassword}
-                        error={error}
-                        setError={setError}
-                        token={token}
-                        setLoading={setLoading}
-                        loading={loading}
-                    />
-                </motion.div>
+                    {/* Subscription */}
+                    <motion.div
+                        initial={{opacity: 0, y: 20}}
+                        animate={{opacity: 1, y: 0}}
+                        transition={{delay: 0.3, duration: 0.5}}
+                    >
+                        <Subscription setType={setType} handleSubscription={handleSubscription}/>
+                    </motion.div>
 
-                <motion.div
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{delay: 0.3, duration: 0.5}}
-                >
-                    <Subscription
-                        setType={setType}
-                        handleSubscription={handleSubscription}
-                    />
+                    {/* Invoices */}
+                    <motion.div
+                        initial={{opacity: 0, y: 20}}
+                        animate={{opacity: 1, y: 0}}
+                        transition={{delay: 0.4, duration: 0.5}}
+                    >
+                        <Invoices/>
+                    </motion.div>
                 </motion.div>
-
-                <motion.div
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{delay: 0.4, duration: 0.5}}
-                >
-                    <Invoices/>
-                </motion.div>
-            </motion.div>
-        </Layout>
+            </Layout>
+        </>
     );
 }

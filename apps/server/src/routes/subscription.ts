@@ -10,7 +10,7 @@ router.get("/", authMiddleware, async (req: AuthRequest, res): Promise<any> => {
 
     try {
         const subscription = await prisma.subscription.findFirst({
-            where: {userId: userId},
+            where: {userId: userId, status: 'active'},
             orderBy: {
                 createdAt: 'desc'
             },

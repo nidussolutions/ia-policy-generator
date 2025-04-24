@@ -60,29 +60,26 @@ export default function Invoices() {
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow space-y-6"
+            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-6"
         >
             <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Faturas</h2>
+                <h2 className="text-lg font-semibold text-white">Invoices</h2>
                 <button
                     onClick={handleUpdate}
-                    className="flex items-center gap-2 text-sm text-blue-500 hover:underline disabled:opacity-50"
+                    className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
                     disabled={loadingUpdate}
+                    aria-label="Update invoices"
                 >
                     {loadingUpdate ? (
-                        <>
-                            <RefreshCw className="animate-spin" size={16}/> Atualizando...
-                        </>
+                        <><RefreshCw className="animate-spin" size={16}/> Updating...</>
                     ) : (
-                        <>
-                            <RefreshCw size={16}/> Atualizar
-                        </>
+                        <><RefreshCw size={16}/> Update</>
                     )}
                 </button>
             </div>
 
-            {error && <p className="text-red-500">Erro ao carregar faturas.</p>}
-            {(isLoading || loadingPageChange) && <p className="text-gray-400 text-sm">Carregando faturas...</p>}
+            {error && <p className="text-red-500 text-sm">Error loading invoices.</p>}
+            {(isLoading || loadingPageChange) && <p className="text-gray-400 text-sm">Loading invoices...</p>}
 
             {!isLoading && invoices.length > 0 ? (
                 <>
@@ -95,34 +92,33 @@ export default function Invoices() {
                                     animate={{opacity: 1, y: 0}}
                                     exit={{opacity: 0, y: -10}}
                                     transition={{duration: 0.3}}
-                                    className="border border-gray-700 rounded-2xl p-5 space-y-4 shadow-sm bg-gray-950 "
+                                    className="border border-white/10 rounded-2xl p-5 space-y-4 shadow-lg "
                                 >
                                     <div className="flex justify-between items-center">
-                                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                                        <div className="flex items-center gap-2 text-sm text-gray-300">
                                             <Receipt size={16}/>
-                                            <span className="text-gray-500">ID da Fatura:</span>
+                                            <span className="text-gray-400">Invoice ID:</span>
                                             <span>{invoice.id}</span>
                                         </div>
                                         {invoice.invoiceUrl && (
-                                            <div>
-                                                <a
-                                                    href={invoice.invoiceUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center gap-1 text-sm text-blue-500 hover:underline"
-                                                >
-                                                    <LinkIcon size={16}/>
-                                                    Acessar Fatura
-                                                </a>
-                                            </div>
+                                            <a
+                                                href={invoice.invoiceUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1 text-sm text-fuchsia-400 hover:underline"
+                                                aria-label="Access Invoice"
+                                            >
+                                                <LinkIcon size={16}/> Access Invoice
+                                            </a>
                                         )}
                                     </div>
 
-                                    <div className="flex items-center gap-2 text-sm text-gray-400 justify-around">
+                                    <div
+                                        className="flex flex-wrap items-center gap-4 text-sm text-gray-300 justify-between">
                                         <div className="flex items-center gap-2">
                                             <CalendarDays size={16} className="text-gray-400"/>
                                             <div>
-                                                <p className="text-xs text-gray-500">Criada em</p>
+                                                <p className="text-xs text-gray-400">Created on</p>
                                                 <p>{new Date(invoice.createdAt!).toLocaleDateString()}</p>
                                             </div>
                                         </div>
@@ -136,14 +132,13 @@ export default function Invoices() {
                                                 <XCircle size={16} className="text-red-500"/>
                                             )}
                                             <div>
-                                                <p className="text-xs text-gray-500">Status</p>
+                                                <p className="text-xs text-gray-400">Status</p>
                                                 <p className="capitalize">{invoice.status}</p>
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-2">
-                                            <span
-                                                className="text-green-500 font-bold">R$ {(invoice.amountPaid / 100).toFixed(2)}</span>
+                                        <div className="flex items-center gap-2 text-green-500 font-semibold">
+                                            <span>R$ {(invoice.amountPaid / 100).toFixed(2)}</span>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -155,24 +150,26 @@ export default function Invoices() {
                         <button
                             onClick={() => changePage(Math.max(page - 1, 1))}
                             disabled={page === 1 || isValidating}
-                            className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
+                            className="flex items-center gap-2 text-fuchsia-400 hover:underline disabled:text-gray-500"
+                            aria-label="Previous page"
                         >
-                            <ArrowLeft size={16}/> Anterior
+                            <ArrowLeft size={16}/> Previous
                         </button>
-                        <span className="text-xs text-gray-500">
-                          Página {page} de {totalPages}
+                        <span className="text-xs text-gray-400">
+                            Page {page} of {totalPages}
                         </span>
                         <button
                             onClick={() => changePage(page + 1)}
                             disabled={!hasMore || isValidating}
-                            className="flex items-center gap-2 text-blue-500 hover:underline disabled:text-gray-500"
+                            className="flex items-center gap-2 text-fuchsia-400 hover:underline disabled:text-gray-500"
+                            aria-label="Next page"
                         >
-                            Próxima <ArrowRight size={16}/>
+                            Next <ArrowRight size={16}/>
                         </button>
                     </div>
                 </>
             ) : (
-                !isLoading && <p className="text-gray-400 text-sm">Nenhuma fatura encontrada.</p>
+                !isLoading && <p className="text-gray-400 text-sm">No invoices found.</p>
             )}
         </motion.div>
     );

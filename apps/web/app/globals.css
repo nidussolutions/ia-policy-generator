@@ -11,3 +11,7 @@ body {
 body[data-loading='true'] {
     opacity: 0;
 }
+
+button{
+    cursor: pointer;
+}

@@ -8,271 +8,163 @@ import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { motion } from 'framer-motion';
 import { fetcher } from '@/lib/api';
 
+// Animation variants
+const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.12 } },
+};
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 12 } },
+};
+
 export default function RegisterPage() {
     const { register } = useAuth();
-    const [email, setEmail] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [cpfCnpj, setCpfCnpj] = useState('');
-    const [cpfCnpjError, setCpfCnpjError] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [cpfCnpjError, setCpfCnpjError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetcher(
-                `${process.env.NEXT_PUBLIC_API_URL}/auth/validatingExpiredToken`,
-                token
-            )
-                .then((res) => {
-                    if (res.valid) {
-                        window.location.href = '/dashboard';
-                    }
-                })
-                .catch(() => {
-                    localStorage.removeItem('token');
-                });
+            fetcher(`${process.env.NEXT_PUBLIC_API_URL}/auth/validatingExpiredToken`, token)
+                .then(res => res.valid && (window.location.href = '/dashboard'))
+                .catch(() => localStorage.removeItem('token'));
         }
     }, []);
 
+    const validateEmail = (value: string) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value);
+    const validatePassword = (value: string) => /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/.test(value);
+    const formatCpfCnpj = (val: string) => {
+        const digits = val.replace(/\D/g, '');
+        return digits.length <= 11 ? cpf.format(digits) : cnpj.format(digits);
+    };
+    const handleCpfCnpj = (val: string) => setCpfCnpj(formatCpfCnpj(val));
+
+    const validateForm = () => {
+        let ok = true;
+        if (!validateEmail(email)) { setEmailError('Invalid email'); ok = false; } else setEmailError('');
+        if (!validatePassword(password)) { setPasswordError('Pwd ≥6 chars, uppercase, number & symbol'); ok = false; } else setPasswordError('');
+        const digits = cpfCnpj.replace(/\D/g, '');
+        if ((digits.length <= 11 && !cpf.isValid(digits)) || (digits.length > 11 && !cnpj.isValid(digits))) {
+            setCpfCnpjError(digits.length <= 11 ? 'Invalid CPF' : 'Invalid CNPJ'); ok = false;
+        } else setCpfCnpjError('');
+        return ok;
+    };
+
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        const valid = validateForm();
-        if (!valid) return;
-
+        if (!validateForm()) return;
         setLoading(true);
         setError('');
-
         try {
-            const error = await register(name, email, password, cpfCnpj, true);
-            if (error) {
-                setError('An error occurred while creating your account. Please try again.');
-            }
+            const err = await register(name, email, password, cpfCnpj, true);
+            if (err) setError('Error creating account. Please try again.');
         } catch {
-            setError('An error occurred while creating your account. Please try again.');
+            setError('Error creating account. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    const validateForm = () => {
-        let valid = true;
-
-        if (!validateEmail(email)) {
-            setEmailError('Invalid email address');
-            valid = false;
-        } else {
-            setEmailError('');
-        }
-
-        if (!validatePassword(password)) {
-            setPasswordError(
-                'Password must be at least 6 characters long and contain a special character, an uppercase letter, and a number'
-            );
-            valid = false;
-        } else {
-            setPasswordError('');
-        }
-
-        const digits = cpfCnpj.replace(/\D/g, '');
-        if (digits.length <= 11 && !cpf.isValid(digits)) {
-            setCpfCnpjError('Invalid CPF');
-            valid = false;
-        } else if (digits.length > 11 && !cnpj.isValid(digits)) {
-            setCpfCnpjError('Invalid CNPJ');
-            valid = false;
-        } else {
-            setCpfCnpjError('');
-        }
-
-        return valid;
-    };
-
-    const validateEmail = (email: string) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    };
-
-    const validatePassword = (password: string) => {
-        const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d).{6,}$/;
-        return regex.test(password);
-    };
-
-    const formatCpfCnpj = (value: string) => {
-        const digits = value.replace(/\D/g, '');
-        if (digits.length <= 11) {
-            return cpf.format(digits);
-        } else {
-            return cnpj.format(digits);
-        }
-    };
-
-    const handleCpfCnpjChange = (value: string) => {
-        setCpfCnpj(formatCpfCnpj(value));
-    };
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 px-4">
+        <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] px-4">
             <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="w-full max-w-md space-y-6 p-8 bg-white dark:bg-gray-900 shadow-xl rounded-2xl"
+                className="w-full max-w-md p-8 bg-[#1E0359]/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-[#8C0368]/20"
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
             >
-                <div className="text-center">
-                    <Link
-                        href="/"
-                        className="flex justify-center items-center gap-2 text-3xl font-extrabold text-blue-600 dark:text-blue-400"
-                    >
-                        <UserPlus className="w-7 h-7" />
-                        Legal Forge
+                {/* Header */}
+                <motion.div className="text-center mb-6" variants={itemVariants}>
+                    <Link href="/" className="inline-flex items-center gap-2 text-3xl font-extrabold text-[#A429A6]">
+                        <UserPlus className="w-7 h-7" /> Legal Forge
                     </Link>
-                    <h2 className="mt-4 text-xl font-semibold text-gray-800 dark:text-white">
-                        Create an account
-                    </h2>
-                </div>
+                    <h2 className="mt-4 text-xl font-semibold text-gray-200">Create an account</h2>
+                </motion.div>
 
+                {/* Error */}
                 {error && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-sm text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200 px-4 py-2 rounded"
-                    >
+                    <motion.div className="mb-4 text-sm text-red-400 bg-red-900/30 px-4 py-2 rounded-lg text-center" variants={itemVariants}>
                         {error}
                     </motion.div>
                 )}
 
-                <form onSubmit={handleRegister} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Name
-                        </label>
-                        <div className="relative mt-1">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <User size={18} />
-                            </span>
+                {/* Form */}
+                <motion.form onSubmit={handleRegister} className="space-y-6" variants={containerVariants}>
+                    {/* Name */}
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><User size={18} /></span>
                             <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                                className="w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                                placeholder="Your full name"
+                                type="text" value={name} onChange={e => setName(e.target.value)} required placeholder="Full name"
+                                className="w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border border-transparent focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500"
                             />
                         </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Email
-                        </label>
-                        <div className="relative mt-1">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Mail size={18} />
-                            </span>
+                    </motion.div>
+                    {/* Email */}
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><Mail size={18} /></span>
                             <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                className={`w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
-                                    emailError ? 'border-red-500' : ''
-                                }`}
-                                placeholder="your-email@example.com"
+                                type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com"
+                                className={`w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border ${emailError ? 'border-red-500' : 'border-transparent'} focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500`}
                             />
                         </div>
-                        {emailError && (
-                            <p className="text-sm text-red-500 mt-1">{emailError}</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            CPF or CNPJ
-                        </label>
-                        <div className="relative mt-1">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <User size={18} />
-                            </span>
+                        {emailError && <p className="mt-1 text-sm text-red-400">{emailError}</p>}
+                    </motion.div>
+                    {/* CPF/CNPJ */}
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">CPF or CNPJ</label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><User size={18} /></span>
                             <input
-                                type="text"
-                                value={cpfCnpj}
-                                onChange={(e) => handleCpfCnpjChange(e.target.value)}
-                                required
-                                className={`w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
-                                    cpfCnpjError ? 'border-red-500' : ''
-                                }`}
-                                placeholder="Enter your CPF or CNPJ"
+                                type="text" value={cpfCnpj} onChange={e => handleCpfCnpj(e.target.value)} required placeholder="CPF or CNPJ"
+                                className={`w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border ${cpfCnpjError ? 'border-red-500' : 'border-transparent'} focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500`}
                             />
                         </div>
-                        {cpfCnpjError && (
-                            <p className="text-sm text-red-500 mt-1">{cpfCnpjError}</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Password
-                        </label>
-                        <div className="relative mt-1">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Lock size={18} />
-                            </span>
+                        {cpfCnpjError && <p className="mt-1 text-sm text-red-400">{cpfCnpjError}</p>}
+                    </motion.div>
+                    {/* Password */}
+                    <motion.div variants={itemVariants}>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><Lock size={18} /></span>
                             <input
-                                type={showPassword ? 'text' : 'password'}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                className={`w-full pl-10 pr-10 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
-                                    passwordError ? 'border-red-500' : ''
-                                }`}
-                                placeholder="Create a secure password"
+                                type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required placeholder="Create a secure password"
+                                className={`w-full pl-10 pr-10 py-2 rounded-lg bg-[#030526]/20 border ${passwordError ? 'border-red-500' : 'border-transparent'} focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500`}
                             />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword((prev) => !prev)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                tabIndex={-1}
-                            >
+                            <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200" tabIndex={-1}>
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
-                        {passwordError && (
-                            <p className="text-sm text-red-500 mt-1">{passwordError}</p>
-                        )}
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        {passwordError && <p className="mt-1 text-sm text-red-400">{passwordError}</p>}
+                    </motion.div>
+                    {/* Submit */}
+                    <motion.button
+                        type="submit" disabled={loading}
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-full font-medium bg-[#8C0368] hover:bg-[#A429A6] disabled:opacity-50 disabled:cursor-not-allowed text-white transition-transform"
+                        variants={itemVariants}
                     >
-                        {loading ? (
-                            <>
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                                Registering...
-                            </>
-                        ) : (
-                            'Create Account'
-                        )}
-                    </button>
-                </form>
+                        {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Registering...</> : 'Create Account'}
+                    </motion.button>
+                </motion.form>
 
-                <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                {/* Footer */}
+                <motion.p className="mt-6 text-center text-sm text-gray-400" variants={itemVariants}>
                     Already have an account?{' '}
-                    <Link
-                        href="/auth/login"
-                        className="text-blue-600 hover:underline dark:text-blue-400"
-                    >
-                        Log In
-                    </Link>
-                </p>
+                    <Link href="/auth/login" className="text-[#A429A6] hover:underline">Log In</Link>
+                </motion.p>
             </motion.div>
-        </div>
+        </main>
     );
 }
