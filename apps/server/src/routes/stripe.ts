@@ -215,8 +215,7 @@ router.patch('/update-entire-profile', authMiddleware, async (req: AuthRequest, 
             }));
 
 
-            return res.status(200);
-
+            return res.status(200).json({message: 'Success'});
         } catch (error) {
             console.log('Error in user profile update: ', error);
             res.status(500).json({error: 'Internal server error'});
