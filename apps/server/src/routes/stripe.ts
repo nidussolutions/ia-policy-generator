@@ -244,8 +244,6 @@ router.patch('/update-subscription-profile', authMiddleware, async (req: AuthReq
                 where: {price: subscriptionActive[0].items.data[0].price.id},
             })
 
-            console.log(newPlan);
-
             await prisma.userPlans.update({
                 where: {userId: user.id},
                 data: {
