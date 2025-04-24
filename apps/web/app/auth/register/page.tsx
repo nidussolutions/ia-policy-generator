@@ -99,7 +99,7 @@ export default function RegisterPage() {
     };
 
     const validatePassword = (password: string) => {
-        const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+        const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d).{6,}$/;
         return regex.test(password);
     };
 
