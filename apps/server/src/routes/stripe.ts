@@ -211,7 +211,7 @@ router.patch('/update-subscription-profile', authMiddleware, async (req: AuthReq
             });
 
             if (!subscriptionsStripe) {
-                return res.status(400).json({message: 'Assinatura não encontrada'});
+                return res.status(400).json({message: 'Subscription not found'});
             }
 
             await Promise.all(subscriptionsStripe.map(async (subscription) => {
