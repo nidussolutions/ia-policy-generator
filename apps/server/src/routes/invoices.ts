@@ -22,6 +22,7 @@ router.get("/", authMiddleware, async (req: AuthRequest, res): Promise<any> => {
                     stripeInvoiceId: true,
                     amountDue: true,
                     amountPaid: true,
+                    invoiceUrl: true,
                     status: true,
                     dueDate: true,
                     createdAt: true,

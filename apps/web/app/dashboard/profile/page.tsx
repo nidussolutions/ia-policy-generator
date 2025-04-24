@@ -1,30 +1,30 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { PlanType, SubscriptionType } from '@/lib/api';
+import React, {useEffect, useState} from 'react';
+import {ArrowLeft} from 'lucide-react';
+import {PlanType} from '@/lib/api';
 import Layout from '@/components/Layout';
-import { useCheckout } from "@/hooks/useCheckout";
+import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
 import ConfirmModal from "@/components/ConfirmModal";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import Invoices from "@/components/Invoices";
 import Subscription from "@/components/Subscription";
 import Profile from "@/components/Profile";
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 
 export default function ProfilePage() {
     const router = useRouter();
+    const [type, setType] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [plan, setPlan] = useState<PlanType | null>(null);
-    const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
 
-    const { startCheckout, cancelSubscription } = useCheckout();
+    const {startCheckout, cancelSubscription} = useCheckout();
 
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
@@ -36,18 +36,15 @@ export default function ProfilePage() {
 
         const fetchData = async () => {
             try {
-                const [resUser, resSubscription] = await Promise.all([
-                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, { headers: { Authorization: `Bearer ${token}` } }),
-                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/subscription`, { headers: { Authorization: `Bearer ${token}` } }),
+                const [resUser] = await Promise.all([
+                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {headers: {Authorization: `Bearer ${token}`}}),
                 ]);
 
                 const userJson = await resUser.json();
-                const subscriptionJson = await resSubscription.json();
 
                 setName(userJson.name);
                 setEmail(userJson.email);
                 setPlan(userJson.plan || null);
-                setSubscription(subscriptionJson);
             } catch (err) {
                 console.error('Error fetching data:', err);
                 setError('Error loading data');
@@ -61,7 +58,7 @@ export default function ProfilePage() {
 
     const confirmDelete = async () => {
         try {
-            await cancelSubscription(!subscription!.cancelAtPeriodEnd!);
+            await cancelSubscription(type);
             setModalOpen(false);
         } catch (error) {
             setError('Error cancelling the plan. Please try again.');
@@ -86,29 +83,29 @@ export default function ProfilePage() {
     const handleCancel = () => setModalOpen(false);
 
     if (loading || !plan) {
-        return <Loading page="profile" />;
+        return <Loading page="profile"/>;
     }
 
     return (
         <Layout>
             <ConfirmModal
                 isOpen={modalOpen}
-                type={subscription?.cancelAtPeriodEnd ? 'resumeSubscription' : 'cancelSubscription'}
+                type={type ? 'resumeSubscription' : 'cancelSubscription'}
                 onConfirm={confirmDelete}
                 onCancel={handleCancel}
             />
 
             <motion.div
                 className="max-w-3xl mx-auto space-y-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
+                initial={{opacity: 0, y: 20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.5, ease: 'easeOut'}}
             >
                 <motion.div
                     className="flex items-center gap-4 dark:text-white"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1, duration: 0.4 }}
+                    initial={{opacity: 0, x: -20}}
+                    animate={{opacity: 1, x: 0}}
+                    transition={{delay: 0.1, duration: 0.4}}
                 >
                     <button onClick={() => window.history.back()}>
                         <ArrowLeft
@@ -120,9 +117,9 @@ export default function ProfilePage() {
                 </motion.div>
 
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.5 }}
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{delay: 0.2, duration: 0.5}}
                 >
                     <Profile
                         name={name}
@@ -140,23 +137,22 @@ export default function ProfilePage() {
                 </motion.div>
 
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{delay: 0.3, duration: 0.5}}
                 >
                     <Subscription
-                        plan={plan}
-                        subscription={subscription}
+                        setType={setType}
                         handleSubscription={handleSubscription}
                     />
                 </motion.div>
 
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4, duration: 0.5 }}
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{delay: 0.4, duration: 0.5}}
                 >
-                    <Invoices />
+                    <Invoices/>
                 </motion.div>
             </motion.div>
         </Layout>
