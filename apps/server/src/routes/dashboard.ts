@@ -16,7 +16,7 @@ router.get('/metrics', authMiddleware, async (req: AuthRequest, res) => {
 
         res.json({
             sites: siteCount,
-            documentos: docCount,
+            documents: docCount,
         });
     } catch (error) {
         console.error(error);
