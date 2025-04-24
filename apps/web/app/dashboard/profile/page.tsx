@@ -11,6 +11,7 @@ import {useRouter} from "next/navigation";
 import Invoices from "@/components/Invoices";
 import Subscription from "@/components/Subscription";
 import Profile from "@/components/Profile";
+import {motion} from "framer-motion";
 
 export default function PerfilPage() {
     const router = useRouter();
@@ -25,8 +26,7 @@ export default function PerfilPage() {
 
     const {startCheckout, cancelSubscription} = useCheckout();
 
-    const token =
-        typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
     useEffect(() => {
         if (!token) {
@@ -58,7 +58,7 @@ export default function PerfilPage() {
 
     const confirmDelete = async () => {
         try {
-            await cancelSubscription(!subscription?.cancelAtPeriodEnd!);
+            await cancelSubscription(!subscription!.cancelAtPeriodEnd!);
             setModalOpen(false);
         } catch (error) {
             setError('Erro ao cancelar plano. Tente novamente.');
@@ -95,8 +95,18 @@ export default function PerfilPage() {
                 onCancel={handleCancel}
             />
 
-            <div className="max-w-3xl mx-auto space-y-8">
-                <div className="flex items-center gap-4 mb-6 dark:text-white">
+            <motion.div
+                className="max-w-3xl mx-auto space-y-8"
+                initial={{opacity: 0, y: 20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.5, ease: 'easeOut'}}
+            >
+                <motion.div
+                    className="flex items-center gap-4 dark:text-white"
+                    initial={{opacity: 0, x: -20}}
+                    animate={{opacity: 1, x: 0}}
+                    transition={{delay: 0.1, duration: 0.4}}
+                >
                     <button onClick={() => window.history.back()}>
                         <ArrowLeft
                             size={24}
@@ -104,30 +114,48 @@ export default function PerfilPage() {
                         />
                     </button>
                     <h1 className="text-3xl font-bold">Meu Perfil</h1>
-                </div>
+                </motion.div>
 
-                <Profile
-                    name={name}
-                    email={email}
-                    password={password}
-                    setName={setName}
-                    setEmail={setEmail}
-                    setPassword={setPassword}
-                    error={error}
-                    setError={setError}
-                    token={token}
-                    setLoading={setLoading}
-                    loading={loading}
-                />
+                <motion.div
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{delay: 0.2, duration: 0.5}}
+                >
+                    <Profile
+                        name={name}
+                        email={email}
+                        password={password}
+                        setName={setName}
+                        setEmail={setEmail}
+                        setPassword={setPassword}
+                        error={error}
+                        setError={setError}
+                        token={token}
+                        setLoading={setLoading}
+                        loading={loading}
+                    />
+                </motion.div>
 
-                <Subscription
-                    plan={plan}
-                    subscription={subscription}
-                    handleSubscription={handleSubscription}
-                />
+                <motion.div
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{delay: 0.3, duration: 0.5}}
+                >
+                    <Subscription
+                        plan={plan}
+                        subscription={subscription}
+                        handleSubscription={handleSubscription}
+                    />
+                </motion.div>
 
-                <Invoices />
-            </div>
+                <motion.div
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{delay: 0.4, duration: 0.5}}
+                >
+                    <Invoices/>
+                </motion.div>
+            </motion.div>
         </Layout>
     );
 }

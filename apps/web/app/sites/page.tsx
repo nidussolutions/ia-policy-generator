@@ -5,11 +5,12 @@ import useSWR from 'swr';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import {notifyError} from '@/hooks/useToast';
+import { notifyError } from '@/hooks/useToast';
 import ConfirmModal from '@/components/ConfirmModal';
-import {fetcher} from '@/lib/api';
-import {useState} from 'react';
-import {useAuth} from '@/hooks/useAuth';
+import { fetcher } from '@/lib/api';
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { motion } from 'framer-motion';
 
 type Site = {
     id: string;
@@ -20,9 +21,9 @@ type Site = {
 export default function SitesPage() {
     const [modalOpen, setModalOpen] = useState(false);
     const [deletingSiteId, setDeletingSiteId] = useState<string | null>(null);
-    const {token, loading: authLoading} = useAuth();
+    const { token, loading: authLoading } = useAuth();
 
-    const {data, error, isLoading, mutate} = useSWR(
+    const { data, error, isLoading, mutate } = useSWR(
         token ? `${process.env.NEXT_PUBLIC_API_URL}/sites` : null,
         (url) => fetcher(url, token!)
     );
@@ -58,8 +59,8 @@ export default function SitesPage() {
         setDeletingSiteId(null);
     };
 
-    if (authLoading || isLoading) return <Loading page="a listagem de sites"/>;
-    if (error) return <Error page="a listagem de sites" err={error}/>;
+    if (authLoading || isLoading) return <Loading page="a listagem de sites" />;
+    if (error) return <Error page="a listagem de sites" err={error} />;
 
     return (
         <Layout>
@@ -74,24 +75,36 @@ export default function SitesPage() {
                     <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
                         Seus Sites
                     </h1>
-                    <Link
-                        href="/sites/new"
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
-                    >
-                        + Novo Site
-                    </Link>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Link
+                            href="/sites/new"
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
+                        >
+                            + Novo Site
+                        </Link>
+                    </motion.div>
                 </div>
 
                 {data?.length === 0 && (
-                    <p className="text-gray-600 dark:text-gray-400 text-center">
+                    <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-gray-600 dark:text-gray-400 text-center"
+                    >
                         Você ainda não tem nenhum site cadastrado.
-                    </p>
+                    </motion.p>
                 )}
 
-                <div className="space-y-4">
-                    {data?.map((site: Site) => (
-                        <div
+                <motion.div
+                    layout
+                    className="space-y-4"
+                >
+                    {data?.map((site: Site, idx: number) => (
+                        <motion.div
                             key={site.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05 }}
                             className="p-2 px-4 bg-white shadow rounded flex justify-between items-center transition duration-200 dark:bg-gray-900 dark:shadow-gray-800"
                         >
                             <div>
@@ -124,9 +137,9 @@ export default function SitesPage() {
                                     Deletar
                                 </button>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </Layout>
     );

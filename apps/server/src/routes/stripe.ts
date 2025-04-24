@@ -113,4 +113,116 @@ router.post('/create-portal-session', async (req, res) => {
 });
 
 
+router.patch('/update-entire-profile', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
+        const userId = req.userId;
+
+        try {
+            const user = await prisma.users.findUnique({
+                where: {id: userId},
+            });
+
+            if (!user) {
+                return res.status(400).json({message: 'Usuário não encontrado'});
+            }
+
+            await stripe.customers.update(
+                user.stripeCustomerId!,
+                {
+                    name: user.name,
+                    email: user.email,
+                    metadata: {
+                        userId: user.id,
+                        identity: user.identity.replace(/\D/g, ''),
+                    },
+                }
+            );
+
+            const {data: subscriptionsStripe} = await stripe.subscriptions.list({
+                customer: user.stripeCustomerId,
+            });
+
+            if (!subscriptionsStripe) {
+                return res.status(400).json({message: 'Assinatura não encontrada'});
+            }
+
+            await Promise.all(subscriptionsStripe.map(async (subscription) => {
+                await prisma.subscription.upsert({
+                    where: {stripeSubscriptionId: subscription.id},
+                    create: {
+                        stripeSubscriptionId: subscription.id,
+                        userId: user.id,
+                        status: subscription.status,
+                        currentPeriodStart: new Date(subscription.items.data[0].current_period_start * 1000),
+                        currentPeriodEnd: new Date(subscription.items.data[0].current_period_end * 1000),
+                        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+                    },
+                    update: {
+                        status: subscription.status,
+                        currentPeriodStart: new Date(subscription.items.data[0].current_period_start * 1000),
+                        currentPeriodEnd: new Date(subscription.items.data[0].current_period_end * 1000),
+                        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+                    }
+
+                })
+
+            }));
+
+            const {data: invoicesStripe} = await stripe.invoices.list({
+                customer: user.stripeCustomerId,
+                limit: 100,
+            });
+
+            await Promise.all(invoicesStripe.map(async (invoice) => {
+                const existingInvoice = await prisma.invoice.findUnique({
+                    where: {stripeInvoiceId: invoice.id!},
+                });
+
+                const dueDate = invoice.due_date ? new Date(invoice.due_date * 1000) : null;
+
+                if (existingInvoice) {
+                    if (
+                        existingInvoice.amountDue !== invoice.amount_due ||
+                        existingInvoice.amountPaid !== invoice.amount_paid ||
+                        existingInvoice.invoiceUrl !== invoice.hosted_invoice_url ||
+                        existingInvoice.status !== invoice.status ||
+                        existingInvoice.dueDate?.getTime() !== dueDate?.getTime()
+                    ) {
+                        await prisma.invoice.update({
+                            where: {stripeInvoiceId: invoice.id!},
+                            data: {
+                                amountDue: invoice.amount_due,
+                                amountPaid: invoice.amount_paid,
+                                invoiceUrl: invoice.hosted_invoice_url,
+                                status: invoice.status!,
+                                dueDate: dueDate,
+                            },
+                        });
+                    }
+                } else {
+                    await prisma.invoice.create({
+                        data: {
+                            stripeInvoiceId: invoice.id!,
+                            userId: user.id,
+                            amountDue: invoice.amount_due,
+                            amountPaid: invoice.amount_paid,
+                            invoiceUrl: invoice.hosted_invoice_url,
+                            status: invoice.status!,
+                            dueDate: dueDate,
+                            createdAt: new Date(invoice.created * 1000),
+                        },
+                    });
+                }
+            }));
+
+
+            return res.status(200);
+
+        } catch (error) {
+            console.log('Error in user profile update: ', error);
+            res.status(500).json({error: 'Internal server error'});
+        }
+    }
+)
+
+
 export default router;

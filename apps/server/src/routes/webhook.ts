@@ -152,6 +152,7 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req, res
                         userId: user.id,
                         amountDue: finalizedInvoice.amount_due,
                         amountPaid: finalizedInvoice.amount_paid,
+                        invoiceUrl: finalizedInvoice.hosted_invoice_url,
                         status: finalizedInvoice.status!,
                         dueDate: finalizedInvoice.due_date ? new Date(finalizedInvoice.due_date * 1000) : null,
                         createdAt: new Date(finalizedInvoice.created * 1000),
