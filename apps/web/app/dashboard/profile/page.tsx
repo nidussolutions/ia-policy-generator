@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {ArrowLeft} from 'lucide-react';
-import {PlanType, SubscriptionType} from '@/lib/api';
+import {PlanType} from '@/lib/api';
 import Layout from '@/components/Layout';
 import {useCheckout} from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";

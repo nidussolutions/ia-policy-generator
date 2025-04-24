@@ -47,7 +47,7 @@ export function useAuth() {
             }
         };
 
-        checkToken();
+        checkToken().finally()
     }, [API_URL]);
 
     const login = useCallback(
