@@ -24,7 +24,7 @@ export default function Invoices() {
     const handleUpdate = async () => {
         setLoadingUpdate(true);
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/update-entire-profile`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/update-invoices-profile`, {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${token}`,

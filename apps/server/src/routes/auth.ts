@@ -9,13 +9,10 @@ const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET as string);
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
-const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || 'refreshSecret';
 
 const generateAccessToken = (userId: string) =>
-    jwt.sign({userId}, jwtSecret, {expiresIn: '60d'});
+    jwt.sign({userId}, jwtSecret, {expiresIn: '7d'});
 
-const generateRefreshToken = (userId: string) =>
-    jwt.sign({userId}, jwtRefreshSecret, {expiresIn: '7d'});
 
 router.post('/register', async (req, res): Promise<any> => {
     const {email, password, name, identity} = req.body;
@@ -58,7 +55,6 @@ router.post('/register', async (req, res): Promise<any> => {
         });
 
         const accessToken = generateAccessToken(user.id);
-        const refreshToken = generateRefreshToken(user.id);
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -73,7 +69,6 @@ router.post('/register', async (req, res): Promise<any> => {
                 },
             },
             token: accessToken,
-            refreshToken,
         });
     } catch (error) {
         console.error('Error during registration:', error);
@@ -92,14 +87,13 @@ router.post('/login', async (req, res): Promise<any> => {
         if (!isValidPassword) return res.status(400).json({error: 'Invalid password'});
 
         const accessToken = generateAccessToken(user.id);
-        const refreshToken = generateRefreshToken(user.id);
 
         await prisma.users.update({
             where: {id: user.id},
             data: {lastLogin: new Date()},
         });
 
-        res.status(200).json({token: accessToken, refreshToken});
+        res.status(200).json({token: accessToken});
     } catch (error) {
         console.log('Error during login:', error);
         res.status(500).json({error: 'Internal server error'});
@@ -125,22 +119,6 @@ router.get('/validate-token', async (req, res): Promise<any> => {
         }
 
         return res.status(401).json({valid: false, error: 'Invalid token'});
-    }
-});
-
-router.post('/refresh-token', async (req, res): Promise<any> => {
-    const {refreshToken} = req.body;
-
-    if (!refreshToken) return res.status(401).json({error: 'Refresh token not provided'});
-
-    try {
-        const decoded = jwt.verify(refreshToken, jwtRefreshSecret) as { userId: string };
-
-        const newAccessToken = generateAccessToken(decoded.userId);
-        res.status(200).json({token: newAccessToken});
-    } catch (error) {
-        console.error('Error verifying refresh token:', error);
-        res.status(403).json({error: 'Invalid or expired refresh token'});
     }
 });
 

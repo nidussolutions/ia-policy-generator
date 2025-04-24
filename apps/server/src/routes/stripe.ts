@@ -113,7 +113,7 @@ router.post('/create-portal-session', async (req, res) => {
 });
 
 
-router.patch('/update-entire-profile', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
+router.patch('/update-invoices-profile', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
         const userId = req.userId;
 
         try {
@@ -122,7 +122,7 @@ router.patch('/update-entire-profile', authMiddleware, async (req: AuthRequest, 
             });
 
             if (!user) {
-                return res.status(400).json({message: 'Usuário não encontrado'});
+                return res.status(400).json({message: 'User not found'});
             }
 
             await stripe.customers.update(
@@ -136,36 +136,6 @@ router.patch('/update-entire-profile', authMiddleware, async (req: AuthRequest, 
                     },
                 }
             );
-
-            const {data: subscriptionsStripe} = await stripe.subscriptions.list({
-                customer: user.stripeCustomerId,
-            });
-
-            if (!subscriptionsStripe) {
-                return res.status(400).json({message: 'Assinatura não encontrada'});
-            }
-
-            await Promise.all(subscriptionsStripe.map(async (subscription) => {
-                await prisma.subscription.upsert({
-                    where: {stripeSubscriptionId: subscription.id},
-                    create: {
-                        stripeSubscriptionId: subscription.id,
-                        userId: user.id,
-                        status: subscription.status,
-                        currentPeriodStart: new Date(subscription.items.data[0].current_period_start * 1000),
-                        currentPeriodEnd: new Date(subscription.items.data[0].current_period_end * 1000),
-                        cancelAtPeriodEnd: subscription.cancel_at_period_end,
-                    },
-                    update: {
-                        status: subscription.status,
-                        currentPeriodStart: new Date(subscription.items.data[0].current_period_start * 1000),
-                        currentPeriodEnd: new Date(subscription.items.data[0].current_period_end * 1000),
-                        cancelAtPeriodEnd: subscription.cancel_at_period_end,
-                    }
-
-                })
-
-            }));
 
             const {data: invoicesStripe} = await stripe.invoices.list({
                 customer: user.stripeCustomerId,
@@ -214,6 +184,74 @@ router.patch('/update-entire-profile', authMiddleware, async (req: AuthRequest, 
                 }
             }));
 
+
+            return res.status(200).json({message: 'Success'});
+        } catch (error) {
+            console.log('Error in user profile update: ', error);
+            res.status(500).json({error: 'Internal server error'});
+        }
+    }
+)
+
+
+router.patch('/update-subscription-profile', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
+        const userId = req.userId;
+
+        try {
+            const user = await prisma.users.findUnique({
+                where: {id: userId},
+            });
+
+            if (!user) {
+                return res.status(400).json({message: 'User not found'});
+            }
+
+            const {data: subscriptionsStripe} = await stripe.subscriptions.list({
+                customer: user.stripeCustomerId,
+            });
+
+            if (!subscriptionsStripe) {
+                return res.status(400).json({message: 'Assinatura não encontrada'});
+            }
+
+            await Promise.all(subscriptionsStripe.map(async (subscription) => {
+                await prisma.subscription.upsert({
+                    where: {stripeSubscriptionId: subscription.id},
+                    create: {
+                        stripeSubscriptionId: subscription.id,
+                        userId: user.id,
+                        status: subscription.status,
+                        currentPeriodStart: new Date(subscription.items.data[0].current_period_start * 1000),
+                        currentPeriodEnd: new Date(subscription.items.data[0].current_period_end * 1000),
+                        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+                    },
+                    update: {
+                        status: subscription.status,
+                        currentPeriodStart: new Date(subscription.items.data[0].current_period_start * 1000),
+                        currentPeriodEnd: new Date(subscription.items.data[0].current_period_end * 1000),
+                        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+                    }
+
+                })
+            }));
+
+            const {data: subscriptionActive} = await stripe.subscriptions.list({
+                customer: user.stripeCustomerId,
+                status: 'active',
+            })
+
+            const newPlan = await prisma.plans.findUnique({
+                where: {price: subscriptionActive[0].items.data[0].price.id},
+            })
+
+            console.log(newPlan);
+
+            await prisma.userPlans.update({
+                where: {userId: user.id},
+                data: {
+                    planId: newPlan!.id
+                }
+            })
 
             return res.status(200).json({message: 'Success'});
         } catch (error) {

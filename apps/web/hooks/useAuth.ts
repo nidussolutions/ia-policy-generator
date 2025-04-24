@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import {useRouter} from 'next/navigation';
+import {useEffect, useState, useCallback} from 'react';
 
 export function useAuth() {
     const router = useRouter();
@@ -13,73 +13,72 @@ export function useAuth() {
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
-        const storedRefreshToken = localStorage.getItem('refreshToken');
 
-        const validateOrRefreshToken = async () => {
+        const checkToken = async () => {
+            if (!API_URL) {
+                console.error('API_URL is not defined.');
+                return;
+            }
+
+            if (!storedToken) {
+                setLoading(false);
+                return;
+            }
+
             try {
                 const res = await fetch(`${API_URL}/auth/validate-token`, {
-                    headers: { Authorization: `Bearer ${storedToken}` },
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${storedToken}`,
+                    },
                 });
 
-                const data = await res.json();
-                if (!res.ok || !data.valid) return ('Invalid token') as string;
-
-                if (data.error === 'Token expired') {
-                    const res = await fetch(`${API_URL}/auth/refresh-token`, {
-                        credentials: 'include',
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ refreshToken: storedRefreshToken }),
-                    });
-
-                    const data = await res.json();
-                    if (!res.ok || !data.token) return ('Invalid refresh token') as string;
-
-                    localStorage.setItem('token', data.token);
-                    setToken(data.token);
+                if (res.ok) {
+                    setToken(storedToken);
                     setIsAuthenticated(true);
+                } else {
+                    localStorage.removeItem('token');
                 }
-
-                setToken(storedToken);
-                setIsAuthenticated(true);
             } catch (error) {
-                localStorage.removeItem('token');
-                setToken(null);
-                setIsAuthenticated(false);
-                console.error(error);
+                console.error('Error validating token:', error);
             } finally {
                 setLoading(false);
             }
         };
 
-        validateOrRefreshToken().finally()
-    }, [API_URL, router]);
+        checkToken();
+    }, [API_URL]);
 
-    const login = useCallback(async (email: string, password: string) => {
-        if (!email || !password) return ('Email and password are required');
+    const login = useCallback(
+        async (email: string, password: string): Promise<string | void> => {
+            if (!API_URL) return 'API URL is not configured';
+            if (!email || !password) return 'Email and password are required';
 
-        try {
-            const res = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
+            try {
+                const res = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email, password}),
+                });
 
-            const data = await res.json();
-            if (!res.ok) {
-                return (data?.error || 'Login error') as string;
+                const data = await res.json();
+
+                if (!res.ok) {
+                    return data?.error || 'Login failed';
+                }
+
+                localStorage.setItem('token', data.token);
+                setToken(data.token);
+                setIsAuthenticated(true);
+                router.push('/dashboard');
+            } catch (error) {
+                console.error('Login error:', error);
+                return 'Unexpected error during login';
             }
-
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('refreshToken', data.refreshToken);
-            setToken(data.token);
-            setIsAuthenticated(true);
-            router.push('/dashboard');
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
-    }, [API_URL, router]);
+        },
+        [API_URL, router]
+    );
 
     const register = useCallback(
         async (
@@ -88,29 +87,28 @@ export function useAuth() {
             password: string,
             identity: string,
             redirect?: boolean
-        ) => {
-            if (!name || !email || !password)
-                return ('Name, email, and password are required');
+        ): Promise<string | void> => {
+            if (!API_URL) return 'API URL is not configured';
+            if (!name || !email || !password) return 'Name, email, and password are required';
 
             try {
                 const res = await fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password, identity }),
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({name, email, password, identity}),
                 });
 
                 const data = await res.json();
-                if (!res.ok) return (data?.error || 'Registration error') as string;
+                if (!res.ok) return data?.error || 'Registration failed';
 
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('refreshToken', data.refreshToken);
                 setToken(data.token);
                 setIsAuthenticated(true);
 
                 router.push(redirect ? '/dashboard/profile' : '/dashboard');
             } catch (error) {
                 console.error('Registration error:', error);
-                throw error;
+                return 'Unexpected error during registration';
             }
         },
         [API_URL, router]
@@ -118,7 +116,6 @@ export function useAuth() {
 
     const logout = useCallback(() => {
         localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
         setToken(null);
         setIsAuthenticated(false);
         router.push('/auth/login');

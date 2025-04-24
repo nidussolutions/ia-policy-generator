@@ -40,6 +40,7 @@ export type InvoicesType = {
     stripeInvoiceId: string;
     amountDue: number;
     amountPaid: number;
+    invoiceUrl?: string,
     status: string;
     dueDate?: string;
     createdAt: string;

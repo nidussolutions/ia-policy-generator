@@ -9,7 +9,7 @@ router.get("/", authMiddleware, async (req: AuthRequest, res): Promise<any> => {
     const userId = req.userId;
 
     try {
-        const subscriptions = await prisma.subscription.findFirst({
+        const subscription = await prisma.subscription.findFirst({
             where: {userId: userId},
             orderBy: {
                 createdAt: 'desc'
@@ -22,7 +22,7 @@ router.get("/", authMiddleware, async (req: AuthRequest, res): Promise<any> => {
             },
         });
 
-        res.status(200).json(subscriptions);
+        res.status(200).json({subscription});
 
     } catch (error) {
         console.error('Error during getting subscriptions:', error);
