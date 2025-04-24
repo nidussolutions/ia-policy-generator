@@ -12,24 +12,24 @@ interface ConfirmModalProps {
 }
 
 const titleLabel: Record<string, string> = {
-    cancelSubscription: 'Cancelar assinatura',
-    resumeSubscription: 'Retomar assinatura',
-    deleteSite: 'Deletar site',
-    deleteDoc: 'Deletar documento',
+    cancelSubscription: 'Cancel Subscription',
+    resumeSubscription: 'Resume Subscription',
+    deleteSite: 'Delete Site',
+    deleteDoc: 'Delete Document',
 }
 
 const messageLabel: Record<string, string> = {
-    cancelSubscription: 'Certeza que deseja cancelar sua assinatura?',
-    resumeSubscription: 'Que bom que deseja voltar!',
-    deleteSite: 'Você tem certeza que deseja deletar este site?',
-    deleteDoc: 'Você tem certeza que deseja deletar este documento?',
+    cancelSubscription: 'Are you sure you want to cancel your subscription?',
+    resumeSubscription: 'Glad to have you back!',
+    deleteSite: 'Are you sure you want to delete this site?',
+    deleteDoc: 'Are you sure you want to delete this document?',
 }
 
 const descLabel: Record<string, string> = {
-    cancelSubscription: 'Ainda poderá usar as funcionalidade Pro até o final da sua assinatura',
-    resumeSubscription: 'Apenas confirmando. Você não será cobrado novamente.',
-    deleteSite: 'Essa ação não pode ser desfeita.',
-    deleteDoc: 'Essa ação não pode ser desfeita.',
+    cancelSubscription: 'You will still be able to use Pro features until the end of your subscription.',
+    resumeSubscription: 'Just confirming. You will not be charged again.',
+    deleteSite: 'This action cannot be undone.',
+    deleteDoc: 'This action cannot be undone.',
 }
 
 const buttonConfirmBg: Record<string, string> = {
@@ -83,13 +83,13 @@ export default function ConfirmModal(
                                 onClick={onCancel}
                                 className={buttonCancelBg[type]}
                             >
-                                Cancelar
+                                Cancel
                             </button>
                             <button
                                 onClick={onConfirm}
                                 className={buttonConfirmBg[type]}
                             >
-                                Confirmar
+                                Confirm
                             </button>
                         </div>
                     </motion.div>

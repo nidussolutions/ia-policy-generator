@@ -1,15 +1,15 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useAuth} from '@/hooks/useAuth';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import {Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff} from 'lucide-react';
-import {cpf, cnpj} from 'cpf-cnpj-validator';
-import {motion} from 'framer-motion';
-import {fetcher} from '@/lib/api';
+import { Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff } from 'lucide-react';
+import { cpf, cnpj } from 'cpf-cnpj-validator';
+import { motion } from 'framer-motion';
+import { fetcher } from '@/lib/api';
 
 export default function RegisterPage() {
-    const {register} = useAuth();
+    const { register } = useAuth();
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
@@ -20,7 +20,6 @@ export default function RegisterPage() {
     const [cpfCnpjError, setCpfCnpjError] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -52,10 +51,10 @@ export default function RegisterPage() {
         try {
             const error = await register(name, email, password, cpfCnpj, true);
             if (error) {
-                setError('Erro ao criar conta. Tente novamente.');
+                setError('An error occurred while creating your account. Please try again.');
             }
         } catch {
-            setError('Erro ao criar conta. Tente novamente.');
+            setError('An error occurred while creating your account. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -65,7 +64,7 @@ export default function RegisterPage() {
         let valid = true;
 
         if (!validateEmail(email)) {
-            setEmailError('E-mail inválido');
+            setEmailError('Invalid email address');
             valid = false;
         } else {
             setEmailError('');
@@ -73,7 +72,7 @@ export default function RegisterPage() {
 
         if (!validatePassword(password)) {
             setPasswordError(
-                'A senha deve ter pelo menos 6 caracteres e um caractere especial'
+                'Password must be at least 6 characters long and contain a special character, an uppercase letter, and a number'
             );
             valid = false;
         } else {
@@ -82,10 +81,10 @@ export default function RegisterPage() {
 
         const digits = cpfCnpj.replace(/\D/g, '');
         if (digits.length <= 11 && !cpf.isValid(digits)) {
-            setCpfCnpjError('CPF inválido');
+            setCpfCnpjError('Invalid CPF');
             valid = false;
         } else if (digits.length > 11 && !cnpj.isValid(digits)) {
-            setCpfCnpjError('CNPJ inválido');
+            setCpfCnpjError('Invalid CNPJ');
             valid = false;
         } else {
             setCpfCnpjError('');
@@ -100,7 +99,7 @@ export default function RegisterPage() {
     };
 
     const validatePassword = (password: string) => {
-        const regex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+        const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d).{6,}$/;
         return regex.test(password);
     };
 
@@ -120,9 +119,9 @@ export default function RegisterPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 px-4">
             <motion.div
-                initial={{opacity: 0, y: 24}}
-                animate={{opacity: 1, y: 0}}
-                transition={{duration: 0.6, ease: 'easeOut'}}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="w-full max-w-md space-y-6 p-8 bg-white dark:bg-gray-900 shadow-xl rounded-2xl"
             >
                 <div className="text-center">
@@ -130,18 +129,18 @@ export default function RegisterPage() {
                         href="/"
                         className="flex justify-center items-center gap-2 text-3xl font-extrabold text-blue-600 dark:text-blue-400"
                     >
-                        <UserPlus className="w-7 h-7"/>
+                        <UserPlus className="w-7 h-7" />
                         Legal Forge
                     </Link>
                     <h2 className="mt-4 text-xl font-semibold text-gray-800 dark:text-white">
-                        Criar uma conta
+                        Create an account
                     </h2>
                 </div>
 
                 {error && (
                     <motion.div
-                        initial={{opacity: 0}}
-                        animate={{opacity: 1}}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         className="text-sm text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200 px-4 py-2 rounded"
                     >
                         {error}
@@ -151,31 +150,31 @@ export default function RegisterPage() {
                 <form onSubmit={handleRegister} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Nome
+                            Name
                         </label>
                         <div className="relative mt-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <User size={18}/>
-              </span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <User size={18} />
+                            </span>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
                                 className="w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                                placeholder="Seu nome completo"
+                                placeholder="Your full name"
                             />
                         </div>
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            E-mail
+                            Email
                         </label>
                         <div className="relative mt-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <Mail size={18}/>
-              </span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <Mail size={18} />
+                            </span>
                             <input
                                 type="email"
                                 value={email}
@@ -184,7 +183,7 @@ export default function RegisterPage() {
                                 className={`w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
                                     emailError ? 'border-red-500' : ''
                                 }`}
-                                placeholder="seuemail@exemplo.com"
+                                placeholder="your-email@example.com"
                             />
                         </div>
                         {emailError && (
@@ -194,12 +193,12 @@ export default function RegisterPage() {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            CPF ou CNPJ
+                            CPF or CNPJ
                         </label>
                         <div className="relative mt-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <User size={18}/>
-              </span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <User size={18} />
+                            </span>
                             <input
                                 type="text"
                                 value={cpfCnpj}
@@ -208,7 +207,7 @@ export default function RegisterPage() {
                                 className={`w-full pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
                                     cpfCnpjError ? 'border-red-500' : ''
                                 }`}
-                                placeholder="Digite seu CPF ou CNPJ"
+                                placeholder="Enter your CPF or CNPJ"
                             />
                         </div>
                         {cpfCnpjError && (
@@ -218,12 +217,12 @@ export default function RegisterPage() {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Senha
+                            Password
                         </label>
                         <div className="relative mt-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <Lock size={18}/>
-              </span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <Lock size={18} />
+                            </span>
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
@@ -232,7 +231,7 @@ export default function RegisterPage() {
                                 className={`w-full pl-10 pr-10 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white ${
                                     passwordError ? 'border-red-500' : ''
                                 }`}
-                                placeholder="Crie uma senha segura"
+                                placeholder="Create a secure password"
                             />
                             <button
                                 type="button"
@@ -240,7 +239,7 @@ export default function RegisterPage() {
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                 tabIndex={-1}
                             >
-                                {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
                         {passwordError && (
@@ -255,22 +254,22 @@ export default function RegisterPage() {
                     >
                         {loading ? (
                             <>
-                                <Loader2 className="w-5 h-5 animate-spin"/>
-                                Cadastrando...
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                Registering...
                             </>
                         ) : (
-                            'Criar Conta'
+                            'Create Account'
                         )}
                     </button>
                 </form>
 
                 <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-                    Já tem uma conta?{' '}
+                    Already have an account?{' '}
                     <Link
                         href="/auth/login"
                         className="text-blue-600 hover:underline dark:text-blue-400"
                     >
-                        Entrar
+                        Log In
                     </Link>
                 </p>
             </motion.div>

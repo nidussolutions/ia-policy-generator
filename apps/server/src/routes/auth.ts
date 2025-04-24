@@ -28,8 +28,19 @@ router.post('/register', async (req, res): Promise<any> => {
 
         const plan = await prisma.plans.findFirst({where: {name: 'Free'}});
 
+        const customer = await stripe.customers.create({
+            email,
+            name,
+            metadata: {
+                identity: identity.replace(/\D/g, ''),
+            },
+        })
+
+        if (!customer) return res.status(400).json({message: 'Error creating customer'});
+
         const user = await prisma.users.create({
             data: {
+                stripeCustomerId: customer.id,
                 email,
                 password: hashedPassword,
                 name,
@@ -37,30 +48,14 @@ router.post('/register', async (req, res): Promise<any> => {
             },
         });
 
+        if (!user) return res.status(400).json({message: 'Error creating user'});
+
         await prisma.userPlans.create({
             data: {
                 userId: user.id,
                 planId: plan!.id,
             },
         });
-
-        if (!user) return res.status(400).json({message: 'Error creating user'});
-
-        const customer = await stripe.customers.create({
-            email,
-            name,
-            metadata: {
-                userId: user.id,
-                identity: identity.replace(/\D/g, ''),
-            },
-        })
-
-        await prisma.users.update({
-            where: {id: user.id},
-            data: {
-                stripeCustomerId: customer.id,
-            }
-        })
 
         const accessToken = generateAccessToken(user.id);
         const refreshToken = generateRefreshToken(user.id);

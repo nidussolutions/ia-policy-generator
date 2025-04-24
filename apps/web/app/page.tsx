@@ -48,7 +48,7 @@ export default function HomePage() {
                     custom={0.1}
                 >
                     <motion.h1 className="text-4xl sm:text-5xl font-bold text-white">
-                        Gere políticas legais para seu site com inteligência artificial
+                        Generate legal policies for your website with artificial intelligence
                     </motion.h1>
 
                     <motion.p
@@ -56,16 +56,15 @@ export default function HomePage() {
                         variants={fadeInUp}
                         custom={0.2}
                     >
-                        Em segundos, gere documentos como Política de Privacidade, Termos de
-                        Uso e Banner de Cookies personalizados e em conformidade com a LGPD
-                        e GDPR.
+                        In seconds, generate documents like Privacy Policy, Terms of Service, and Cookie Banners,
+                        tailored and compliant with LGPD and GDPR.
                     </motion.p>
 
                     <motion.div variants={fadeInUp} custom={0.3}>
                         <Link href="/auth/login">
                             <button
                                 className="bg-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition cursor-pointer">
-                                Comece agora gratuitamente
+                                Get started for free
                             </button>
                         </Link>
                     </motion.div>
@@ -82,20 +81,20 @@ export default function HomePage() {
             >
                 {[
                     {
-                        title: '100% Personalizado',
-                        desc: 'Adapte os documentos ao seu negócio, site ou app com precisão.',
+                        title: '100% Customizable',
+                        desc: 'Tailor the documents to your business, website, or app with precision.',
                         icon: (
                             <ShieldCheck className="mx-auto mb-4 w-10 h-10 text-blue-500"/>
                         ),
                     },
                     {
-                        title: 'Conforme LGPD e GDPR',
-                        desc: 'Geramos documentos com base nas leis de privacidade mais atuais.',
+                        title: 'Compliant with LGPD and GDPR',
+                        desc: 'We generate documents based on the latest privacy laws.',
                         icon: <Globe className="mx-auto mb-4 w-10 h-10 text-green-500"/>,
                     },
                     {
-                        title: 'Integração fácil',
-                        desc: 'Use um link público ou incorpore o conteúdo no seu site.',
+                        title: 'Easy Integration',
+                        desc: 'Use a public link or embed the content directly on your site.',
                         icon: <Code2 className="mx-auto mb-4 w-10 h-10 text-purple-500"/>,
                     },
                 ].map((item, index) => (
@@ -115,12 +114,12 @@ export default function HomePage() {
                 variants={fadeInUp}
                 custom={0.3}
             >
-                <h2 className="text-3xl font-bold text-center mb-6">Como funciona?</h2>
+                <h2 className="text-3xl font-bold text-center mb-6">How it works?</h2>
                 <ol className="space-y-4 list-decimal list-inside text-gray-700 dark:text-gray-300 text-lg">
-                    <li>Crie uma conta rapidamente</li>
-                    <li>Adicione seu site ou app</li>
-                    <li>Gere documentos com um clique</li>
-                    <li>Copie o link público ou incorpore no seu site</li>
+                    <li>Create an account quickly</li>
+                    <li>Add your website or app</li>
+                    <li>Generate documents with a click</li>
+                    <li>Copy the public link or embed it on your site</li>
                 </ol>
             </motion.section>
 
@@ -133,7 +132,7 @@ export default function HomePage() {
                 custom={0.3}
             >
                 <h2 className="text-3xl font-bold text-center mb-12">
-                    Escolha seu plano
+                    Choose your plan
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
@@ -142,21 +141,21 @@ export default function HomePage() {
                         variants={fadeInUp}
                         custom={0.1}
                     >
-                        <h3 className="text-2xl font-semibold mb-2">Gratuito</h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-1">R$ 0 / mês</p>
+                        <h3 className="text-2xl font-semibold mb-2">Free</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-1">$ 0 / month</p>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            Ideal para testar a plataforma
+                            Ideal for testing the platform
                         </p>
                         <ul className="space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                            <li>✔️ 1 documento gerado</li>
-                            <li>✔️ 1 site adicionado</li>
-                            <li>✔️ 1.000 caracteres de IA</li>
-                            <li>✔️ IA básica</li>
+                            <li>✔️ 1 document generated</li>
+                            <li>✔️ 1 site added</li>
+                            <li>✔️ 1,000 characters of AI</li>
+                            <li>✔️ Basic AI</li>
                         </ul>
                         <Link href="/auth/register">
                             <button
                                 className="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-medium py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition cursor-pointer">
-                                Começar grátis
+                                Start for free
                             </button>
                         </Link>
                     </motion.div>
@@ -167,21 +166,21 @@ export default function HomePage() {
                         custom={0.2}
                     >
                         <h3 className="text-2xl font-semibold mb-2 text-blue-600">Pro</h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-1">R$ 15 / mês</p>
+                        <p className="text-gray-600 dark:text-gray-400 mb-1">$ 5 / month</p>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            Para projetos profissionais e uso contínuo
+                            For professional projects and continuous use
                         </p>
                         <ul className="space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                            <li>✔️ Documentos ilimitados</li>
-                            <li>✔️ Até 10 sites cadastrados</li>
-                            <li>✔️ Sem limite de caracteres de IA</li>
-                            <li>✔️ IA avançada</li>
+                            <li>✔️ Unlimited documents</li>
+                            <li>✔️ Up to 10 sites added</li>
+                            <li>✔️ No limit on AI characters</li>
+                            <li>✔️ Advanced AI</li>
                         </ul>
                         <Link href={{pathname: '/auth/register', query: {redirect: true}}}>
                             <button
                                 className="w-full bg-blue-600 text-white font-medium py-3 rounded-xl hover:bg-blue-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Adquirir agora
+                                Subscribe now
                             </button>
                         </Link>
                     </motion.div>
@@ -196,14 +195,14 @@ export default function HomePage() {
                 variants={fadeInUp}
                 custom={0.4}
             >
-                <h2 className="text-3xl font-bold mb-4">Pronto para começar?</h2>
+                <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
                 <p className="mb-8 text-gray-600 dark:text-gray-400">
-                    Crie seus documentos agora mesmo, sem complicação.
+                    Create your documents now, hassle-free.
                 </p>
                 <Link href="/auth/login">
                     <button
                         className="bg-blue-600 text-white font-medium px-6 py-3 rounded-xl shadow hover:bg-blue-700 transition cursor-pointer">
-                        Criar conta grátis
+                        Create a free account
                     </button>
                 </Link>
             </motion.section>

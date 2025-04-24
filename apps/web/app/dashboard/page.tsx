@@ -7,14 +7,16 @@ import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import ActionButton from '@/components/ActionButton';
 import { useAuth } from '@/hooks/useAuth';
+import { motion } from 'framer-motion';
 
 export default function DashboardPage() {
     const router = useRouter();
     const { token, isAuthenticated, loading: authLoading } = useAuth();
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState<UserType | null>(null);
-    const [metrics, setMetrics] = useState({ sites: 0, documentos: 0 });
-    const [atividades, setAtividades] = useState<string[]>([]);
+    const [metrics, setMetrics] = useState({ sites: 0, documents: 0 });
+    const [activities, setActivities] = useState<string[]>([]);
+    const [error, setError] = useState<string>('');
 
     useEffect(() => {
         if (authLoading) return;
@@ -29,28 +31,26 @@ export default function DashboardPage() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
-                if (resUser.status === 401) throw new Error('Token expirado');
-
+                if (resUser.status === 401) throw new Error('Token expired');
                 const userJson = await resUser.json();
                 if (!resUser.ok) throw new Error(userJson.message);
 
                 const resMetrics = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/metrics`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-
                 const metricsJson = await resMetrics.json();
 
                 const resLog = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/logs`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-
                 const logsJson = await resLog.json();
 
                 setUserData(userJson);
                 setMetrics(metricsJson);
-                setAtividades(logsJson.logs || []);
+                setActivities(logsJson.logs || []);
             } catch (err: any) {
-                console.error('Erro ao carregar dados do dashboard:', err.message);
+                console.error('Error loading dashboard data:', err.message);
+                setError('There was an error loading your dashboard data. Please try again.');
                 localStorage.removeItem('token');
                 router.push('/auth/login');
             } finally {
@@ -62,72 +62,85 @@ export default function DashboardPage() {
     }, [authLoading, isAuthenticated, token, router]);
 
     if (authLoading || loading) return <Loading page="dashboard" />;
-    if (!userData) return null; // Evita render antes de redirecionar
+    if (error) return <div className="text-center text-red-500">{error}</div>;
+    if (!userData) return null;
 
     return (
         <Layout>
-            <div className="p-6 space-y-6 ">
-                <h1 className="text-3xl font-bold">Olá, {userData.name} 👋</h1>
+            <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="p-6 space-y-6"
+            >
+                <motion.h1
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-3xl font-bold"
+                >
+                    Hello, {userData.name} 👋
+                </motion.h1>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <Card title="Sites Conectados" value={metrics.sites} />
-                    <Card title="Documentos Gerados" value={metrics.documentos} />
-                    <Card
-                        title="Último Login"
-                        value={new Date(userData.lastLogin).toLocaleString()}
-                    />
-                    <Card title="Plano" value={userData?.plan?.name || 'Free'} />
+                    <AnimatedCard title="Connected Sites" value={metrics.sites} />
+                    <AnimatedCard title="Generated Documents" value={metrics.documents} />
+                    <AnimatedCard title="Last Login" value={new Date(userData.lastLogin).toLocaleString()} />
+                    <AnimatedCard title="Plan" value={userData?.plan?.name || 'Free'} />
                 </div>
 
-                <div>
-                    <h2 className="text-xl font-semibold mb-2">Sugestões de Ações</h2>
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <h2 className="text-xl font-semibold mb-2">Suggested Actions</h2>
                     <div className="flex flex-col justify-between md:flex-row gap-4">
-                        <ActionButton
-                            className="w-full"
-                            text="Cadastrar novo site"
-                            onClick={() => router.push('/sites/new')}
-                        />
-                        <ActionButton
-                            className="w-full"
-                            text="Gerar novo documento"
-                            onClick={() => router.push('/sites')}
-                        />
-                        <ActionButton
-                            className="w-full"
-                            text="Conferir status dos termos"
-                            onClick={() => router.push('/sites')}
-                        />
+                        <ActionButton className="w-full" text="Register a new site" onClick={() => router.push('/sites/new')} />
+                        <ActionButton className="w-full" text="Generate a new document" onClick={() => router.push('/sites')} />
+                        <ActionButton className="w-full" text="Check terms status" onClick={() => router.push('/sites')} />
                     </div>
-                </div>
+                </motion.div>
 
-                <div>
-                    <h2 className="text-xl font-semibold mb-2">Últimas Atividades</h2>
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                >
+                    <h2 className="text-xl font-semibold mb-2">Recent Activities</h2>
                     <ul className="bg-white rounded border divide-y divide-gray-700 dark:bg-gray-800 dark:border-gray-700">
-                        {atividades.length === 0 ? (
-                            <li className="p-4 text-gray-500 dark:text-gray-400">
-                                Nenhuma atividade recente.
-                            </li>
+                        {activities.length === 0 ? (
+                            <li className="p-4 text-gray-500 dark:text-gray-400">No recent activities.</li>
                         ) : (
-                            atividades.slice(0, 5).map((a, idx) => (
-                                <li key={idx} className="p-4 text-gray-700 dark:text-gray-200">
+                            activities.slice(0, 5).map((a, idx) => (
+                                <motion.li
+                                    key={idx}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.5 + idx * 0.1 }}
+                                    className="p-4 text-gray-700 dark:text-gray-200"
+                                >
                                     {a}
-                                </li>
+                                </motion.li>
                             ))
                         )}
                     </ul>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </Layout>
     );
 }
 
-function Card({ title, value }: { title: string; value: string | number }) {
+function AnimatedCard({ title, value }: { title: string; value: string | number }) {
     return (
-        <div className="p-4 bg-white border rounded shadow text-center hover:shadow-lg transition duration-200 dark:bg-gray-800 dark:border-gray-700">
+        <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="p-4 bg-white border rounded shadow text-center hover:shadow-lg transition duration-200 dark:bg-gray-800 dark:border-gray-700"
+        >
             <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-            <p className="text-1xl font-bold text-gray-800 mt-1 dark:text-white">
-                {value}
-            </p>
-        </div>
+            <p className="text-1xl font-bold text-gray-800 mt-1 dark:text-white">{value}</p>
+        </motion.div>
     );
 }

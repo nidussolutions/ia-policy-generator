@@ -1,6 +1,7 @@
 import {Loader2, Lock, Mail, User} from "lucide-react";
 import React, {useState} from "react";
 import {putWithAuth} from "@/lib/api";
+import {motion, AnimatePresence} from "framer-motion";
 
 type ProfileProps = {
     name: string;
@@ -16,20 +17,19 @@ type ProfileProps = {
     token: string;
 }
 
-export default function (
-    {
-        name,
-        email,
-        password,
-        setName,
-        setEmail,
-        error,
-        setPassword,
-        token,
-        setError,
-        loading,
-        setLoading
-    }: ProfileProps) {
+export default function ({
+                             name,
+                             email,
+                             password,
+                             setName,
+                             setEmail,
+                             error,
+                             setPassword,
+                             token,
+                             setError,
+                             loading,
+                             setLoading
+                         }: ProfileProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [success, setSuccess] = useState('');
 
@@ -40,7 +40,7 @@ export default function (
         setError('');
 
         if (password && (password.length < 6 || !/[^A-Za-z0-9]/.test(password))) {
-            setError('A senha deve ter pelo menos 6 caracteres e um caractere especial.');
+            setError('Password must be at least 6 characters long and contain a special character.');
             setLoading(false);
             return;
         }
@@ -52,83 +52,123 @@ export default function (
                 password: password || undefined,
             }, token);
 
-            if (!res.id) return setError('Erro ao atualizar perfil. Tente novamente.');
+            if (!res.id) return setError('Error updating profile. Please try again.');
 
-            setSuccess('Informações atualizadas com sucesso!');
+            setSuccess('Information updated successfully!');
         } catch {
-            setError('Erro ao atualizar perfil. Tente novamente.');
+            setError('Error updating profile. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    return (
-        <div>
-            <form onSubmit={handleUpdate} className="space-y-6 bg-white dark:bg-gray-900 p-6 rounded-xl shadow">
-                {error && <p className="text-red-500">{error}</p>}
-                {success && <p className="text-green-600">{success}</p>}
+    const motionTransition = {initial: {opacity: 0, y: 20}, animate: {opacity: 1, y: 0}, transition: {duration: 0.4}};
 
-                <div>
-                    <label className="block text-sm font-medium mb-1">Nome</label>
+    return (
+        <motion.div {...motionTransition}>
+            <motion.form
+                onSubmit={handleUpdate}
+                className="space-y-6 bg-white dark:bg-gray-900 p-6 rounded-xl shadow"
+                initial={{opacity: 0, scale: 0.95}}
+                animate={{opacity: 1, scale: 1}}
+                transition={{duration: 0.3}}
+            >
+                <AnimatePresence>
+                    {error && (
+                        <motion.p
+                            className="text-red-500"
+                            initial={{opacity: 0, y: -10}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -10}}
+                        >
+                            {error}
+                        </motion.p>
+                    )}
+                    {success && (
+                        <motion.p
+                            className="text-green-600"
+                            initial={{opacity: 0, y: -10}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -10}}
+                        >
+                            {success}
+                        </motion.p>
+                    )}
+                </AnimatePresence>
+
+                <motion.div {...motionTransition} transition={{delay: 0.1}}>
+                    <label className="block text-sm font-medium mb-1">Name</label>
                     <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><User
-                                size={18}/></span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <User size={18}/>
+                        </span>
                         <input
                             type="text"
                             className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
+                            aria-label="Name"
                         />
                     </div>
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div {...motionTransition} transition={{delay: 0.2}}>
                     <label className="block text-sm font-medium mb-1">Email</label>
                     <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Mail size={18}/></span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <Mail size={18}/>
+                        </span>
                         <input
                             type="email"
                             className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            aria-label="Email"
                         />
                     </div>
-                </div>
+                </motion.div>
 
-                <div>
-                    <label className="block text-sm font-medium mb-1">Nova Senha</label>
+                <motion.div {...motionTransition} transition={{delay: 0.3}}>
+                    <label className="block text-sm font-medium mb-1">New Password</label>
                     <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Lock size={18}/></span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <Lock size={18}/>
+                        </span>
                         <input
                             type={showPassword ? 'text' : 'password'}
                             className="w-full pl-10 pr-12 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Deixe em branco para não alterar"
+                            placeholder="Leave blank to keep current password"
+                            aria-label="Password"
                         />
                         <button
                             type="button"
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-blue-600"
                             onClick={() => setShowPassword((prev) => !prev)}
                         >
-                            {showPassword ? 'Ocultar' : 'Ver'}
+                            {showPassword ? 'Hide' : 'Show'}
                         </button>
                     </div>
-                </div>
+                </motion.div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
+                <motion.div
+                    className="flex justify-end"
+                    {...motionTransition}
+                    transition={{delay: 0.4}}
                 >
-                    {loading && <Loader2 className="w-4 h-4 animate-spin"/>}
-                    Salvar Alterações
-                </button>
-            </form>
-        </div>
-    )
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2 cursor-pointer dark:bg-blue-700 dark:hover:bg-blue-800"
+                    >
+                        {loading && <Loader2 className="w-4 h-4 animate-spin"/>}
+                        Save Changes
+                    </button>
+                </motion.div>
+            </motion.form>
+        </motion.div>
+    );
 }

@@ -7,7 +7,7 @@ import React, {useEffect, useState} from 'react';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import {ArrowLeft} from "lucide-react";
+import {ArrowLeft} from 'lucide-react';
 
 export default function EditSitePage() {
     const {siteId} = useParams() as { siteId: string };
@@ -43,22 +43,23 @@ export default function EditSitePage() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                alert(`Erro: ${errorData.error}`);
-                return
+                alert(`Error: ${errorData.error}`);
+                return;
             }
+
             await mutate();
-            setSuccess('Site atualizado com sucesso!');
+            setSuccess('Site updated successfully!');
         } catch (err) {
-            setError('Erro ao atualizar o site. Tente novamente mais tarde.');
+            setError('Error updating the site. Please try again later.');
             console.error(err);
         } finally {
             setIsSaving(false);
         }
     };
 
-    if (isLoading) return <Loading page="a listagem de sites"/>;
-    if (errorSWR) return <Error page="a listagem de sites" err={error}/>;
-    if (!site) return <Error page="o site solicitado" err="Site not found"/>;
+    if (isLoading) return <Loading page="the site list"/>;
+    if (errorSWR) return <Error page="the site list" err={error}/>;
+    if (!site) return <Error page="the requested site" err="Site not found"/>;
 
     return (
         <Layout>
@@ -70,15 +71,15 @@ export default function EditSitePage() {
                     >
                         <ArrowLeft className="cursor-pointer" size={20}/>
                     </button>
-                    <h1 className="text-2xl font-semibold">Editar site</h1>
+                    <h1 className="text-2xl font-semibold">Edit site</h1>
                 </div>
 
                 {error && <p className="text-red-500">{error}</p>}
                 {success && <p className="text-green-600">{success}</p>}
 
-                <form onSubmit={handleSubmit} className="w-full max-w-md  p-6 rounded-2xl shadow-lg">
+                <form onSubmit={handleSubmit} className="w-full max-w-md p-6 rounded-2xl shadow-lg">
                     <label className="block mb-4">
-                        <span className="text-neutral-300">Nome do site</span>
+                        <span className="text-neutral-300">Site name</span>
                         <input
                             type="text"
                             value={site.name}
@@ -89,7 +90,7 @@ export default function EditSitePage() {
                     </label>
 
                     <label className="block mb-6">
-                        <span className="text-neutral-300">Domínio</span>
+                        <span className="text-neutral-300">Domain</span>
                         <input
                             type="text"
                             value={site.domain}
@@ -100,7 +101,7 @@ export default function EditSitePage() {
                     </label>
 
                     <label className="block mb-6">
-                        <span className="text-neutral-300">Idioma</span>
+                        <span className="text-neutral-300">Language</span>
                         <input
                             type="text"
                             value={site.language}
@@ -111,7 +112,7 @@ export default function EditSitePage() {
                     </label>
 
                     <label className="block mb-6">
-                        <span className="text-neutral-300">Legislação</span>
+                        <span className="text-neutral-300">Legislation</span>
                         <input
                             type="text"
                             value={site.legislation}
@@ -122,13 +123,13 @@ export default function EditSitePage() {
                     </label>
 
                     <label className="block mb-6">
-                        <span className="text-neutral-300">Observações</span>
+                        <span className="text-neutral-300">Notes</span>
                         <textarea
                             value={site.observations || ''}
                             onChange={(e) => setSite({...site, observations: e.target.value})}
                             className="w-full mt-1 px-4 py-2 rounded-xl text-white border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                             rows={4}
-                            placeholder="Escreva suas observações aqui..."
+                            placeholder="Write your notes here..."
                         />
                     </label>
 
@@ -137,7 +138,7 @@ export default function EditSitePage() {
                         disabled={isSaving}
                         className="w-full py-2 bg-cyan-500 text-white font-semibold rounded-xl hover:bg-cyan-600 transition cursor-pointer"
                     >
-                        {isSaving ? 'Salvando...' : 'Salvar alterações'}
+                        {isSaving ? 'Saving...' : 'Save changes'}
                     </button>
                 </form>
             </div>

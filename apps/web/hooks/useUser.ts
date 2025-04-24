@@ -25,14 +25,14 @@ export function useUser() {
                 });
 
                 if (!res.ok) {
-                    new Error('Falha ao buscar usuário');
+                    throw new Error('Failed to fetch user data');
                 }
 
                 const data = await res.json();
                 setUser(data);
             } catch (err) {
                 console.error(err);
-                setError('Erro ao buscar informações do usuário');
+                setError('Error fetching user information');
             } finally {
                 setLoading(false);
             }

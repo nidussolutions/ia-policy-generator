@@ -4,75 +4,56 @@ import {useParams} from 'next/navigation';
 import {CheckCircle, XCircle, Hourglass} from 'lucide-react';
 import Link from "next/link";
 
+// Reusable StatusMessage component for cleaner code
+const StatusMessage = ({icon: Icon, color, title, message}: {
+    icon: React.ElementType,
+    color: string,
+    title: string,
+    message: string
+}) => (
+    <div className={`text-center ${color}`}>
+        <Icon size={64} className="mx-auto mb-4"/>
+        <h2 className="text-2xl font-semibold mb-2">{title}</h2>
+        <p>{message}</p>
+    </div>
+);
+
 export default function PaymentConfirmationPage() {
     const {status} = useParams() as { status: string };
-
 
     const renderStatus = () => {
         switch (status) {
             case 'approved':
-                return (
-                    <div className="text-center text-green-500">
-                        <CheckCircle size={64} className="mx-auto mb-4"/>
-                        <h2 className="text-2xl font-semibold mb-2">Pagamento Confirmado</h2>
-                        <p>Sua assinatura está ativa! É um prezer ter você conosco!</p>
-                    </div>
-
-                );
+                return <StatusMessage icon={CheckCircle} color="text-green-500" title="Payment Confirmed"
+                                      message="Your subscription is active! We're glad to have you with us!"/>;
             case 'pending':
-                return (
-                    <div className="text-center text-yellow-500">
-                        <Hourglass size={64} className="mx-auto mb-4 animate-pulse"/>
-                        <h2 className="text-2xl font-semibold mb-2">Pagamento pendente</h2>
-                        <p>Estamos aguardando a confirmação do pagamento. Verifique novamente mais tarde.</p>
-                    </div>
-                );
+                return <StatusMessage icon={Hourglass} color="text-yellow-500" title="Payment Pending"
+                                      message="We're waiting for the payment confirmation. Please check again later."/>;
             case 'rejected':
-                return (
-                    <div className="text-center text-red-500">
-                        <XCircle size={64} className="mx-auto mb-4"/>
-                        <h2 className="text-2xl font-semibold mb-2">Pagamento rejeitado</h2>
-                        <p> Seu pagamento foi rejeitado. Verifique os dados do cartão e tente novamente. </p>
-                    </div>
-                )
+                return <StatusMessage icon={XCircle} color="text-red-500" title="Payment Rejected"
+                                      message="Your payment was rejected. Please verify your card details and try again."/>;
             case 'failure':
-                return (
-                    <div className="text-center text-red-500">
-                        <XCircle size={64} className="mx-auto mb-4"/>
-                        <h2 className="text-2xl font-semibold mb-2">Falha no pagamento</h2>
-                        <p>
-                            Sentimos muito, mas seu pagamento não foi aprovado. Você pode tentar novamente! Se precisar
-                            de ajuda, entre em contato com nosso suporte.
-                        </p>
-                    </div>
-                );
+                return <StatusMessage icon={XCircle} color="text-red-500" title="Payment Failed"
+                                      message="We're sorry, but your payment was not approved. Please try again! If you need help, contact support."/>;
             case 'cancelled':
-                return (
-                    <div className="text-center text-red-500">
-                        <XCircle size={64} className="mx-auto mb-4"/>
-                        <h2 className="text-2xl font-semibold mb-2">Pagamento Cancelado</h2>
-                        <p> Seu pagamento foi cancelado. Se você não fez isso, entre em contato com nosso suporte </p>
-                    </div>
-                )
-                    ;
+                return <StatusMessage icon={XCircle} color="text-red-500" title="Payment Cancelled"
+                                      message="Your payment was cancelled. If you didn't do this, please contact support."/>;
             default:
-                return (
-                    <div className="text-center text-neutral-400">
-                        <h2 className="text-2xl font-semibold mb-2">Processando...</h2>
-                        <p>Estamos processando seu pagamento. Isso pode levar alguns minutos.</p>
-                    </div>
-                );
+                return <div className="text-center text-neutral-400">
+                    <h2 className="text-2xl font-semibold mb-2">Processing...</h2>
+                    <p>We&apos;re processing your payment. This may take a few minutes.</p>
+                </div>;
         }
     };
 
     return (
-        <main className="text-white min-h-screen  flex flex-col justify-center items-center p-6">
+        <main className="text-white min-h-screen flex flex-col justify-center items-center p-6">
             <div className="p-8 rounded-2xl shadow-xl max-w-lg w-full text-center bg-gray-800 dark:bg-gray-900">
                 {renderStatus()}
                 <div className="mt-6">
                     <Link href="/dashboard"
                           className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
-                        Voltar para o Dashboard
+                        Back to Dashboard
                     </Link>
                 </div>
             </div>

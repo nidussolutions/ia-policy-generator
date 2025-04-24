@@ -1,9 +1,11 @@
+import Stripe from 'stripe';
 import {Router} from 'express';
 import {PrismaClient} from '../../generated/prisma';
 import {AuthRequest, authMiddleware} from '../middlewares/authMiddlewares';
 
 const router = Router();
 const prisma = new PrismaClient();
+const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 router.get('/profile', authMiddleware, async (req: AuthRequest, res) => {
     try {
@@ -37,6 +39,18 @@ router.put('/profile', authMiddleware, async (req: AuthRequest, res) => {
             where: {id: req.userId},
             data: {name, email},
         });
+
+        await stripe.customers.update(
+            user.stripeCustomerId!,
+            {
+                name: user.name,
+                email: user.email,
+                metadata: {
+                    userId: user.id,
+                    identity: user.identity.replace(/\D/g, ''),
+                },
+            }
+        );
 
         if (!user) res.status(404).json({error: 'User not found'});
         const {password, ...userData} = user!;

@@ -1,18 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {ArrowLeft} from 'lucide-react';
-import {PlanType, SubscriptionType} from '@/lib/api';
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { PlanType, SubscriptionType } from '@/lib/api';
 import Layout from '@/components/Layout';
-import {useCheckout} from "@/hooks/useCheckout";
+import { useCheckout } from "@/hooks/useCheckout";
 import Loading from "@/components/Loading";
 import ConfirmModal from "@/components/ConfirmModal";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Invoices from "@/components/Invoices";
 import Subscription from "@/components/Subscription";
 import Profile from "@/components/Profile";
+import { motion } from "framer-motion";
 
-export default function PerfilPage() {
+export default function ProfilePage() {
     const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -23,21 +24,21 @@ export default function PerfilPage() {
     const [error, setError] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
 
-    const {startCheckout, cancelSubscription} = useCheckout();
+    const { startCheckout, cancelSubscription } = useCheckout();
 
-    const token =
-        typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
     useEffect(() => {
         if (!token) {
             router.push('/auth/login');
+            return;
         }
 
         const fetchData = async () => {
             try {
                 const [resUser, resSubscription] = await Promise.all([
-                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {headers: {Authorization: `Bearer ${token}`}}),
-                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/subscription`, {headers: {Authorization: `Bearer ${token}`}}),
+                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, { headers: { Authorization: `Bearer ${token}` } }),
+                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/subscription`, { headers: { Authorization: `Bearer ${token}` } }),
                 ]);
 
                 const userJson = await resUser.json();
@@ -48,20 +49,22 @@ export default function PerfilPage() {
                 setPlan(userJson.plan || null);
                 setSubscription(subscriptionJson);
             } catch (err) {
-                console.error(err);
+                console.error('Error fetching data:', err);
+                setError('Error loading data');
             } finally {
                 setLoading(false);
             }
         };
+
         fetchData();
     }, [token, router]);
 
     const confirmDelete = async () => {
         try {
-            await cancelSubscription(!subscription?.cancelAtPeriodEnd!);
+            await cancelSubscription(!subscription!.cancelAtPeriodEnd!);
             setModalOpen(false);
         } catch (error) {
-            setError('Erro ao cancelar plano. Tente novamente.');
+            setError('Error cancelling the plan. Please try again.');
             console.log(error);
         }
     };
@@ -76,14 +79,14 @@ export default function PerfilPage() {
                 await startCheckout(plan.id!);
             }
         } catch {
-            setError('Erro ao processar plano. Tente novamente.');
+            setError('Error processing plan. Please try again.');
         }
     };
 
     const handleCancel = () => setModalOpen(false);
 
     if (loading || !plan) {
-        return <Loading page="profile"/>;
+        return <Loading page="profile" />;
     }
 
     return (
@@ -95,39 +98,67 @@ export default function PerfilPage() {
                 onCancel={handleCancel}
             />
 
-            <div className="max-w-3xl mx-auto space-y-8">
-                <div className="flex items-center gap-4 mb-6 dark:text-white">
+            <motion.div
+                className="max-w-3xl mx-auto space-y-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
+                <motion.div
+                    className="flex items-center gap-4 dark:text-white"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1, duration: 0.4 }}
+                >
                     <button onClick={() => window.history.back()}>
                         <ArrowLeft
                             size={24}
                             className="text-gray-500 hover:text-gray-700 dark:text-white dark:hover:text-gray-300 transition-colors duration-200 cursor-pointer"
                         />
                     </button>
-                    <h1 className="text-3xl font-bold">Meu Perfil</h1>
-                </div>
+                    <h1 className="text-3xl font-bold">My Profile</h1>
+                </motion.div>
 
-                <Profile
-                    name={name}
-                    email={email}
-                    password={password}
-                    setName={setName}
-                    setEmail={setEmail}
-                    setPassword={setPassword}
-                    error={error}
-                    setError={setError}
-                    token={token}
-                    setLoading={setLoading}
-                    loading={loading}
-                />
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                >
+                    <Profile
+                        name={name}
+                        email={email}
+                        password={password}
+                        setName={setName}
+                        setEmail={setEmail}
+                        setPassword={setPassword}
+                        error={error}
+                        setError={setError}
+                        token={token}
+                        setLoading={setLoading}
+                        loading={loading}
+                    />
+                </motion.div>
 
-                <Subscription
-                    plan={plan}
-                    subscription={subscription}
-                    handleSubscription={handleSubscription}
-                />
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                    <Subscription
+                        plan={plan}
+                        subscription={subscription}
+                        handleSubscription={handleSubscription}
+                    />
+                </motion.div>
 
-                <Invoices />
-            </div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.5 }}
+                >
+                    <Invoices />
+                </motion.div>
+            </motion.div>
         </Layout>
     );
 }

@@ -10,7 +10,7 @@ datasource db {
 
 model Users {
   id               String    @id @default(uuid())
-  stripeCustomerId String?   @unique
+  stripeCustomerId String    @unique
   identity         String    @unique
   email            String    @unique
   name             String
@@ -94,6 +94,7 @@ model Invoice {
   id              String    @id @default(uuid())
   stripeInvoiceId String    @unique
   userId          String
+  invoiceUrl      String?
   amountDue       Int
   amountPaid      Int
   status          String
