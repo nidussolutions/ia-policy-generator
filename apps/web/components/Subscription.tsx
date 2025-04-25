@@ -7,11 +7,6 @@ import {fetcher, PlanType, SubscriptionType} from "@/lib/api";
 import {useCheckout} from "@/hooks/useCheckout";
 import {useRouter} from "next/navigation";
 
-type SubscriptionProps = {
-    handleSubscription: (planName: string) => void;
-    setType: (type: boolean) => void;
-};
-
 const statusLabel: Record<string, string> = {
     active: "Active",
     canceled: "Canceled",
@@ -26,7 +21,7 @@ const formatDate = (dateString: string) =>
         year: "numeric",
     });
 
-const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
+const Subscription = () => {
     const {accessPortalClient} = useCheckout();
     const router = useRouter();
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
@@ -45,13 +40,11 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
         (url: string) => fetcher(url, token!)
     );
 
-
     useEffect(() => {
         if (data) {
             setSubscription(data.subscription);
             if (data.subscription) {
                 console.log(data);
-                setType(!data.subscription.cancelAtPeriodEnd);
             }
         }
 
@@ -59,7 +52,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
             setPlan(user.plan);
         }
 
-    }, [data, user, setType]);
+    }, [data, user]);
 
     const handleUpdate = async () => {
         setLoadingUpdate(true);
@@ -93,7 +86,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
     const getButtonProps = () => {
         if (!plan) return null;
 
-        if (plan.name === "Free") {
+        if (plan.type === "free") {
             return {
                 className: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800",
                 label: "Subscribe",
@@ -108,7 +101,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
         }
 
         return {
-            className: "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800",
+            className: "bg-fuchsia-600 hover:bg-fuchsia-700 dark:bg-fuchsia-700 dark:hover:bg-fuchsia-800",
             label: "Manage Subscription",
         };
     };
@@ -120,7 +113,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
             initial={{opacity: 0, y: 10}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-6"
+            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-3"
         >
             <div className="flex justify-between items-start flex-wrap gap-4">
                 <div>
@@ -153,19 +146,11 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
 
             {subscription ? (
                 <div className="text-sm text-gray-300 space-y-1">
-      <span
-          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${
-              subscription.status !== "active"
-                  ? "bg-red-600"
-                  : subscription.cancelAtPeriodEnd
-                      ? "bg-yellow-600"
-                      : "bg-green-600"
-          }`}
-      >
-        {subscription.cancelAtPeriodEnd
-            ? "Active - Not Renewing"
-            : statusLabel[subscription.status] || subscription.status}
-      </span>
+                    <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${subscription.status !== "active" ? "bg-blue-600" : subscription.cancelAtPeriodEnd ? "bg-yellow-600" : "bg-green-600"}`}>
+                        {subscription.cancelAtPeriodEnd ? "Active - Not Renewing" : statusLabel[subscription.status] || subscription.status}
+                    </span>
+
                     <p className="text-sm text-gray-400 mt-1">
                         <strong>{subscription.cancelAtPeriodEnd ? "Ends on" : "Next charge on"}:</strong>{" "}
                         {subscription.currentPeriodEnd ? formatDate(subscription.currentPeriodEnd) : "---"}
@@ -179,11 +164,11 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                 <motion.button
                     whileTap={{scale: 0.95}}
                     whileHover={{scale: 1.03}}
+                    disabled={loadingAccess}
                     onClick={() => {
-                        if (plan.name === "Free") {
-                            router.push("/pricingpage")
-                        } else if (subscription?.cancelAtPeriodEnd) {
-                            handleSubscription(plan.name);
+                        if (plan?.type === "free") {
+                            setLoadingAccess(true);
+                            router.push("/pricingpage");
                         } else {
                             handleAccessPortal().finally();
                         }

@@ -5,17 +5,14 @@ import {ArrowLeft} from 'lucide-react';
 import {PlanType} from '@/lib/api';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
-import ConfirmModal from '@/components/ConfirmModal';
 import {useRouter} from 'next/navigation';
 import Invoices from '@/components/Invoices';
 import Subscription from '@/components/Subscription';
 import Profile from '@/components/Profile';
 import {motion} from 'framer-motion';
-import {useCheckout} from '@/hooks/useCheckout';
 
 export default function ProfilePage() {
     const router = useRouter();
-    const [type, setType] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,7 +21,6 @@ export default function ProfilePage() {
     const [loadingCheckout, setLoadingCheckout] = useState(false);
     const [error, setError] = useState('');
 
-    const {startCheckout} = useCheckout();
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
     useEffect(() => {
@@ -50,18 +46,6 @@ export default function ProfilePage() {
         };
         fetchProfile().finally();
     }, [token, router]);
-
-    const handleSubscription = async (planName: string) => {
-        if (!plan) return;
-        try {
-            setLoadingCheckout(true);
-            await startCheckout(plan.name!);
-        } catch {
-            setError('Error processing plan. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     if (loading || !plan || loadingCheckout) return <Loading page={loadingCheckout ? "Checkout" : "Profile"}/>;
 
@@ -114,7 +98,7 @@ export default function ProfilePage() {
                         animate={{opacity: 1, y: 0}}
                         transition={{delay: 0.3, duration: 0.5}}
                     >
-                        <Subscription setType={setType} handleSubscription={handleSubscription}/>
+                        <Subscription />
                     </motion.div>
 
                     {/* Invoices */}
