@@ -11,6 +11,7 @@ const domain = process.env.DOMAIN || 'http://localhost:3000';
 
 router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest, res: Response) => {
         const userId = req.userId
+        const {plan: planName} = req.body;
 
         const user = await prisma.users.findUnique({
             where: {id: userId},
@@ -22,8 +23,11 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
         }
 
         const plan = await prisma.plans.findUnique({
-            where: {name: "Pro"},
-        })
+            where: {name: planName},
+            select: {
+                price: true,
+            }
+        });
 
         if (!plan) {
             res.status(400).json({message: 'Plano não encontrado'});
@@ -37,7 +41,7 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
                         price: plan.price,
                         quantity: 1,
 
-                    },
+                    }
                 ],
                 mode: 'subscription',
                 customer: user.stripeCustomerId!,
@@ -58,59 +62,34 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
 )
 ;
 
-router.post('/cancel-subscription', authMiddleware, async (req: AuthRequest, res: Response) => {
-    const userId = req.userId
+router.post('/create-customer-portal-session', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
+        const userId = req.userId;
 
-    const user = await prisma.users.findUnique({
-        where: {id: userId},
-    })
+        try {
+            const user = await prisma.users.findUnique({
+                where: {id: userId},
+            });
 
-    if (!user) {
-        res.status(400).json({message: 'Usuário não encontrado'});
-        return;
-    }
-
-    try {
-        const subscriptions = await stripe.subscriptions.list({
-            customer: user.stripeCustomerId!,
-            status: 'active',
-        });
-
-        if (subscriptions.data.length === 0) {
-            res.status(400).json({message: 'Assinatura não encontrada'});
-            return;
-        }
-
-        const subscription = subscriptions.data[0];
-
-        await stripe.subscriptions.update(
-            subscription.id,
-            {
-                cancel_at_period_end: !subscription.cancel_at_period_end,
+            if (!user) {
+                return res.status(400).json({message: 'User not found'});
             }
-        );
 
+            const session = await stripe.billingPortal.sessions.create({
+                customer: user.stripeCustomerId!,
+                return_url: `${domain}/dashboard/profile`,
+            });
 
-        res.status(200).json({message: 'Assinatura cancelada com sucesso'});
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({message: 'Erro ao cancelar assinatura'});
+            res.status(200).json({
+                sessionId: session.id,
+                url: session.url,
+            })
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({message: 'Erro ao criar sessão do portal do cliente'});
+        }
     }
-})
-
-router.post('/create-portal-session', async (req, res) => {
-    const {session_id} = req.body;
-    const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
-
-    const returnUrl = domain || process.env.DOMAIN;
-
-    const portalSession = await stripe.billingPortal.sessions.create({
-        customer: checkoutSession.customer as string,
-        return_url: returnUrl,
-    });
-
-    res.redirect(303, portalSession.url);
-});
+);
 
 
 router.patch('/update-invoices-profile', authMiddleware, async (req: AuthRequest, res): Promise<any> => {

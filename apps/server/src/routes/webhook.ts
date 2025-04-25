@@ -66,7 +66,7 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req, res
                     return
                 }
 
-                const plan = await prisma.plans.findUnique({where: {name: "Free"}});
+                const plan = await prisma.plans.findUnique({where: {name: "free"}});
 
                 if (!plan) {
                     console.error('Plano Free não encontrado');

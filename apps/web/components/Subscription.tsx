@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {motion} from "framer-motion";
 import useSWR from "swr";
-import {fetcher, PlanType, SubscriptionType} from "@/lib/api";
+import {motion} from "framer-motion";
+import React, {useEffect, useState} from "react";
 import {RefreshCw} from "lucide-react";
 
-type SubscriptionProps = {
-    handleSubscription: (planName: string) => void;
-    setType: (type: boolean) => void;
-};
+import {fetcher, PlanType, SubscriptionType} from "@/lib/api";
+import {useCheckout} from "@/hooks/useCheckout";
+import {useRouter} from "next/navigation";
 
 const statusLabel: Record<string, string> = {
     active: "Active",
@@ -23,10 +21,13 @@ const formatDate = (dateString: string) =>
         year: "numeric",
     });
 
-const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
+const Subscription = () => {
+    const {accessPortalClient} = useCheckout();
+    const router = useRouter();
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
+    const [loadingAccess, setLoadingAccess] = useState(false);
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     const {data, error, isLoading, mutate} = useSWR(
@@ -39,13 +40,11 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
         (url: string) => fetcher(url, token!)
     );
 
-
     useEffect(() => {
         if (data) {
             setSubscription(data.subscription);
             if (data.subscription) {
                 console.log(data);
-                setType(!data.subscription.cancelAtPeriodEnd);
             }
         }
 
@@ -53,7 +52,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
             setPlan(user.plan);
         }
 
-    }, [data, user, setType]);
+    }, [data, user]);
 
     const handleUpdate = async () => {
         setLoadingUpdate(true);
@@ -62,8 +61,8 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                 method: "PATCH",
                 headers: {Authorization: `Bearer ${token}`},
             });
-            mutate();
-            userMutate();
+            mutate().finally();
+            userMutate().finally();
         } catch (error) {
             console.error("Failed to update invoices profile:", error);
         } finally {
@@ -73,10 +72,21 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
         }
     };
 
+    const handleAccessPortal = async () => {
+        setLoadingAccess(true);
+        try {
+            await accessPortalClient();
+        } catch (error) {
+            console.error("Failed to access client portal:", error);
+        } finally {
+            setLoadingAccess(false);
+        }
+    }
+
     const getButtonProps = () => {
         if (!plan) return null;
 
-        if (plan.name === "Free") {
+        if (plan.type === "free") {
             return {
                 className: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800",
                 label: "Subscribe",
@@ -91,8 +101,8 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
         }
 
         return {
-            className: "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800",
-            label: "Cancel Subscription",
+            className: "bg-fuchsia-600 hover:bg-fuchsia-700 dark:bg-fuchsia-700 dark:hover:bg-fuchsia-800",
+            label: "Manage Subscription",
         };
     };
 
@@ -103,7 +113,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
             initial={{opacity: 0, y: 10}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-6"
+            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-3"
         >
             <div className="flex justify-between items-start flex-wrap gap-4">
                 <div>
@@ -114,32 +124,21 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                     </p>
                 </div>
 
-                <div className="flex flex-col items-end justify-between gap-2">
-                    <button
-                        onClick={handleUpdate}
-                        disabled={loadingUpdate}
-                        className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
-                    >
-                        {loadingUpdate ? (
-                            <>
-                                <RefreshCw className="animate-spin" size={16}/> Updating...
-                            </>
-                        ) : (
-                            <>
-                                <RefreshCw size={16}/> Update
-                            </>
-                        )}
-                    </button>
-
-                    <button
-                        disabled={isLoading || !subscription}
-                        className={`text-sm text-fuchsia-400 hover:underline disabled:opacity-50 ${
-                            subscription ? "cursor-pointer" : "cursor-not-allowed"
-                        }`}
-                    >
-                        Change payment method
-                    </button>
-                </div>
+                <button
+                    onClick={handleUpdate}
+                    disabled={loadingUpdate}
+                    className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
+                >
+                    {loadingUpdate ? (
+                        <>
+                            <RefreshCw className="animate-spin" size={16}/> Updating...
+                        </>
+                    ) : (
+                        <>
+                            <RefreshCw size={16}/> Update
+                        </>
+                    )}
+                </button>
             </div>
 
             {(error || userError) && <p className="text-red-500 text-sm">Error loading subscription.</p>}
@@ -147,19 +146,11 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
 
             {subscription ? (
                 <div className="text-sm text-gray-300 space-y-1">
-      <span
-          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${
-              subscription.status !== "active"
-                  ? "bg-red-600"
-                  : subscription.cancelAtPeriodEnd
-                      ? "bg-yellow-600"
-                      : "bg-green-600"
-          }`}
-      >
-        {subscription.cancelAtPeriodEnd
-            ? "Active - Not Renewing"
-            : statusLabel[subscription.status] || subscription.status}
-      </span>
+                    <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${subscription.status !== "active" ? "bg-blue-600" : subscription.cancelAtPeriodEnd ? "bg-yellow-600" : "bg-green-600"}`}>
+                        {subscription.cancelAtPeriodEnd ? "Active - Not Renewing" : statusLabel[subscription.status] || subscription.status}
+                    </span>
+
                     <p className="text-sm text-gray-400 mt-1">
                         <strong>{subscription.cancelAtPeriodEnd ? "Ends on" : "Next charge on"}:</strong>{" "}
                         {subscription.currentPeriodEnd ? formatDate(subscription.currentPeriodEnd) : "---"}
@@ -173,7 +164,15 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                 <motion.button
                     whileTap={{scale: 0.95}}
                     whileHover={{scale: 1.03}}
-                    onClick={() => handleSubscription(plan.name)}
+                    disabled={loadingAccess}
+                    onClick={() => {
+                        if (plan?.type === "free") {
+                            setLoadingAccess(true);
+                            router.push("/pricingpage");
+                        } else {
+                            handleAccessPortal().finally();
+                        }
+                    }}
                     className={`px-4 py-2 rounded-xl text-white font-medium transition shadow-lg ${buttonProps.className}`}
                 >
                     {buttonProps.label}

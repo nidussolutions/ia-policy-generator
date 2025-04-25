@@ -34,7 +34,7 @@ export default function SitesPage() {
                 method: 'DELETE',
                 headers: {Authorization: `Bearer ${token}`},
             });
-            mutate();
+            mutate().finally();
         } catch (err) {
             console.error('Error deleting site:', err);
             notifyError('Error deleting site');
@@ -47,7 +47,7 @@ export default function SitesPage() {
     };
 
     const handleConfirm = () => {
-        if (deletingSiteId) confirmDelete(deletingSiteId);
+        if (deletingSiteId) confirmDelete(deletingSiteId).finally();
         setModalOpen(false);
         setDeletingSiteId(null);
     };
@@ -97,44 +97,56 @@ export default function SitesPage() {
                         </motion.p>
                     )}
 
-                    <motion.div layout className="space-y-4">
-                        {data?.map((site: Site, idx: number) => (
-                            <motion.div
-                                key={site.id}
+                    {data[0] !== null
+                        ? (<motion.div layout className="space-y-4">
+                            {data.map((site: Site, idx: number) => (
+                                <motion.div
+                                    key={site.id}
+                                    initial={{opacity: 0, y: 10}}
+                                    animate={{opacity: 1, y: 0}}
+                                    transition={{delay: 0.3 + idx * 0.05}}
+                                    className="p-4 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl flex justify-between items-center"
+                                >
+                                    <div>
+                                        <h2 className="text-xl font-semibold text-white">{site.name || ''}</h2>
+                                        <p className="text-gray-400 mt-1">{site.domain}</p>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Link
+                                            href={`/sites/${site.id}/`}
+                                            className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
+                                        >
+                                            Access
+                                        </Link>
+                                        <span className="text-gray-600">|</span>
+                                        <Link
+                                            href={`/sites/edit/${site.id}`}
+                                            className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
+                                        >
+                                            Edit
+                                        </Link>
+                                        <span className="text-gray-600">|</span>
+                                        <button
+                                            onClick={() => handleDelete(site.id)}
+                                            className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.div>)
+                        :
+                        (<motion.p
                                 initial={{opacity: 0, y: 10}}
                                 animate={{opacity: 1, y: 0}}
-                                transition={{delay: 0.3 + idx * 0.05}}
-                                className="p-4 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl flex justify-between items-center"
+                                transition={{delay: 0.3}}
+                                className="text-gray-400 text-center"
                             >
-                                <div>
-                                    <h2 className="text-xl font-semibold text-white">{site.name}</h2>
-                                    <p className="text-gray-400 mt-1">{site.domain}</p>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Link
-                                        href={`/sites/${site.id}/`}
-                                        className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
-                                    >
-                                        Access
-                                    </Link>
-                                    <span className="text-gray-600">|</span>
-                                    <Link
-                                        href={`/sites/edit/${site.id}`}
-                                        className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
-                                    >
-                                        Edit
-                                    </Link>
-                                    <span className="text-gray-600">|</span>
-                                    <button
-                                        onClick={() => handleDelete(site.id)}
-                                        className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                                You don&apos;t have any sites registered yet.
+                            </motion.p>
+                        )
+                    }
                 </motion.div>
             </Layout>
             <ConfirmModal

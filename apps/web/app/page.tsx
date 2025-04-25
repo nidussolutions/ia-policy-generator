@@ -17,10 +17,15 @@ const itemVariants = {
 export default function HomePage() {
     return (
         <main
-            className="min-h-screen flex flex-col bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200">
+            className="min-h-screen flex flex-col bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200"
+        >
             {/* Navbar */}
             <header className="w-full max-w-6xl mx-auto flex items-center justify-between py-6 px-4">
-                <div className="text-2xl font-bold text-white">Legal Forge</div>
+                <div className="text-2xl font-bold text-white">
+                    <Link href='/'>
+                        Legal Forge
+                    </Link>
+                </div>
                 <nav className="hidden md:flex space-x-8 text-gray-300 ">
                     <Link href="#features" className="hover:text-white transition">Features</Link>
                     <Link href="#pricing" className="hover:text-white transition">Pricing</Link>
@@ -108,8 +113,10 @@ export default function HomePage() {
                 viewport={{once: true}}
                 variants={containerVariants}
             >
-                <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white"
-                           variants={itemVariants}>
+                <motion.h2
+                    className="text-3xl md:text-4xl font-bold text-center mb-12 text-white"
+                    variants={itemVariants}
+                >
                     Features
                 </motion.h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-12">
@@ -172,7 +179,7 @@ export default function HomePage() {
                     <motion.div className="p-8 bg-[#1E0359]/30 rounded-2xl text-center border-2 border-[#A429A6]"
                                 variants={itemVariants}>
                         <h3 className="text-2xl font-semibold mb-2 text-white">Pro</h3>
-                        <p className="text-lg font-bold mb-4 text-[#A429A6]">$5 / month</p>
+                        <p className="text-lg font-bold mb-4 text-[#A429A6]">$5 / month or $40 / year</p>
                         <ul className="space-y-2 text-gray-300 mb-6">
                             <li>Unlimited documents</li>
                             <li>Up to 10 sites</li>
@@ -227,14 +234,6 @@ export default function HomePage() {
                     ))}
                 </div>
             </motion.section>
-
-            {/* Mockup Preview (coming soon) */}
-            {/*
-      <section className="mt-16 w-full max-w-4xl mx-auto px-4">
-        <img src="/mockup.png" alt="Dashboard preview" className="w-full rounded-2xl shadow-2xl border border-[#1E0359]" />
-      </section>
-      */}
-
         </main>
     );
 }

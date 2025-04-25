@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { PlanType } from "@/lib/api"; // Assuming PlanType is defined in your API lib
+import {useEffect, useState} from 'react';
+import {PlanType} from "@/lib/api"; // Assuming PlanType is defined in your API lib
 
 interface CheckoutResponse {
     sessionId: string;
@@ -41,7 +41,7 @@ export function useCheckout() {
                 setLoading(false);
             };
 
-            fetchPlans();
+            fetchPlans().finally()
         } catch (error) {
             setError('Erro ao buscar planos');
             console.error('Erro ao buscar planos:', error);
@@ -49,13 +49,12 @@ export function useCheckout() {
     }, []); // Empty dependency array means this runs once on component mount
 
     // Function to initiate checkout
-    const startCheckout = async (planId: string) => {
+    const startCheckout = async (plan: string) => {
         setLoading(true);
         setError(null); // Reset error
 
         try {
             const token = localStorage.getItem('token');
-            console.log(process.env.NEXT_PUBLIC_API_URL); // Debugging
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/create-checkout-session`, {
                 method: 'POST',
@@ -63,12 +62,11 @@ export function useCheckout() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ planId }),
+                body: JSON.stringify({plan}),
             });
 
             if (!response.ok) {
-                setError('Erro ao iniciar checkout');
-                console.log(response);
+                setError('Error starting checkout');
                 return;
             }
 
@@ -77,27 +75,26 @@ export function useCheckout() {
             if (data?.url) {
                 window.location.href = data.url; // Redirect to the checkout URL
             } else {
-                setError('Erro ao iniciar checkout');
+                setError('Error starting checkout');
             }
 
         } catch (err: any) {
-            setError(err.message || 'Erro desconhecido');
-            console.error('Erro ao iniciar checkout:', err);
+            setError(err.message || 'Unknown error');
         } finally {
             setLoading(false);
         }
     };
 
-    // Function to cancel subscription
-    const cancelSubscription = async (type: boolean) => {
+    // Function to access customer portal
+    const accessPortalClient = async () => {
         setLoading(true);
-        setError(null); // Reset error
+        setError(null);
 
         try {
             const token = localStorage.getItem('token');
 
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/plans/cancel-subscription`, {
+                `${process.env.NEXT_PUBLIC_API_URL}/plans/create-customer-portal-session`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -106,30 +103,24 @@ export function useCheckout() {
                 });
 
             if (!response.ok) {
-                setError('Erro ao cancelar assinatura');
-                console.log(response);
+                setError('Error accessing the customer portal');
                 return;
             }
 
-            const data = await response.json();
+            const data: CheckoutResponse = await response.json();
 
-            if (data?.message) {
-                if (type) {
-                    window.location.href = '/cancellation'; // Redirect to cancellation page
-                } else {
-                    window.location.reload(); // Reload the page
-                }
+            if (data.url) {
+                window.location.href = data.url; // Redirect to the customer portal URL
             } else {
-                setError('Erro ao cancelar assinatura');
+                setError('Error accessing the customer portal');
             }
 
         } catch (err: any) {
-            setError(err.message || 'Erro desconhecido');
-            console.error('Erro ao cancelar assinatura:', err);
+            setError(err.message || 'Unknown error');
         } finally {
             setLoading(false);
         }
-    };
+    }
 
-    return { startCheckout, cancelSubscription, loading, error, plans };
+    return {startCheckout, accessPortalClient, loading, error, plans};
 }

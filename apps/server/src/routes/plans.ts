@@ -78,6 +78,7 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
                 id: true,
                 name: true,
                 description: true,
+                type: true,
                 price: true,
             },
         });
