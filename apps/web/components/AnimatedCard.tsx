@@ -12,6 +12,7 @@ export default function AnimatedCard({title, value}: { title: string; value: str
 
     const startCheckout = async () => {
         try {
+            setLoading(true)
             const token = localStorage.getItem('token');
             console.log(process.env.NEXT_PUBLIC_API_URL);
 
@@ -59,10 +60,11 @@ export default function AnimatedCard({title, value}: { title: string; value: str
                 && (
                     <div className="flex flex-col md:flex-row gap-4">
                         <button
+                            disabled={loading}
                             className="mt-2 w-full bg-[#8C0368] hover:bg-[#A429A6] text-white py-2 rounded-lg text-sm font-semibold"
                             onClick={() => startCheckout()}
                         >
-                            Upgrade Plan
+                            {loading ? 'Loading...' : 'Subscribe'}
                         </button>
                     </div>
                 )}

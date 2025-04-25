@@ -21,6 +21,7 @@ export default function ProfilePage() {
     const [password, setPassword] = useState('');
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loading, setLoading] = useState(true);
+    const [loadingCheckout, setLoadingCheckout] = useState(false);
     const [error, setError] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -48,7 +49,7 @@ export default function ProfilePage() {
                 setLoading(false);
             }
         };
-        fetchProfile();
+        fetchProfile().finally();
     }, [token, router]);
 
     const confirmDelete = async () => {
@@ -63,14 +64,17 @@ export default function ProfilePage() {
     const handleSubscription = async (planName: string) => {
         if (!plan) return;
         try {
+            setLoadingCheckout(true);
             if (planName === 'Pro') setModalOpen(true);
             else await startCheckout(plan.id!);
         } catch {
             setError('Error processing plan. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (loading || !plan) return <Loading page="profile"/>;
+    if (loading || !plan || loadingCheckout) return <Loading page={loadingCheckout ? "Checkout" : "Profile"}/>;
 
     return (
         <>
