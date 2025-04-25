@@ -22,8 +22,6 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
             return;
         }
 
-        console.log(planName);
-
         const plan = await prisma.plans.findUnique({
             where: {name: planName},
             select: {
