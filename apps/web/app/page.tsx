@@ -179,7 +179,7 @@ export default function HomePage() {
                     <motion.div className="p-8 bg-[#1E0359]/30 rounded-2xl text-center border-2 border-[#A429A6]"
                                 variants={itemVariants}>
                         <h3 className="text-2xl font-semibold mb-2 text-white">Pro</h3>
-                        <p className="text-lg font-bold mb-4 text-[#A429A6]">$5 / month</p>
+                        <p className="text-lg font-bold mb-4 text-[#A429A6]">$5 / month or $40 / year</p>
                         <ul className="space-y-2 text-gray-300 mb-6">
                             <li>Unlimited documents</li>
                             <li>Up to 10 sites</li>

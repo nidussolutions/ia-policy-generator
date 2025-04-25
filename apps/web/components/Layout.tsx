@@ -18,7 +18,7 @@ export default function Layout({ children }: Props) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="p-6 mt-8 max-w-5xl mx-auto bg-[#1E0359]/30 backdrop-blur-lg rounded-2xl shadow-2xl"
+                    className="p-6 mt-8 max-w-5xl mx-auto"
                 >
                     {children}
                 </motion.main>

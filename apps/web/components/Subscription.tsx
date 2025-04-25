@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {motion} from "framer-motion";
 import useSWR from "swr";
-import {fetcher, PlanType, SubscriptionType} from "@/lib/api";
+import {motion} from "framer-motion";
+import React, {useEffect, useState} from "react";
 import {RefreshCw} from "lucide-react";
+
+import {fetcher, PlanType, SubscriptionType} from "@/lib/api";
+import {useCheckout} from "@/hooks/useCheckout";
 
 type SubscriptionProps = {
     handleSubscription: (planName: string) => void;
@@ -24,9 +26,11 @@ const formatDate = (dateString: string) =>
     });
 
 const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
+    const {accessPortalClient} = useCheckout();
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
+    const [loadingAccess, setLoadingAccess] = useState(false);
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     const {data, error, isLoading, mutate} = useSWR(
@@ -62,8 +66,8 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                 method: "PATCH",
                 headers: {Authorization: `Bearer ${token}`},
             });
-            mutate();
-            userMutate();
+            mutate().finally();
+            userMutate().finally();
         } catch (error) {
             console.error("Failed to update invoices profile:", error);
         } finally {
@@ -72,6 +76,17 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
             setLoadingUpdate(false);
         }
     };
+
+    const handleAccessPortal = async () => {
+        setLoadingAccess(true);
+        try {
+            await accessPortalClient();
+        } catch (error) {
+            console.error("Failed to access client portal:", error);
+        } finally {
+            setLoadingAccess(false);
+        }
+    }
 
     const getButtonProps = () => {
         if (!plan) return null;
@@ -92,7 +107,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
 
         return {
             className: "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800",
-            label: "Cancel Subscription",
+            label: "Manage Subscription",
         };
     };
 
@@ -114,32 +129,21 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                     </p>
                 </div>
 
-                <div className="flex flex-col items-end justify-between gap-2">
-                    <button
-                        onClick={handleUpdate}
-                        disabled={loadingUpdate}
-                        className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
-                    >
-                        {loadingUpdate ? (
-                            <>
-                                <RefreshCw className="animate-spin" size={16}/> Updating...
-                            </>
-                        ) : (
-                            <>
-                                <RefreshCw size={16}/> Update
-                            </>
-                        )}
-                    </button>
-
-                    <button
-                        disabled={isLoading || !subscription}
-                        className={`text-sm text-fuchsia-400 hover:underline disabled:opacity-50 ${
-                            subscription ? "cursor-pointer" : "cursor-not-allowed"
-                        }`}
-                    >
-                        Change payment method
-                    </button>
-                </div>
+                <button
+                    onClick={handleUpdate}
+                    disabled={loadingUpdate}
+                    className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
+                >
+                    {loadingUpdate ? (
+                        <>
+                            <RefreshCw className="animate-spin" size={16}/> Updating...
+                        </>
+                    ) : (
+                        <>
+                            <RefreshCw size={16}/> Update
+                        </>
+                    )}
+                </button>
             </div>
 
             {(error || userError) && <p className="text-red-500 text-sm">Error loading subscription.</p>}
@@ -173,7 +177,15 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                 <motion.button
                     whileTap={{scale: 0.95}}
                     whileHover={{scale: 1.03}}
-                    onClick={() => handleSubscription(plan.name)}
+                    onClick={() => {
+                        if (plan.name === "Free") {
+                            handleSubscription(plan.name);
+                        } else if (subscription?.cancelAtPeriodEnd) {
+                            handleSubscription(plan.name);
+                        } else {
+                            handleAccessPortal().finally();
+                        }
+                    }}
                     className={`px-4 py-2 rounded-xl text-white font-medium transition shadow-lg ${buttonProps.className}`}
                 >
                     {buttonProps.label}
