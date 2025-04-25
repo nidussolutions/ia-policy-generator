@@ -5,6 +5,7 @@ import {RefreshCw} from "lucide-react";
 
 import {fetcher, PlanType, SubscriptionType} from "@/lib/api";
 import {useCheckout} from "@/hooks/useCheckout";
+import {useRouter} from "next/navigation";
 
 type SubscriptionProps = {
     handleSubscription: (planName: string) => void;
@@ -27,6 +28,7 @@ const formatDate = (dateString: string) =>
 
 const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
     const {accessPortalClient} = useCheckout();
+    const router = useRouter();
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
@@ -179,7 +181,7 @@ const Subscription = ({setType, handleSubscription}: SubscriptionProps) => {
                     whileHover={{scale: 1.03}}
                     onClick={() => {
                         if (plan.name === "Free") {
-                            handleSubscription(plan.name);
+                            router.push("/pricingpage")
                         } else if (subscription?.cancelAtPeriodEnd) {
                             handleSubscription(plan.name);
                         } else {

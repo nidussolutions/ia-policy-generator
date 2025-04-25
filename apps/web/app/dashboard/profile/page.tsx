@@ -23,9 +23,8 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [loadingCheckout, setLoadingCheckout] = useState(false);
     const [error, setError] = useState('');
-    const [modalOpen, setModalOpen] = useState(false);
 
-    const {startCheckout, cancelSubscription} = useCheckout();
+    const {startCheckout} = useCheckout();
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
     useEffect(() => {
@@ -52,21 +51,11 @@ export default function ProfilePage() {
         fetchProfile().finally();
     }, [token, router]);
 
-    const confirmDelete = async () => {
-        try {
-            await cancelSubscription(type);
-            setModalOpen(false);
-        } catch {
-            setError('Error cancelling the plan. Please try again.');
-        }
-    };
-
     const handleSubscription = async (planName: string) => {
         if (!plan) return;
         try {
             setLoadingCheckout(true);
-            if (planName === 'Pro') setModalOpen(true);
-            else await startCheckout(plan.id!);
+            await startCheckout(plan.name!);
         } catch {
             setError('Error processing plan. Please try again.');
         } finally {
@@ -78,15 +67,7 @@ export default function ProfilePage() {
 
     return (
         <>
-            <ConfirmModal
-                isOpen={modalOpen}
-                type={type ? 'resumeSubscription' : 'cancelSubscription'}
-                onConfirm={confirmDelete}
-                onCancel={() => setModalOpen(false)}
-            />
             <Layout>
-
-
                 <motion.div
                     className="max-w-3xl mx-auto space-y-8 p-6"
                     initial={{opacity: 0, y: 20}}

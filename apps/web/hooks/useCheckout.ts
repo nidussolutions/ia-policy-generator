@@ -41,7 +41,7 @@ export function useCheckout() {
                 setLoading(false);
             };
 
-            fetchPlans();
+            fetchPlans().finally()
         } catch (error) {
             setError('Erro ao buscar planos');
             console.error('Erro ao buscar planos:', error);
@@ -49,13 +49,12 @@ export function useCheckout() {
     }, []); // Empty dependency array means this runs once on component mount
 
     // Function to initiate checkout
-    const startCheckout = async (planId: string) => {
+    const startCheckout = async (plan: string) => {
         setLoading(true);
         setError(null); // Reset error
 
         try {
             const token = localStorage.getItem('token');
-            console.log(process.env.NEXT_PUBLIC_API_URL); // Debugging
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/create-checkout-session`, {
                 method: 'POST',
@@ -63,7 +62,7 @@ export function useCheckout() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({planId}),
+                body: JSON.stringify({plan}),
             });
 
             if (!response.ok) {

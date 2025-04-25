@@ -70,6 +70,7 @@ model Plans {
   id          String   @id @default(uuid())
   name        String   @unique
   description String
+  type        String   @default("free")
   price       String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

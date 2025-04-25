@@ -11,7 +11,7 @@ const domain = process.env.DOMAIN || 'http://localhost:3000';
 
 router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest, res: Response) => {
         const userId = req.userId
-        const {priceId} = req.body;
+        const {plan: planName} = req.body;
 
         const user = await prisma.users.findUnique({
             where: {id: userId},
@@ -22,15 +22,28 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
             return;
         }
 
+        console.log(planName);
+
+        const plan = await prisma.plans.findUnique({
+            where: {name: planName},
+            select: {
+                price: true,
+            }
+        });
+
+        if (!plan) {
+            res.status(400).json({message: 'Plano não encontrado'});
+            return;
+        }
+
         try {
             const sessions = await stripe.checkout.sessions.create({
                 line_items: [
                     {
-                        price: priceId,
+                        price: plan.price,
                         quantity: 1,
 
-                    },
-
+                    }
                 ],
                 mode: 'subscription',
                 customer: user.stripeCustomerId!,
