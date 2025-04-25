@@ -1,3 +1,5 @@
+// noinspection CssInvalidPropertyValue
+
 'use client';
 
 import useSWR from 'swr';
@@ -21,7 +23,10 @@ export default function DocumentEditPage() {
 
     const [content, setContent] = useState('');
     const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
-    const [copied, setCopied] = useState(false);
+    const [copiedLink, setCopiedLink] = useState(false);
+    const [height, setHeight] = useState('400');
+    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const [copiedEmbed, setCopiedEmbed] = useState(false);
     const saveTimeout = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -41,7 +46,7 @@ export default function DocumentEditPage() {
                 `${process.env.NEXT_PUBLIC_API_URL}/docs/${documentId}`,
                 {content}, token
             );
-            mutate();
+            mutate().finally();
             setStatus('saved');
         } catch {
             setStatus('error');
@@ -52,9 +57,9 @@ export default function DocumentEditPage() {
 
     const copyLink = () => {
         const link = `${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`;
-        navigator.clipboard.writeText(link);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        navigator.clipboard.writeText(link).finally();
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2000);
     };
 
     if (error) return <p className="text-red-500 text-center p-6">Failed to load document.</p>;
@@ -79,41 +84,87 @@ export default function DocumentEditPage() {
                             {status === 'saved' && <CheckCircle className="text-green-400"/>}
                             {status === 'error' && <XCircle className="text-red-400"/>}
                             <button onClick={saveChanges} disabled={status === 'saving'}
-                                    className="bg-[#8C0368] hover:bg-[#A429A6] text-white px-3 py-1 rounded disabled:opacity-50">Save
+                                    className="bg-[#8C0368] hover:bg-[#A429A6] text-white px-3 py-1 rounded disabled:opacity-50">
+                                Save
                             </button>
                         </div>
                     </motion.div>
 
                     <motion.div initial={{opacity: 0, y: 8}} animate={{opacity: 1, y: 0}} transition={{delay: 0.3}}>
-            <textarea
-                className="w-full h-[500px] px-4 py-3 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl text-white font-mono resize-none focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
-                value={content}
-                onChange={e => {
-                    setContent(e.target.value);
-                    scheduleSave();
-                }}
-            />
+                        <textarea
+                            className="w-full h-[500px] px-4 py-3 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl text-white font-mono resize-none focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                            value={content}
+                            onChange={e => {
+                                setContent(e.target.value);
+                                scheduleSave();
+                            }}
+                        />
                     </motion.div>
 
                     {data.publicId && (
-                        <motion.div
-                            initial={{opacity: 0, y: 8}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.4}}
-                            className="flex gap-2 items-center">
+                        <>
+                            <motion.div initial={{opacity: 0, y: 8}} animate={{opacity: 1, y: 0}}
+                                        transition={{delay: 0.4}} className="flex gap-2 items-center">
+                                <h2 className="text-lg font-bold text-white">Public Link:</h2>
+                                <input
+                                    readOnly
+                                    value={`${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`}
+                                    className="flex-1 px-3 py-2 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                                />
+                                <button onClick={copyLink}
+                                        className="bg-[#8C0368] hover:bg-[#A429A6] text-white px-3 py-2 rounded-xl">
+                                    {copiedLink ? 'Copied!' : 'Copy'}
+                                </button>
+                            </motion.div>
 
-                            <h2 className="text-lg font-bold text-white">Public Link:</h2>
+                            {/* Embed Generator Inline */}
+                            <motion.div initial={{opacity: 0, y: 8}} animate={{opacity: 1, y: 0}}
+                                        transition={{delay: 0.5}}
+                                        className="mt-6 w-full bg-[#1E0359]/30 p-6 rounded-xl backdrop-blur-md border border-[#8C0368]/30">
+                                <h3 className="text-lg font-bold mb-4 text-white">Embed Code</h3>
 
-                            <input
-                                readOnly
-                                value={`${process.env.NEXT_PUBLIC_APP_URL}/public/${data.publicId}`}
-                                className="flex-1 px-3 py-2 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
-                            />
-                            <button onClick={copyLink}
-                                    className="bg-[#8C0368] hover:bg-[#A429A6] text-white px-3 py-2 rounded-xl">
-                                {copied ? 'Copied' : 'Copy'}
-                            </button>
-                        </motion.div>
+                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label className="text-white block mb-1">Height (px)</label>
+                                        <input
+                                            type="number"
+                                            value={height}
+                                            onChange={e => setHeight(e.target.value)}
+                                            className="w-full p-2 rounded-md bg-[#0c0c0c] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-white block mb-1">Theme</label>
+                                        <select
+                                            value={theme}
+                                            onChange={e => setTheme(e.target.value as 'light' | 'dark')}
+                                            className="w-full p-2 rounded-md bg-[#0c0c0c] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                                        >
+                                            <option value="light">Light</option>
+                                            <option value="dark">Dark</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <label className="text-white block mb-1">Embed Code:</label>
+                                <textarea
+                                    readOnly
+                                    value={`<iframe src="${process.env.NEXT_PUBLIC_APP_URL}/embed/${data.publicId}?theme=${theme}" style="border:none;width:100%;height:${height}px;" loading="lazy" title="Legal Document by Legal Forge"></iframe>`}
+                                    className="w-full h-32 p-3 text-sm font-mono rounded-md bg-white text-black border border-gray-300 focus:outline-none resize-none "
+                                />
+
+                                <button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(`<iframe src="${process.env.NEXT_PUBLIC_APP_URL}/embed/${data.publicId}?theme=${theme}" style="border:none;width:100%;height:${height}px;" loading="lazy" title="Legal Document by Legal Forge"></iframe>`).finally();
+                                        setCopiedEmbed(true);
+                                        setTimeout(() => setCopiedEmbed(false), 2000);
+                                    }}
+                                    className="mt-4 w-full py-2 rounded-md bg-[#8C0368] hover:bg-[#A429A6] text-white font-semibold transition"
+                                >
+                                    {copiedEmbed ? 'Copied!' : 'Copy Embed'}
+                                </button>
+                            </motion.div>
+                        </>
                     )}
                 </motion.div>
             </Layout>

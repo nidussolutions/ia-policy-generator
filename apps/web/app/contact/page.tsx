@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {motion} from 'framer-motion';
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ export default function ContactPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Aqui você pode integrar com um backend ou API de email
+        // integrar com um backend ou API de email
         console.log('Formulário enviado:', form);
         alert('Mensagem enviada com sucesso!');
         setForm({name: '', phone: '', subject: '', message: ''});
@@ -32,7 +32,11 @@ export default function ContactPage() {
     return (
         <main>
             <header className="w-full max-w-6xl mx-auto flex items-center justify-between py-6 px-4">
-                <div className="text-2xl font-bold text-white">Legal Forge</div>
+                <div className="text-2xl font-bold text-white">
+                    <Link href='/'>
+                        Legal Forge
+                    </Link>
+                </div>
                 <nav className="hidden md:flex space-x-8 text-gray-300 ">
                     <Link href="/#features" className="hover:text-white transition">Features</Link>
                     <Link href="/#pricing" className="hover:text-white transition">Pricing</Link>
