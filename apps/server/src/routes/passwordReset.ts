@@ -54,15 +54,18 @@ router.post('/forgot-password', async (req: AuthRequest, res): Promise<any> => {
 
 
 router.post('/reset-password', async (req, res): Promise<any> => {
-    const {token, newPassword} = req.body;
+    const {token, password} = req.body;
 
     try {
         const resetRequest = await prisma.passwordReset.findUnique({where: {token}});
         if (!resetRequest || resetRequest.expiresAt < new Date()) {
             return res.status(400).json({message: 'Invalid or expired token'});
         }
+        console.log(password);
 
-        const hashed = await bcrypt.hash(newPassword, 10);
+        const hashed = await bcrypt.hash(password, 10);
+
+        console.log(hashed);
 
         await prisma.users.update({
             where: {id: resetRequest.userId},

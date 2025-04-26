@@ -113,6 +113,13 @@ export default function LoginPage() {
                         </div>
                     </motion.div>
 
+                    <motion.p className="text-end text-sm text-gray-400" variants={itemVariants}>
+                        Forgot your password?{' '}
+                        <Link href="/auth/forgot-password" className="text-[#A429A6] hover:underline">
+                            Reset it
+                        </Link>
+                    </motion.p>
+
                     <motion.button
                         type="submit"
                         disabled={loading}
@@ -130,7 +137,7 @@ export default function LoginPage() {
                 </motion.form>
 
                 <motion.p className="mt-6 text-center text-sm text-gray-400" variants={itemVariants}>
-                    Don't have an account?{' '}
+                    Don&apos;t have an account?{' '}
                     <Link href="/auth/register" className="text-[#A429A6] hover:underline">
                         Sign up
                     </Link>

@@ -14,6 +14,7 @@ model Users {
   identity         String    @unique
   email            String    @unique
   name             String
+  phone            String    @default("no-phone")
   password         String
   lastLogin        DateTime? @default(now())
   createdAt        DateTime  @default(now())
