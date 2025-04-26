@@ -13,6 +13,7 @@ import stripeRouter from './routes/stripe';
 import webhookRouter from './routes/webhook';
 import invoicesRouter from './routes/invoices';
 import subscriptionRouter from './routes/subscription';
+import resetPasswordRouter from './routes/passwordReset';
 
 const PORT = process.env.PORT || 3001;
 
@@ -23,6 +24,7 @@ app.use('/', webhookRouter)
 
 app.use(express.json());
 app.use('/auth', authRouter);
+app.use('/auth', resetPasswordRouter);
 app.use('/user', userRouter);
 app.use('/user/subscription', subscriptionRouter)
 app.use('/user/invoices', invoicesRouter)
