@@ -12,7 +12,9 @@
       "@/components/*": ["components/*"],
       "@/lib/*": ["lib/*"],
       "@/hooks/*": ["hooks/*"],
-      "@/providers/*": ["src/providers/*"]
+      "@/providers/*": ["src/providers/*"],
+      "@/utils/*": ["utils/*"],
+      "@/contexts/*": ["contexts/*"]
     }
   },
   "include": [
