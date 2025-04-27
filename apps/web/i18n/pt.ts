@@ -36,7 +36,7 @@ export const pt = {
     title: 'Preços',
     free: {
       title: 'Gratuito',
-      price: 'R$0 / mês',
+      price: '$0 / mês',
       features: {
         documents: '1 documento',
         sites: '1 site',
@@ -47,7 +47,7 @@ export const pt = {
     },
     pro: {
       title: 'Pro',
-      price: 'R$25 / mês ou R$200 / ano',
+      price: '$5 / mês ou $40 / ano',
       features: {
         documents: 'Documentos ilimitados',
         sites: 'Até 10 sites',
