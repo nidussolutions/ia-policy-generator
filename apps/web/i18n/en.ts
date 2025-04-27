@@ -64,7 +64,7 @@ export const en = {
     forgotPassword: 'Forgot your password?',
     resetPassword: 'Reset your password',
     errorMessage: 'Invalid email or password',
-    noAccountMessage: 'Don’t have an account?',
+    noAccountMessage: 'Don&apos;t have an account?',
     signUp: 'Sign up',
   },
   register: {

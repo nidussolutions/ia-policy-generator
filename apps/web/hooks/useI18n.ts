@@ -5,7 +5,6 @@ import { en } from '../i18n/en';
 import { pt } from '../i18n/pt';
 
 export type Language = 'en' | 'pt';
-type TranslationKeys = keyof typeof en;
 
 const translations = {
   en,
@@ -31,18 +30,22 @@ export function useI18n() {
   }, []);
 
   type Path = string | string[];
-  
-  const t = useCallback((path: Path): string => {
-    const keys = Array.isArray(path) ? path : path.split('.');
-    let current: any = translations[language];
-    
-    for (const key of keys) {
-      if (current === undefined) return Array.isArray(path) ? path.join('.') : path;
-      current = current[key];
-    }
-    
-    return current || (Array.isArray(path) ? path.join('.') : path);
-  }, [language]);
+
+  const t = useCallback(
+    (path: Path): string => {
+      const keys = Array.isArray(path) ? path : path.split('.');
+      let current: any = translations[language];
+
+      for (const key of keys) {
+        if (current === undefined)
+          return Array.isArray(path) ? path.join('.') : path;
+        current = current[key];
+      }
+
+      return current || (Array.isArray(path) ? path.join('.') : path);
+    },
+    [language]
+  );
 
   return {
     language,

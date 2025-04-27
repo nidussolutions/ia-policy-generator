@@ -1,5 +1,3 @@
-import ResetPasswordPage from 'app/auth/reset-password/page';
-
 export const pt = {
   nav: {
     features: 'Recursos',
