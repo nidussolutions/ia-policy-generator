@@ -14,17 +14,19 @@ model Users {
   identity         String    @unique
   email            String    @unique
   name             String
+  phone            String    @default("no-phone")
   password         String
   lastLogin        DateTime? @default(now())
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  sites        Site[]
-  logs         ActivityLog[]
-  documents    Document[]
-  userPlans    UserPlans[]
-  invoices     Invoice[]
-  subscription Subscription[]
+  sites         Site[]
+  logs          ActivityLog[]
+  documents     Document[]
+  userPlans     UserPlans[]
+  invoices      Invoice[]
+  subscription  Subscription[]
+  PasswordReset PasswordReset[]
 }
 
 model Site {
@@ -117,4 +119,12 @@ model Subscription {
   updatedAt            DateTime @updatedAt
 
   user Users @relation(fields: [userId], references: [id])
+}
+
+model PasswordReset {
+  token     String   @id
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }

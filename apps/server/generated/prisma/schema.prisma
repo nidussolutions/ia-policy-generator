@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id               String    @id @default(uuid())
+  stripeCustomerId String    @unique
+  identity         String    @unique
+  email            String    @unique
+  name             String
+  phone            String    @default("no-phone")
+  password         String
+  role             String    @default("user")
+  refreshToken     String?   @db.Text
+  tokenVersion     Float?
+  lastLogin        DateTime? @default(now())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  sites         Site[]
+  logs          ActivityLog[]
+  documents     Document[]
+  userPlans     UserPlans[]
+  invoices      Invoice[]
+  subscription  Subscription[]
+  PasswordReset PasswordReset[]
+}
+
+model Site {
+  id          String   @id @default(uuid())
+  name        String
+  domain      String
+  language    String
+  legislation String
+  observation String   @default("")
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner     Users      @relation(fields: [ownerId], references: [id])
+  documents Document[]
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  title     String
+  type      String
+  content   String
+  siteId    String
+  usersId   String?
+  publicId  String   @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site Site   @relation(fields: [siteId], references: [id])
+  user Users? @relation(fields: [usersId], references: [id])
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  createdAt DateTime @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model Plans {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  type        String   @default("free")
+  price       String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  UserPlans UserPlans[]
+}
+
+model UserPlans {
+  id                   String    @id @default(uuid())
+  userId               String    @unique
+  planId               String
+  downgradeToPlanId    String?
+  downgradeScheduledAt DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
+  plan Plans @relation(fields: [planId], references: [id])
+}
+
+model Invoice {
+  id              String    @id @default(uuid())
+  stripeInvoiceId String    @unique
+  userId          String
+  invoiceUrl      String?
+  amountDue       Int
+  amountPaid      Int
+  status          String
+  dueDate         DateTime?
+  createdAt       DateTime  @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id                   String   @id @default(uuid())
+  stripeSubscriptionId String   @unique
+  userId               String
+  status               String
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model PasswordReset {
+  token     String   @id
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

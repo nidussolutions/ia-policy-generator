@@ -1,0 +1,18 @@
+{
+  "common": {
+    "welcome": "Bem-vindo",
+    "login": "Entrar",
+    "logout": "Sair",
+    "register": "Registrar",
+    "email": "E-mail",
+    "password": "Senha"
+  },
+  "home": {
+    "title": "Gerador de Políticas",
+    "description": "Gere suas políticas de privacidade e termos de uso"
+  },
+  "errors": {
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "E-mail inválido"
+  }
+}
