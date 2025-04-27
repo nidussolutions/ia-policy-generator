@@ -97,7 +97,7 @@ git clone https://github.com/your-org/legalforge.git
 2. Install dependencies
 
 ```bash
-yarn install
+npm install
 ```
 
 3. Set up environment variables
@@ -109,7 +109,7 @@ cp .env.example .env
 4. Start the development server
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 ## 📚 Documentation
@@ -126,4 +126,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 🌟 Support
 
-For support, email support@legalforge.com or visit our [Help Center](https://help.legalforge.com).
+For support, email suporte@nidussolutions.com or visit our [Help Center](https://help.legalforge.com).
