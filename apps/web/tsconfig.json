@@ -11,7 +11,8 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/lib/*": ["lib/*"],
-      "@/hooks/*": ["hooks/*"]
+      "@/hooks/*": ["hooks/*"],
+      "@/providers/*": ["src/providers/*"]
     }
   },
   "include": [
@@ -19,7 +20,8 @@
     "**/*.tsx",
     "next-env.d.ts",
     "next.config.js",
-    ".next/types/**/*.ts"
-, "tailwind.config.js"  ],
+    ".next/types/**/*.ts",
+    "tailwind.config.js"
+  ],
   "exclude": ["node_modules"]
 }
