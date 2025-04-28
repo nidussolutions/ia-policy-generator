@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {ArrowLeft} from 'lucide-react';
-import {PlanType} from '@/types/Plan';
+import {PlanType} from '@/lib/api';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import {useRouter} from 'next/navigation';
