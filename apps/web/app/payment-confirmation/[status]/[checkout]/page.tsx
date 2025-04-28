@@ -5,6 +5,8 @@ import {CheckCircle, XCircle, Hourglass} from 'lucide-react';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import {motion} from 'framer-motion';
+import { sendGTMEvent } from '@next/third-parties/google'
+import {useEffect} from 'react';
 
 const StatusMessage = ({
                            icon: Icon,
@@ -31,6 +33,10 @@ const StatusMessage = ({
 
 export default function PaymentConfirmationPage() {
     const {status} = useParams() as { status: string };
+
+    useEffect(() => {
+      sendGTMEvent({ event: 'conversion', value: 1.0 })}
+    },[]);
 
     const renderStatus = () => {
         switch (status) {
