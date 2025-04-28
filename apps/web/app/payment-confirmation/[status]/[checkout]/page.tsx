@@ -35,7 +35,7 @@ export default function PaymentConfirmationPage() {
     const {status} = useParams() as { status: string };
 
     useEffect(() => {
-      sendGTMEvent({ event: 'conversion', value: 1.0 })}
+      sendGTMEvent({ event: 'conversion', value: 1.0 })
     },[]);
 
     const renderStatus = () => {
