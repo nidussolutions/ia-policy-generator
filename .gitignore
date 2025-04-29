@@ -33,3 +33,4 @@ yarn-error.log*
 
 # vercel
 .vercel
+apps/server/generated/prisma/query_engine-windows.dll.node
