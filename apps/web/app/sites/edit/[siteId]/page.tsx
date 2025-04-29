@@ -10,12 +10,10 @@ import Error from '@/components/Error';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SiteType } from '@/types/SitesType';
-import { useTheme } from '@/components/ThemeContext';
 
 export default function EditSitePage() {
   const { siteId } = useParams() as { siteId: string };
   const router = useRouter();
-  const { theme } = useTheme();
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 

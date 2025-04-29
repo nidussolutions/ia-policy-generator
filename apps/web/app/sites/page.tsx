@@ -11,7 +11,6 @@ import { fetcher } from '@/lib/api';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
-import { useTheme } from '@/components/ThemeContext';
 
 type Site = {
   id: string;
@@ -23,7 +22,6 @@ export default function SitesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deletingSiteId, setDeletingSiteId] = useState<string | null>(null);
   const { token, loading: authLoading } = useAuth();
-  const { theme } = useTheme();
 
   const { data, error, isLoading, mutate } = useSWR(
     token ? `${process.env.NEXT_PUBLIC_API_URL}/sites` : null,

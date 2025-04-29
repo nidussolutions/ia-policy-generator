@@ -8,6 +8,17 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
 const inter = Inter({subsets: ['latin']});
 
+
+export const metadata = {
+    title: 'Legal Forge',
+    description: 'Generate legal documents for your website with Legal Forge',
+    icons: {
+        icon: '/favicon.png',
+        shortcut: '/favicon.png',
+        apple: '/favicon.png',
+    },
+};
+
 export default function RootLayout({
                                        children,
                                    }: {
