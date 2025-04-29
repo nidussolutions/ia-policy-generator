@@ -3,19 +3,52 @@ import {PrismaClient} from '../../generated/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Stripe from "stripe";
+import axios from 'axios';
 
 const router = Router();
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET as string);
 
-const jwtSecret = process.env.JWT_SECRET || 'secret';
+const jwtSecret = process.env.JWT_SECRET as string;
+const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY as string;
+
+// Helper function to verify reCAPTCHA token
+const verifyRecaptcha = async (token: string): Promise<boolean> => {
+    try {
+        const response = await axios.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            null,
+            {
+                params: {
+                    secret: RECAPTCHA_SECRET_KEY,
+                    response: token
+                }
+            }
+        );
+
+        return response.data.success;
+    } catch (error) {
+        console.error('reCAPTCHA verification error:', error);
+        return false;
+    }
+};
 
 const generateAccessToken = (userId: string) =>
     jwt.sign({userId}, jwtSecret, {expiresIn: '7d'});
 
 
 router.post('/register', async (req, res): Promise<any> => {
-    const {email, password, name, identity} = req.body;
+    const {email, password, name, identity, recaptchaToken} = req.body;
+
+    // Verify reCAPTCHA token
+    if (!recaptchaToken) {
+        return res.status(400).json({error: 'reCAPTCHA verification is required'});
+    }
+
+    const isValidRecaptcha = await verifyRecaptcha(recaptchaToken);
+    if (!isValidRecaptcha) {
+        return res.status(400).json({error: 'reCAPTCHA verification failed'});
+    }
 
     try {
         const userExist = await prisma.users.findUnique({where: {email}});
@@ -79,7 +112,17 @@ router.post('/register', async (req, res): Promise<any> => {
 });
 
 router.post('/login', async (req, res): Promise<any> => {
-    const {email, password} = req.body;
+    const {email, password, recaptchaToken} = req.body;
+
+    // Verify reCAPTCHA token
+    if (!recaptchaToken) {
+        return res.status(400).json({error: 'reCAPTCHA verification is required'});
+    }
+
+    const isValidRecaptcha = await verifyRecaptcha(recaptchaToken);
+    if (!isValidRecaptcha) {
+        return res.status(400).json({error: 'reCAPTCHA verification failed'});
+    }
 
     try {
         const user = await prisma.users.findUnique({where: {email}});

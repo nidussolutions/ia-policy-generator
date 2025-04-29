@@ -154,6 +154,7 @@ export const pt = {
         errorMessage: 'E-mail ou senha inválidos',
         noAccount: 'Não tem uma conta?',
         signUp: 'Cadastre-se',
+        registering: 'Registrando...',
     },
     register: {
         title: 'Criar conta',

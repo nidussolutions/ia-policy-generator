@@ -51,15 +51,16 @@ export function useAuth() {
     }, [API_URL]);
 
     const login = useCallback(
-        async (email: string, password: string): Promise<string | void> => {
+        async (email: string, password: string, recaptchaToken?: string): Promise<string | void> => {
             if (!API_URL) return 'API URL is not configured';
             if (!email || !password) return 'Email and password are required';
+            if (!recaptchaToken) return 'reCAPTCHA verification is required';
 
             try {
                 const res = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({email, password}),
+                    body: JSON.stringify({email, password, recaptchaToken}),
                 });
 
                 const data = await res.json();
@@ -86,16 +87,18 @@ export function useAuth() {
             email: string,
             password: string,
             identity: string,
-            redirect?: boolean
+            redirect?: boolean,
+            recaptchaToken?: string
         ): Promise<string | void> => {
             if (!API_URL) return 'API URL is not configured';
             if (!name || !email || !password) return 'Name, email, and password are required';
+            if (!recaptchaToken) return 'reCAPTCHA verification is required';
 
             try {
                 const res = await fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({name, email, password, identity}),
+                    body: JSON.stringify({name, email, password, identity, recaptchaToken}),
                 });
 
                 const data = await res.json();

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Mail, Lock, User, UserPlus, Loader2, Eye, EyeOff } from 'lucide-react';
@@ -8,6 +8,7 @@ import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { motion } from 'framer-motion';
 import { fetcher } from '@/lib/api';
 import { useI18n } from '@/contexts/I18nContext';
+import Script from 'next/script';
 
 // Animation variants
 const containerVariants = {
@@ -36,6 +37,8 @@ export default function RegisterPage() {
   const [emailError, setEmailError] = useState('');
   const [companyIdError, setCompanyIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [recaptchaError, setRecaptchaError] = useState('');
+  const recaptchaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -107,20 +110,35 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+
+    // Get reCAPTCHA token
+    const recaptchaValue = (window as any).grecaptcha?.getResponse();
+    if (!recaptchaValue) {
+      setRecaptchaError('Please complete the reCAPTCHA verification');
+      return;
+    }
+    setRecaptchaError('');
+
     setLoading(true);
     setError('');
     try {
-      const err = await register(name, email, password, companyId, true);
+      const err = await register(name, email, password, companyId, true, recaptchaValue);
       if (err) setError('Error creating account. Please try again.');
     } catch {
       setError('Error creating account. Please try again.');
     } finally {
       setLoading(false);
+      // Reset reCAPTCHA
+      (window as any).grecaptcha?.reset();
     }
   };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] px-4">
+      <Script
+        src="https://www.google.com/recaptcha/api.js"
+        strategy="afterInteractive"
+      />
       <motion.div
         className="w-full max-w-md p-8 bg-[#1E0359]/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-[#8C0368]/20"
         initial="hidden"
@@ -249,6 +267,20 @@ export default function RegisterPage() {
             )}
           </motion.div>
           {/* Submit */}
+          <motion.div 
+            className="mb-6"
+            variants={itemVariants}
+          >
+            <div 
+              ref={recaptchaRef}
+              className="g-recaptcha flex justify-center" 
+              data-sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+            ></div>
+            {recaptchaError && (
+              <p className="mt-1 text-sm text-red-400 text-center">{recaptchaError}</p>
+            )}
+          </motion.div>
+
           <motion.button
             type="submit"
             disabled={loading}
@@ -257,7 +289,7 @@ export default function RegisterPage() {
           >
             {loading ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" /> Registering...
+                <Loader2 className="w-5 h-5 animate-spin" /> {t("profile.registering")}
               </>
             ) : (
               <p>{t('register.button')}</p>

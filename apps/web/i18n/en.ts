@@ -143,8 +143,9 @@ export const en = {
         forgotPassword: 'Forgot your password?',
         resetPassword: 'Reset your password',
         errorMessage: 'Invalid email or password',
-        noAccountMessage: 'Don&apos;t have an account?',
+        noAccount: 'Don\'t have an account?',
         signUp: 'Sign up',
+        registering: 'Registering...',
     },
     register: {
         title: 'Create account',
