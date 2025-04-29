@@ -1,4 +1,14 @@
 export const pt = {
+  header: {
+    brand: 'Legal Forge',
+    dashboard: 'Painel',
+    sites: 'Sites',
+    account: 'Conta',
+    logout: 'Sair',
+    language: 'Idioma',
+    languageEN: 'Inglês',
+    languagePT: 'Português',
+  },
   nav: {
     features: 'Recursos',
     pricing: 'Preços',
@@ -57,6 +67,54 @@ export const pt = {
       cta: 'Assinar Agora',
     },
   },
+  about: {
+    title: 'Sobre Nós',
+    description: 'Legal Forge nasceu com a missão de simplificar a criação de políticas legais para sites e aplicativos, usando inteligência artificial para entregar documentos precisos, atualizados e personalizados em segundos.',
+    team: {
+      joao: {
+        name: 'João Gustavo',
+        role: 'CEO & Fundador',
+      },
+      thiago: {
+        name: 'Thiago Viana',
+        role: 'CMO & Fundador',
+      },
+    },
+  },
+  error: {
+    title: 'Ops! Algo deu errado ao carregar a página {page}.',
+    description: 'Não foi possível carregar o conteúdo devido ao seguinte erro:',
+  },
+  profile: {
+    fields: {
+      name: 'Nome',
+      email: 'E-mail',
+      newPassword: 'Nova Senha',
+    },
+    placeholders: {
+      password: 'Deixe em branco para manter a atual',
+    },
+    buttons: {
+      show: 'Mostrar',
+      hide: 'Ocultar',
+      saveChanges: 'Salvar Alterações',
+    },
+    errors: {
+      passwordRequirements: 'A senha deve ter pelo menos 6 caracteres e incluir um caractere especial.',
+      updateFailed: 'Erro ao atualizar o perfil. Por favor, tente novamente.',
+    },
+    success: {
+      updated: 'Informações atualizadas com sucesso!',
+    },
+  },
+  footer: {
+    legal: 'Legal',
+    privacyPolicy: 'Política de Privacidade',
+    termsOfUse: 'Termos de Uso',
+    cookiePolicy: 'Política de Cookies',
+    contact: 'Contato',
+    copyright: 'Legal Forge de propriedade da Nidus Solutions. Todos os direitos reservados.',
+  },
   login: {
     title: 'Bem vindo de volta',
     email: 'Endereço de e-mail',
@@ -83,5 +141,28 @@ export const pt = {
     placeholderCnpjCpf: 'Digite seu CPF ou CNPJ',
     alreadyHaveAccount: 'Já tem uma conta?',
     logIn: 'Entrar',
+  },
+  dashboard: {
+    greeting: 'Olá, {name} 👋',
+    metrics: {
+      connectedSites: 'Sites Conectados',
+      generatedDocuments: 'Documentos Gerados',
+      lastLogin: 'Último Login',
+      plan: 'Plano',
+    },
+    actions: {
+      title: 'Ações Sugeridas',
+      registerSite: 'Registrar um novo site',
+      generateDocument: 'Gerar um novo documento',
+      checkTerms: 'Verificar status dos termos',
+    },
+    activities: {
+      title: 'Atividades Recentes',
+      noActivities: 'Nenhuma atividade recente.',
+    },
+    errors: {
+      noToken: 'Token não encontrado. Por favor, faça login novamente.',
+      loadingError: 'Erro ao carregar o painel. Por favor, faça login novamente.',
+    },
   },
 } as const;

@@ -7,12 +7,14 @@ import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import ActionButton from '@/components/ActionButton';
 import {useAuth} from '@/hooks/useAuth';
+import {useI18n} from '@/contexts/I18nContext';
 import {motion} from 'framer-motion';
 import AnimatedCard from '@/components/AnimatedCard';
 
 export default function DashboardPage() {
     const router = useRouter();
     const {token, isAuthenticated, loading: authLoading} = useAuth();
+    const {t} = useI18n();
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState<UserType | null>(null);
     const [metrics, setMetrics] = useState({sites: 0, documents: 0});
@@ -30,7 +32,7 @@ export default function DashboardPage() {
             try {
 
                 if (!token) {
-                    setError('No token found. Please login again.');
+                    setError(t('dashboard.errors.noToken'));
                     localStorage.removeItem('token');
                     router.push('/auth/login');
                     return;
@@ -67,7 +69,7 @@ export default function DashboardPage() {
                 setActivities(logsJson.logs || []);
             } catch (err: any) {
                 console.error('Error loading dashboard data:', err.message);
-                setError('Error loading dashboard. Please login again.');
+                setError(t('dashboard.errors.loadingError'));
                 localStorage.removeItem('token');
                 router.push('/auth/login');
             } finally {
@@ -75,7 +77,7 @@ export default function DashboardPage() {
             }
         };
 
-        fetchData();
+        fetchData().finally();
     }, [authLoading, isAuthenticated, token, router]);
 
     if (authLoading || loading) return <Loading page="dashboard"/>;
@@ -83,7 +85,8 @@ export default function DashboardPage() {
     if (!userData) return null;
 
     return (
-        <main className="min-h-screen bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary">
+        <main
+            className="min-h-screen bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary">
             <Layout>
                 <motion.div
                     initial={{opacity: 0, y: 12}}
@@ -97,20 +100,20 @@ export default function DashboardPage() {
                         transition={{delay: 0.2}}
                         className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary"
                     >
-                        Hello, {userData.name} 👋
+                        {t('dashboard.greeting').replace('{name}', userData.name)}
                     </motion.h1>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <AnimatedCard title="Connected Sites" value={metrics.sites}/>
+                        <AnimatedCard title={t('dashboard.metrics.connectedSites')} value={metrics.sites}/>
                         <AnimatedCard
-                            title="Generated Documents"
+                            title={t('dashboard.metrics.generatedDocuments')}
                             value={metrics.documents}
                         />
                         <AnimatedCard
-                            title="Last Login"
+                            title={t('dashboard.metrics.lastLogin')}
                             value={new Date(userData.lastLogin).toLocaleString()}
                         />
-                        <AnimatedCard title="Plan" value={userData?.plan?.name || 'Free'}/>
+                        <AnimatedCard title={t('dashboard.metrics.plan')} value={userData?.plan?.name || 'Free'}/>
                     </div>
 
                     <motion.div
@@ -119,22 +122,22 @@ export default function DashboardPage() {
                         transition={{delay: 0.3}}
                     >
                         <h2 className="text-xl font-semibold mb-4 text-light-text-primary dark:text-dark-text-primary">
-                            Suggested Actions
+                            {t('dashboard.actions.title')}
                         </h2>
                         <div className="flex flex-col md:flex-row gap-4">
                             <ActionButton
                                 className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary"
-                                text="Register a new site"
+                                text={t('dashboard.actions.registerSite')}
                                 onClick={() => router.push('/sites/new')}
                             />
                             <ActionButton
                                 className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary"
-                                text="Generate a new document"
+                                text={t('dashboard.actions.generateDocument')}
                                 onClick={() => router.push('/sites')}
                             />
                             <ActionButton
                                 className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary"
-                                text="Check terms status"
+                                text={t('dashboard.actions.checkTerms')}
                                 onClick={() => router.push('/sites')}
                             />
                         </div>
@@ -146,11 +149,13 @@ export default function DashboardPage() {
                         transition={{delay: 0.4}}
                     >
                         <h2 className="text-xl font-semibold mb-4 text-light-text-primary dark:text-dark-text-primary">
-                            Recent Activities
+                            {t('dashboard.activities.title')}
                         </h2>
                         <ul className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl divide-y divide-light-border dark:divide-dark-border">
                             {activities.length === 0 ? (
-                                <li className="p-4 text-light-text-secondary dark:text-dark-text-secondary">No recent activities.</li>
+                                <li className="p-4 text-light-text-secondary dark:text-dark-text-secondary">
+                                    {t('dashboard.activities.noActivities')}
+                                </li>
                             ) : (
                                 activities.slice(0, 5).map((a, idx) => (
                                     <motion.li

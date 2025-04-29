@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import {putWithAuth} from '@/lib/api';
 import {motion, AnimatePresence} from 'framer-motion';
 import {useTheme} from './ThemeContext';
+import {useI18n} from '../contexts/I18nContext';
 
 type ProfileProps = {
     name: string;
@@ -36,6 +37,7 @@ export default function Profile({
     const [showPassword, setShowPassword] = useState(false);
     const [success, setSuccess] = useState('');
     const {theme} = useTheme();
+    const {t} = useI18n();
 
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,7 +46,7 @@ export default function Profile({
         setError('');
 
         if (password && (password.length < 6 || !/[^A-Za-z0-9]/.test(password))) {
-            setError('Password must be at least 6 characters and include a special character.');
+            setError(t('profile.errors.passwordRequirements'));
             setLoading(false);
             return;
         }
@@ -56,9 +58,9 @@ export default function Profile({
                 token
             );
             if (!res.id) throw new Error();
-            setSuccess('Information updated successfully!');
+            setSuccess(t('profile.success.updated'));
         } catch {
-            setError('Error updating profile. Please try again.');
+            setError(t('profile.errors.updateFailed'));
         } finally {
             setLoading(false);
         }
@@ -100,7 +102,7 @@ export default function Profile({
                 </AnimatePresence>
 
                 <motion.div {...motionTransition} transition={{delay: 0.1}}>
-                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">Name</label>
+                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">{t('profile.fields.name')}</label>
                     <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <User size={18}/>
@@ -111,13 +113,13 @@ export default function Profile({
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
-                            aria-label="Name"
+                            aria-label={t('profile.fields.name')}
                         />
                     </div>
                 </motion.div>
 
                 <motion.div {...motionTransition} transition={{delay: 0.2}}>
-                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">Email</label>
+                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">{t('profile.fields.email')}</label>
                     <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <Mail size={18}/>
@@ -128,13 +130,13 @@ export default function Profile({
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            aria-label="Email"
+                            aria-label={t('profile.fields.email')}
                         />
                     </div>
                 </motion.div>
 
                 <motion.div {...motionTransition} transition={{delay: 0.3}}>
-                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">New Password</label>
+                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">{t('profile.fields.newPassword')}</label>
                     <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <Lock size={18}/>
@@ -144,15 +146,15 @@ export default function Profile({
                             className="w-full pl-10 pr-12 py-2 rounded-lg bg-light-background/20 dark:bg-dark-background/20 border border-transparent focus:border-light-accent-purple dark:focus:border-dark-accent-purple focus:ring-0 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Leave blank to keep current"
-                            aria-label="Password"
+                            placeholder={t('profile.placeholders.password')}
+                            aria-label={t('profile.fields.newPassword')}
                         />
                         <button
                             type="button"
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary"
                             onClick={() => setShowPassword((prev) => !prev)}
                         >
-                            {showPassword ? 'Hide' : 'Show'}
+                            {showPassword ? t('profile.buttons.hide') : t('profile.buttons.show')}
                         </button>
                     </div>
                 </motion.div>
@@ -164,7 +166,7 @@ export default function Profile({
                         className="flex items-center gap-2 bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary px-6 py-2 rounded-full shadow-lg transition-transform hover:scale-105 disabled:opacity-50"
                     >
                         {loading && <Loader2 className="w-4 h-4 animate-spin"/>}
-                        Save Changes
+                        {t('profile.buttons.saveChanges')}
                     </button>
                 </motion.div>
             </motion.form>

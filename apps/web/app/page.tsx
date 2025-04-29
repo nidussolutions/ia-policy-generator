@@ -330,27 +330,24 @@ export default function HomePage() {
                     className="text-3xl md:text-4xl font-bold text-center mb-12 text-light-text-primary dark:text-white"
                     variants={itemVariants}
                 >
-                    About Us
+                    {t('about.title')}
                 </motion.h2>
                 <motion.p
                     className="max-w-2xl mx-auto text-center text-light-text-secondary dark:text-gray-300 mb-8"
                     variants={itemVariants}
                 >
-                    Legal Forge was born with the mission of simplifying the creation of
-                    legal policies for websites and applications, using artificial
-                    intelligence to deliver accurate, updated and personalized documents
-                    in seconds.
+                    {t('about.description')}
                 </motion.p>
                 <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-14 items-center">
                     {[
                         {
-                            name: 'João Gustavo',
-                            role: 'CEO & Founder',
+                            name: t('about.team.joao.name'),
+                            role: t('about.team.joao.role'),
                             image: '/team/joao.png',
                         },
                         {
-                            name: 'Thiago Viana',
-                            role: 'CMO & Founder',
+                            name: t('about.team.thiago.name'),
+                            role: t('about.team.thiago.role'),
                             image: '/team/thiago.png',
                         },
                     ].map((member, idx) => (

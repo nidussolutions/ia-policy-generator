@@ -4,7 +4,6 @@ import React from 'react';
 import Header from './Header';
 import {MotionConfig, motion} from 'framer-motion';
 import {useTheme} from './ThemeContext';
-import Footer from "@/components/Footer";
 
 interface Props {
     children: React.ReactNode;
