@@ -197,7 +197,7 @@ export default function RegisterPage() {
           {/* Password */}
           <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              {t('register.password')}
+              {t('placeholderPassword')}
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">

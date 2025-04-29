@@ -14,7 +14,8 @@
       "@/hooks/*": ["hooks/*"],
       "@/providers/*": ["src/providers/*"],
       "@/utils/*": ["utils/*"],
-      "@/contexts/*": ["contexts/*"]
+      "@/contexts/*": ["contexts/*"],
+      "@/types/*": ["types/*"]
     }
   },
   "include": [
