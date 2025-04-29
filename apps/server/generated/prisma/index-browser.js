@@ -125,9 +125,6 @@ exports.Prisma.UsersScalarFieldEnum = {
   name: 'name',
   phone: 'phone',
   password: 'password',
-  role: 'role',
-  refreshToken: 'refreshToken',
-  tokenVersion: 'tokenVersion',
   lastLogin: 'lastLogin',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -1,20 +1,23 @@
-'use client';
 import './globals.css';
-import { Inter } from 'next/font/google';
-import { I18nProvider } from '../contexts/I18nContext';
+import {Inter} from 'next/font/google';
+import {I18nProvider} from '../contexts/I18nContext';
+import {ThemeProvider} from '../components/ThemeContext';
+import React from "react";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({subsets: ['latin']});
 
 export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
+                                       children,
+                                   }: {
+    children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <I18nProvider>{children}</I18nProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" suppressHydrationWarning={true}>
+        <body className={inter.className}>
+        <ThemeProvider>
+            <I18nProvider>{children}</I18nProvider>
+        </ThemeProvider>
+        </body>
+        </html>
+    );
 }

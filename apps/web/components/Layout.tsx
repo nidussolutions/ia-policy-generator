@@ -10,7 +10,7 @@ interface Props {
 
 export default function Layout({ children }: Props) {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200">
+        <div className="min-h-screen bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary">
             <Header />
             <MotionConfig transition={{ duration: 0.5 }}>
                 <motion.main

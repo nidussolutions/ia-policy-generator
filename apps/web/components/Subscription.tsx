@@ -3,7 +3,9 @@ import {motion} from "framer-motion";
 import React, {useEffect, useState} from "react";
 import {RefreshCw} from "lucide-react";
 
-import {fetcher, PlanType, SubscriptionType} from "@/lib/api";
+import {fetcher} from "@/lib/api";
+import {PlanType} from '@/types/PlanType';
+import {SubscriptionType} from "@/types/SubscriptionsType";
 import {useCheckout} from "@/hooks/useCheckout";
 import {useRouter} from "next/navigation";
 

@@ -52,16 +52,16 @@ export default function AnimatedCard({title, value}: { title: string; value: str
             initial={{opacity: 0, y: 8}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="p-4 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl text-center shadow-lg shadow-[#8C0368]/20 hover:shadow-[#8C0368]/40 transition-all duration-300 ease-in-out flex flex-col h-full justify-center"
+            className="p-4 bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl text-center shadow-lg transition-all duration-300 ease-in-out flex flex-col h-full justify-center"
         >
-            <p className="text-sm text-gray-400">{title}</p>
-            <p className="text-1xl font-bold text-white mt-2">{value}</p>
+            <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">{title}</p>
+            <p className="text-1xl font-bold text-light-text-primary dark:text-dark-text-primary mt-2">{value}</p>
             {value === 'Free'
                 && (
                     <div className="flex flex-col md:flex-row gap-4">
                         <button
                             disabled={loading}
-                            className="mt-2 w-full bg-[#8C0368] hover:bg-[#A429A6] text-white py-2 rounded-lg text-sm font-semibold"
+                            className="mt-2 w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary py-2 rounded-lg text-sm font-semibold disabled:bg-light-border dark:disabled:bg-dark-disabled"
                             onClick={() => startCheckout()}
                         >
                             {loading ? 'Loading...' : 'Subscribe'}

@@ -15,3 +15,4 @@ export type InvoicesType = {
   dueDate?: string;
   createdAt: string;
 };
+
