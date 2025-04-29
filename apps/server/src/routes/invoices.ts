@@ -7,41 +7,25 @@ const prisma = new PrismaClient();
 
 router.get("/", authMiddleware, async (req: AuthRequest, res): Promise<any> => {
     const userId = req.userId;
-    const {limit = "5", page = "1"} = req.query;
-
-    const take = parseInt(limit as string);
-    const skip = (parseInt(page as string) - 1) * take;
 
     try {
-        const [invoices, totalCount] = await Promise.all([
-            prisma.invoice.findMany({
-                where: {userId},
-                orderBy: {createdAt: 'desc'},
-                select: {
-                    id: true,
-                    stripeInvoiceId: true,
-                    amountDue: true,
-                    amountPaid: true,
-                    invoiceUrl: true,
-                    status: true,
-                    dueDate: true,
-                    createdAt: true,
-                },
-                take,
-                skip,
-            }),
-            prisma.invoice.count({where: {userId}})
-        ]);
+        const invoices = await prisma.invoice.findMany({
+            where: {userId},
+            orderBy: {createdAt: 'desc'},
+            select: {
+                id: true,
+                stripeInvoiceId: true,
+                amountDue: true,
+                amountPaid: true,
+                invoiceUrl: true,
+                status: true,
+                dueDate: true,
+                createdAt: true,
+            },
+            take: 3
+        })
 
-        res.status(200).json({
-            invoices,
-            pagination: {
-                total: totalCount,
-                page: parseInt(page as string),
-                limit: take,
-                totalPages: Math.ceil(totalCount / take),
-            }
-        });
+        res.status(200).json({invoices});
 
     } catch (error) {
         console.error('Error during getting invoices:', error);

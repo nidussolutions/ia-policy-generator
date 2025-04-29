@@ -2,6 +2,7 @@ import useSWR from "swr";
 import {motion} from "framer-motion";
 import React, {useEffect, useState} from "react";
 import {RefreshCw} from "lucide-react";
+import {useI18n} from "@/contexts/I18nContext";
 
 import {fetcher} from "@/lib/api";
 import {PlanType} from '@/types/PlanType';
@@ -27,7 +28,8 @@ const formatDate = (dateString: string) =>
 const Subscription = () => {
     const {accessPortalClient} = useCheckout();
     const router = useRouter();
-    const { theme } = useTheme();
+    const {theme} = useTheme();
+    const {t} = useI18n();
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
@@ -68,7 +70,7 @@ const Subscription = () => {
             mutate().finally();
             userMutate().finally();
         } catch (error) {
-            console.error("Failed to update invoices profile:", error);
+            console.log("Failed to update invoices profile:", error);
         } finally {
             console.log("Update complete");
             console.log(data);
@@ -93,20 +95,20 @@ const Subscription = () => {
         if (plan.type === "free") {
             return {
                 className: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800",
-                label: "Subscribe",
+                label: t("profile.subscription.purchaseSubscription"),
             };
         }
 
         if (subscription?.cancelAtPeriodEnd) {
             return {
                 className: "bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-700 dark:hover:bg-yellow-800",
-                label: "Reactivate Subscription",
+                label: t("profile.subscription.cancelSubscription"),
             };
         }
 
         return {
             className: "bg-fuchsia-600 hover:bg-fuchsia-700 dark:bg-fuchsia-700 dark:hover:bg-fuchsia-800",
-            label: "Manage Subscription",
+            label: t("profile.subscription.manegeSubscription"),
         };
     };
 
@@ -121,9 +123,9 @@ const Subscription = () => {
         >
             <div className="flex justify-between items-start flex-wrap gap-4">
                 <div>
-                    <h2 className="text-lg font-semibold text-light-text-primary dark:text-dark-text-primary">Current Plan</h2>
+                    <h2 className="text-lg font-semibold text-light-text-primary dark:text-dark-text-primary">{t("profile.subscription.currentPlan")}</h2>
                     <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                        <strong>Type:</strong>{" "}
+                        <strong>{t("profile.subscription.type")}:</strong>{" "}
                         {plan ? plan.name.charAt(0).toUpperCase() + plan.name.slice(1) : "Loading..."}
                     </p>
                 </div>
@@ -135,18 +137,20 @@ const Subscription = () => {
                 >
                     {loadingUpdate ? (
                         <>
-                            <RefreshCw className="animate-spin" size={16}/> Updating...
+                            <RefreshCw className="animate-spin" size={16}/> {t("profile.subscription.updating")}...
                         </>
                     ) : (
                         <>
-                            <RefreshCw size={16}/> Update
+                            <RefreshCw size={16}/> {t("profile.subscription.update.button")}
                         </>
                     )}
                 </button>
             </div>
 
-            {(error || userError) && <p className="text-red-500 text-sm">Error loading subscription.</p>}
-            {(isLoading || loadingUser) && <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">Loading subscription...</p>}
+            {(error || userError) && <p className="text-red-500 text-sm">{t("profile.subscription.update.error")}</p>}
+            {(isLoading || loadingUser) &&
+                <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">Loading
+                    subscription...</p>}
 
             {subscription ? (
                 <div className="text-sm text-light-text-secondary dark:text-dark-text-secondary space-y-1">
@@ -156,12 +160,14 @@ const Subscription = () => {
                     </span>
 
                     <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary mt-1">
-                        <strong>{subscription.cancelAtPeriodEnd ? "Ends on" : "Next charge on"}:</strong>{" "}
+                        <strong>{subscription.cancelAtPeriodEnd ? t("profile.subscription.ends") : t("profile.subscription.nextCharge")}:</strong>{" "}
                         {subscription.currentPeriodEnd ? formatDate(subscription.currentPeriodEnd) : "---"}
                     </p>
                 </div>
             ) : (
-                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">No active subscription at the moment.</p>
+                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                    {t("profile.subscription.noPlan")}
+                </p>
             )}
 
             {plan && buttonProps && (

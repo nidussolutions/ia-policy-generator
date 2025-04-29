@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import {putWithAuth} from '@/lib/api';
 import {motion, AnimatePresence} from 'framer-motion';
 import {useTheme} from './ThemeContext';
-import {useI18n} from '../contexts/I18nContext';
+import {useI18n} from '@/contexts/I18nContext';
 
 type ProfileProps = {
     name: string;

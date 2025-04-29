@@ -10,9 +10,11 @@ import Invoices from '@/components/Invoices';
 import Subscription from '@/components/Subscription';
 import Profile from '@/components/Profile';
 import {motion} from 'framer-motion';
+import {useI18n} from '@/contexts/I18nContext';
 
 export default function ProfilePage() {
     const router = useRouter();
+    const {t} = useI18n();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -68,7 +70,7 @@ export default function ProfilePage() {
                         <button onClick={() => router.back()}>
                             <ArrowLeft className="w-6 h-6 text-gray-200 hover:text-[#8C0368] transition-colors"/>
                         </button>
-                        <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">My Profile</h1>
+                        <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">{t("profile.title")}</h1>
                     </motion.div>
 
                     {/* Profile Form */}

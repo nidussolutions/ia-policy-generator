@@ -77,7 +77,17 @@ export default function DashboardPage() {
             }
         };
 
-        fetchData().finally();
+        fetchData().then(() => {
+            if (userData) {
+                const lastLogin = new Date(userData.lastLogin);
+                const now = new Date();
+                if (now.getTime() - lastLogin.getTime() > 1000 * 60 * 60 * 24 * 30) {
+                    setError(t('dashboard.errors.tokenExpired'));
+                    localStorage.removeItem('token');
+                    router.push('/auth/login');
+                }
+            }
+        });
     }, [authLoading, isAuthenticated, token, router]);
 
     if (authLoading || loading) return <Loading page="dashboard"/>;
