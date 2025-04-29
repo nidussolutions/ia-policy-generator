@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {ArrowLeft} from 'lucide-react';
-import {PlanType} from '@/lib/api';
+import {PlanType} from '@/types/PlanType';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import {useRouter} from 'next/navigation';
@@ -10,9 +10,11 @@ import Invoices from '@/components/Invoices';
 import Subscription from '@/components/Subscription';
 import Profile from '@/components/Profile';
 import {motion} from 'framer-motion';
+import {useI18n} from '@/contexts/I18nContext';
 
 export default function ProfilePage() {
     const router = useRouter();
+    const {t} = useI18n();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -60,7 +62,7 @@ export default function ProfilePage() {
                 >
                     {/* Back & Title */}
                     <motion.div
-                        className="flex items-center gap-4"
+                        className="flex items-center gap-4 "
                         initial={{opacity: 0, x: -20}}
                         animate={{opacity: 1, x: 0}}
                         transition={{delay: 0.1, duration: 0.4}}
@@ -68,7 +70,7 @@ export default function ProfilePage() {
                         <button onClick={() => router.back()}>
                             <ArrowLeft className="w-6 h-6 text-gray-200 hover:text-[#8C0368] transition-colors"/>
                         </button>
-                        <h1 className="text-3xl font-bold text-white">My Profile</h1>
+                        <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">{t("profile.title")}</h1>
                     </motion.div>
 
                     {/* Profile Form */}
@@ -98,7 +100,7 @@ export default function ProfilePage() {
                         animate={{opacity: 1, y: 0}}
                         transition={{delay: 0.3, duration: 0.5}}
                     >
-                        <Subscription />
+                        <Subscription/>
                     </motion.div>
 
                     {/* Invoices */}

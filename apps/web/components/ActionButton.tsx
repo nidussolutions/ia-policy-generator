@@ -1,4 +1,5 @@
 import {ButtonHTMLAttributes} from 'react';
+import {useTheme} from './ThemeContext';
 
 interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     text: string;
@@ -6,10 +7,12 @@ interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function ActionButton({text, onClick, className = '', ...props}: ActionButtonProps) {
+    const { theme } = useTheme();
+
     return (
         <button
             onClick={onClick}
-            className={`bg-[#8C0368] text-white py-3 px-6 rounded-full shadow-lg transition-transform hover:bg-[#A429A6] ${className}`}
+            className={`bg-light-accent-purple dark:bg-dark-accent-purple text-light-background dark:text-dark-text-primary py-3 px-6 rounded-full shadow-lg transition-transform hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue ${className}`}
             {...props}
         >
             {text}

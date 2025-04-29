@@ -3,12 +3,13 @@ import {PrismaClient} from '../../generated/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Stripe from "stripe";
+import axios from 'axios';
 
 const router = Router();
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET as string);
 
-const jwtSecret = process.env.JWT_SECRET || 'secret';
+const jwtSecret = process.env.JWT_SECRET as string;
 
 const generateAccessToken = (userId: string) =>
     jwt.sign({userId}, jwtSecret, {expiresIn: '7d'});
@@ -23,7 +24,9 @@ router.post('/register', async (req, res): Promise<any> => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const plan = await prisma.plans.findFirst({where: {name: 'Free'}});
+        const plan = await prisma.plans.findFirst({where: {name: 'free'}});
+
+        if (!plan) return res.status(400).json({message: 'Plan not found'});
 
         const customer = await stripe.customers.create({
             email,
