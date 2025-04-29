@@ -128,7 +128,7 @@ export default function PricingPage() {
                             <motion.button
                                 whileHover={{scale: 1.05}}
                                 onClick={() => handleSubscription('monthly')}
-                                className="w-full py-3 bg-light-accent-blue dark:bg-dark-acecent-blue text-white rounded-full font-medium transition-transform"
+                                className="w-full py-3 bg-light-accent-blue dark:bg-dark-accent-blue text-white rounded-full font-medium transition-transform"
                             >
                                 Get Monthly Plan
                             </motion.button>
