@@ -14,14 +14,12 @@ import { notifyError } from '@/hooks/useToast';
 import ConfirmModal from '@/components/ConfirmModal';
 import { motion } from 'framer-motion';
 import { fetcher } from '@/lib/api';
-import { useTheme } from '@/components/ThemeContext';
 
 export default function DocumentPage() {
   const router = useRouter();
   const { siteId } = useParams() as { siteId: string };
   const [deletingDocId, setDeletingDocId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const { theme } = useTheme();
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 

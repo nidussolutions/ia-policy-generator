@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import React from 'react';
-import { useTheme } from './ThemeContext';
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -38,7 +37,6 @@ export default function ConfirmModal({
                                          onConfirm,
                                          onCancel,
                                      }: ConfirmModalProps) {
-    const { theme } = useTheme();
     return (
         <AnimatePresence>
             {isOpen && (

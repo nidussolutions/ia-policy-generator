@@ -1,6 +1,5 @@
 import { CheckCircle, Loader2 } from 'lucide-react';
 import React from 'react';
-import { useTheme } from './ThemeContext';
 
 export type GenerationStepsProps = {
   currentStep: number;
@@ -15,7 +14,6 @@ const steps = [
 ];
 
 export function GenerationSteps({ currentStep }: GenerationStepsProps) {
-  const { theme } = useTheme();
 
   return (
       <div className="flex flex-col gap-3 p-4 bg-light-card dark:bg-dark-card rounded-lg">

@@ -4,7 +4,6 @@ import React, {useState} from 'react';
 import {motion} from 'framer-motion';
 import {useForm} from '@formspree/react';
 import Link from 'next/link';
-import {useTheme} from '../../components/ThemeContext';
 
 const itemVariants = {
     hidden: {opacity: 0, y: 20},
@@ -23,7 +22,6 @@ export default function ContactPage() {
         subject: '',
         message: '',
     });
-    const { theme } = useTheme();
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -1,5 +1,4 @@
 import Header from './Header';
-import { useTheme } from './ThemeContext';
 import { useI18n } from '../contexts/I18nContext';
 
 interface ErrorProps {
@@ -8,7 +7,7 @@ interface ErrorProps {
 }
 
 export default function Error({ page, err }: ErrorProps) {
-  const { theme } = useTheme();
+
   const { t } = useI18n();
 
   return (

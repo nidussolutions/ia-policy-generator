@@ -2,11 +2,9 @@
 
 import { motion } from 'framer-motion';
 import { useI18n } from '../contexts/I18nContext';
-import { useTheme } from './ThemeContext';
 
 export function LanguageSelector() {
   const { language, changeLanguage } = useI18n();
-  const { theme } = useTheme();
 
   return (
     <div className="flex items-center space-x-2">

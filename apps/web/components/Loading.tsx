@@ -1,12 +1,10 @@
 import Header from './Header';
-import { useTheme } from './ThemeContext';
 
 interface LoadingProps {
   page: string;
 }
 
 export default function Loading({ page }: LoadingProps) {
-  const { theme } = useTheme();
 
   return (
       <div className="flex flex-col bg-light-background dark:bg-dark-background min-h-screen">

@@ -18,7 +18,7 @@ export const pt = {
     },
     hero: {
         stats: 'Já geramos mais de 1.000 documentos.',
-        title: 'Gere políticas legais para seu site com IA',
+        title: 'Gere os documentos legais para seu site com a Legal Forge',
         description:
             'Em segundos, crie Políticas de Privacidade, Termos de Serviço e Banners de Cookie totalmente em conformidade com LGPD e GDPR.',
         getStartedFree: 'Comece Gratuitamente',

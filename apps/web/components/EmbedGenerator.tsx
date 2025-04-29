@@ -1,7 +1,6 @@
 'use client';
 
 import {useState} from 'react';
-import {useTheme} from './ThemeContext';
 
 type Props = {
     publicId: string;
@@ -11,7 +10,6 @@ export default function EmbedGenerator({publicId}: Props) {
     const [height, setHeight] = useState('400');
     const [embedTheme, setEmbedTheme] = useState<'light' | 'dark'>('light');
     const [copied, setCopied] = useState(false);
-    const { theme } = useTheme();
 
     const embedCode = `<iframe src="${process.env.NEXT_PUBLIC_APP_URL}/embed/${publicId}?theme=${embedTheme}" style="border:none;width:100%;height:${height}px;" loading="lazy" title="Legal Document by Legal Forge"></iframe>`;
 

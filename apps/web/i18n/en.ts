@@ -18,7 +18,7 @@ export const en = {
     },
     hero: {
         stats: 'We have already generated more than 1K documents.',
-        title: 'Generate legal policies for your website with AI',
+        title: 'Generate legal documents for your website with Legal Forge',
         description:
             'In seconds, create Privacy Policies, Terms of Service, and Cookie Banners that are fully compliant with LGPD & GDPR.',
         getStartedFree: 'Get Started for Free',
