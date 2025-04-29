@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Mail, Lock, LogIn, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useI18n } from '@/contexts/I18nContext';
-import Script from 'next/script';
 
 // Animation variants
 const containerVariants = {
@@ -24,6 +23,7 @@ const itemVariants = {
   },
 };
 
+
 export default function LoginPage() {
   const { t } = useI18n();
   const { login } = useAuth();
@@ -33,8 +33,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [mounted, setMounted] = useState(false);
-  const [recaptchaError, setRecaptchaError] = useState('');
-  const recaptchaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -49,35 +47,21 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Get reCAPTCHA token
-    const recaptchaValue = (window as any).grecaptcha?.getResponse();
-    if (!recaptchaValue) {
-      setRecaptchaError('Please complete the reCAPTCHA verification');
-      return;
-    }
-    setRecaptchaError('');
-
     setLoading(true);
     setError('');
     try {
-      const err = await login(email, password, recaptchaValue);
+      const err = await login(email, password);
       if (err) setError(err);
       else router.push('/dashboard');
     } catch {
       setError('Error logging in. Please check your credentials.');
     } finally {
       setLoading(false);
-      // Reset reCAPTCHA
-      (window as any).grecaptcha?.reset();
     }
   };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] px-4">
-      <Script
-        src="https://www.google.com/recaptcha/api.js"
-        strategy="afterInteractive"
-      />
       <motion.div
         className="w-full max-w-md p-8 bg-[#1E0359]/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-[#8C0368]/20"
         initial="hidden"
@@ -165,20 +149,6 @@ export default function LoginPage() {
               {t('login.resetPassword')}
             </Link>
           </motion.p>
-
-          <motion.div 
-            className="mb-6"
-            variants={itemVariants}
-          >
-            <div 
-              ref={recaptchaRef}
-              className="g-recaptcha flex justify-center" 
-              data-sitekey="6LfLyigrAAAAAGVV-I2-fl1znMJQlujCMPo6K8rU"
-            ></div>
-            {recaptchaError && (
-              <p className="mt-1 text-sm text-red-400 text-center">{recaptchaError}</p>
-            )}
-          </motion.div>
 
           <motion.button
             type="submit"
