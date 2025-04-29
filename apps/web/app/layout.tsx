@@ -4,6 +4,7 @@ import {I18nProvider} from '../contexts/I18nContext';
 import {ThemeProvider} from '../components/ThemeContext';
 import React from "react";
 import Footer from "@/components/Footer";
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
 const inter = Inter({subsets: ['latin']});
 
