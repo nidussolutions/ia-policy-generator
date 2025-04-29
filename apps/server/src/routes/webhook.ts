@@ -182,7 +182,7 @@ router.post('/webhook', express.raw({type: 'application/json'}), async (req, res
             break;
 
         default:
-            console.log(`Unhandled event type ${event.type}`);
+            console.warn(`Unhandled event type ${event.type}`);
     }
 
     res.status(200).send();

@@ -23,7 +23,9 @@ router.post('/register', async (req, res): Promise<any> => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const plan = await prisma.plans.findFirst({where: {name: 'Free'}});
+        const plan = await prisma.plans.findFirst({where: {name: 'free'}});
+
+        if (!plan) return res.status(400).json({message: 'Plan not found'});
 
         const customer = await stripe.customers.create({
             email,

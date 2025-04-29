@@ -28,13 +28,13 @@ export default function RegisterPage() {
   const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [cpfCnpj, setCpfCnpj] = useState('');
+  const [companyId, setCompanyId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [cpfCnpjError, setCpfCnpjError] = useState('');
+  const [companyIdError, setCompanyIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
@@ -53,11 +53,17 @@ export default function RegisterPage() {
     /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value);
   const validatePassword = (value: string) =>
     /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/.test(value);
-  const formatCpfCnpj = (val: string) => {
+  const formatCompanyId = (val: string) => {
     const digits = val.replace(/\D/g, '');
-    return digits.length <= 11 ? cpf.format(digits) : cnpj.format(digits);
+    // Format Brazilian documents (CPF/CNPJ)
+    if (/^\d+$/.test(digits)) {
+      if (digits.length <= 11) return cpf.format(digits);
+      if (digits.length <= 14) return cnpj.format(digits);
+    }
+    // For other international IDs, preserve the original input
+    return val;
   };
-  const handleCpfCnpj = (val: string) => setCpfCnpj(formatCpfCnpj(val));
+  const handleCompanyId = (val: string) => setCompanyId(formatCompanyId(val));
 
   const validateForm = () => {
     let ok = true;
@@ -69,14 +75,32 @@ export default function RegisterPage() {
       setPasswordError('Pwd ≥6 chars, uppercase, number & symbol');
       ok = false;
     } else setPasswordError('');
-    const digits = cpfCnpj.replace(/\D/g, '');
-    if (
-      (digits.length <= 11 && !cpf.isValid(digits)) ||
-      (digits.length > 11 && !cnpj.isValid(digits))
-    ) {
-      setCpfCnpjError(digits.length <= 11 ? 'Invalid CPF' : 'Invalid CNPJ');
+
+    // Validate company ID
+    if (companyId.trim() === '') {
+      setCompanyIdError('Company ID is required');
       ok = false;
-    } else setCpfCnpjError('');
+    } else {
+      const digits = companyId.replace(/\D/g, '');
+      // For Brazilian documents, validate strictly
+      if (/^\d+$/.test(digits)) {
+        if (digits.length <= 11 && !cpf.isValid(digits)) {
+          setCompanyIdError('Invalid CPF');
+          ok = false;
+        } else if (digits.length > 11 && digits.length <= 14 && !cnpj.isValid(digits)) {
+          setCompanyIdError('Invalid CNPJ');
+          ok = false;
+        } else {
+          setCompanyIdError('');
+        }
+      } else if (companyId.length < 3) {
+        // For international IDs, just check minimum length
+        setCompanyIdError('Company ID is too short');
+        ok = false;
+      } else {
+        setCompanyIdError('');
+      }
+    }
     return ok;
   };
 
@@ -86,7 +110,7 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     try {
-      const err = await register(name, email, password, cpfCnpj, true);
+      const err = await register(name, email, password, companyId, true);
       if (err) setError('Error creating account. Please try again.');
     } catch {
       setError('Error creating account. Please try again.');
@@ -172,7 +196,7 @@ export default function RegisterPage() {
               <p className="mt-1 text-sm text-red-400">{emailError}</p>
             )}
           </motion.div>
-          {/* CPF/CNPJ */}
+          {/* Company ID */}
           <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               {t('register.cnpjCpf')}
@@ -184,14 +208,14 @@ export default function RegisterPage() {
               <input
                 required
                 type="text"
-                value={cpfCnpj}
-                onChange={(e) => handleCpfCnpj(e.target.value)}
+                value={companyId}
+                onChange={(e) => handleCompanyId(e.target.value)}
                 placeholder={t('register.placeholderCnpjCpf')}
-                className={`w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border ${cpfCnpjError ? 'border-red-500' : 'border-transparent'} focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500`}
+                className={`w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border ${companyIdError ? 'border-red-500' : 'border-transparent'} focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500`}
               />
             </div>
-            {cpfCnpjError && (
-              <p className="mt-1 text-sm text-red-400">{cpfCnpjError}</p>
+            {companyIdError && (
+              <p className="mt-1 text-sm text-red-400">{companyIdError}</p>
             )}
           </motion.div>
           {/* Password */}

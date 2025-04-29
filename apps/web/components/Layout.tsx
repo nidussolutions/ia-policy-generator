@@ -24,7 +24,9 @@ export default function Layout({children}: Props) {
                     exit={{opacity: 0}}
                     className="p-6 mt-8 max-w-5xl mx-auto"
                 >
-                    {children}
+                    <div className="w-full max-w-5xl mx-auto">
+                        {children}
+                    </div>
                 </motion.main>
             </MotionConfig>
         </div>
