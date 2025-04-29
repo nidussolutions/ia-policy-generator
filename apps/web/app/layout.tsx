@@ -3,6 +3,7 @@ import {Inter} from 'next/font/google';
 import {I18nProvider} from '../contexts/I18nContext';
 import {ThemeProvider} from '../components/ThemeContext';
 import React from "react";
+import Footer from "@/components/Footer";
 
 const inter = Inter({subsets: ['latin']});
 
@@ -16,6 +17,7 @@ export default function RootLayout({
         <body className={inter.className}>
         <ThemeProvider>
             <I18nProvider>{children}</I18nProvider>
+            <Footer/>
         </ThemeProvider>
         </body>
         </html>

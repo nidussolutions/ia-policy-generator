@@ -1,5 +1,6 @@
 import { CheckCircle, Loader2 } from 'lucide-react';
 import React from 'react';
+import { useTheme } from './ThemeContext';
 
 export type GenerationStepsProps = {
   currentStep: number;
@@ -14,8 +15,10 @@ const steps = [
 ];
 
 export function GenerationSteps({ currentStep }: GenerationStepsProps) {
+  const { theme } = useTheme();
+
   return (
-      <div className="flex flex-col gap-3 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <div className="flex flex-col gap-3 p-4 bg-light-card dark:bg-dark-card rounded-lg">
         {steps.map((label, index) => {
           const status =
               index < currentStep
@@ -27,19 +30,19 @@ export function GenerationSteps({ currentStep }: GenerationStepsProps) {
           return (
               <div key={index} className="flex items-center gap-3">
                 {status === 'done' ? (
-                    <CheckCircle className="text-green-500" />
+                    <CheckCircle className="text-green-500 dark:text-green-400" />
                 ) : status === 'in-progress' ? (
-                    <Loader2 className="animate-spin text-yellow-500" />
+                    <Loader2 className="animate-spin text-yellow-500 dark:text-yellow-400" />
                 ) : (
-                    <div className="w-4 h-4 border-2 border-gray-400 rounded-full" />
+                    <div className="w-4 h-4 border-2 border-gray-400 dark:border-gray-600 rounded-full" />
                 )}
                 <span
                     className={`text-sm font-medium ${
                         status === 'done'
-                            ? 'text-green-500'
+                            ? 'text-green-500 dark:text-green-400'
                             : status === 'in-progress'
-                                ? 'text-yellow-500'
-                                : 'text-gray-400'
+                                ? 'text-yellow-500 dark:text-yellow-400'
+                                : 'text-gray-400 dark:text-gray-500'
                     }`}
                 >
               {label}

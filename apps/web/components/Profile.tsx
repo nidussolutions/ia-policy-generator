@@ -79,7 +79,7 @@ export default function Profile({
                 <AnimatePresence>
                     {error && (
                         <motion.p
-                            className="text-red-400 bg-red-900/30 px-4 py-2 rounded-lg"
+                            className="text-red-500 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-4 py-2 rounded-lg"
                             initial={{opacity: 0, y: -10}}
                             animate={{opacity: 1, y: 0}}
                             exit={{opacity: 0, y: -10}}
@@ -89,7 +89,7 @@ export default function Profile({
                     )}
                     {success && (
                         <motion.p
-                            className="text-green-300 bg-green-900/30 px-4 py-2 rounded-lg"
+                            className="text-green-600 dark:text-green-300 bg-green-100 dark:bg-green-900/30 px-4 py-2 rounded-lg"
                             initial={{opacity: 0, y: -10}}
                             animate={{opacity: 1, y: 0}}
                             exit={{opacity: 0, y: -10}}
@@ -100,14 +100,14 @@ export default function Profile({
                 </AnimatePresence>
 
                 <motion.div {...motionTransition} transition={{delay: 0.1}}>
-                    <label className="block text-sm font-medium text-gray-200 mb-1">Name</label>
+                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">Name</label>
                     <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <User size={18}/>
             </span>
                         <input
                             type="text"
-                            className="w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border border-transparent focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500"
+                            className="w-full pl-10 pr-4 py-2 rounded-lg bg-light-background/20 dark:bg-dark-background/20 border border-transparent focus:border-light-accent-purple dark:focus:border-dark-accent-purple focus:ring-0 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
@@ -117,14 +117,14 @@ export default function Profile({
                 </motion.div>
 
                 <motion.div {...motionTransition} transition={{delay: 0.2}}>
-                    <label className="block text-sm font-medium text-gray-200 mb-1">Email</label>
+                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">Email</label>
                     <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <Mail size={18}/>
             </span>
                         <input
                             type="email"
-                            className="w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border border-transparent focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500"
+                            className="w-full pl-10 pr-4 py-2 rounded-lg bg-light-background/20 dark:bg-dark-background/20 border border-transparent focus:border-light-accent-purple dark:focus:border-dark-accent-purple focus:ring-0 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -134,14 +134,14 @@ export default function Profile({
                 </motion.div>
 
                 <motion.div {...motionTransition} transition={{delay: 0.3}}>
-                    <label className="block text-sm font-medium text-gray-200 mb-1">New Password</label>
+                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">New Password</label>
                     <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <Lock size={18}/>
             </span>
                         <input
                             type={showPassword ? 'text' : 'password'}
-                            className="w-full pl-10 pr-12 py-2 rounded-lg bg-[#030526]/20 border border-transparent focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500"
+                            className="w-full pl-10 pr-12 py-2 rounded-lg bg-light-background/20 dark:bg-dark-background/20 border border-transparent focus:border-light-accent-purple dark:focus:border-dark-accent-purple focus:ring-0 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Leave blank to keep current"
@@ -149,7 +149,7 @@ export default function Profile({
                         />
                         <button
                             type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary"
                             onClick={() => setShowPassword((prev) => !prev)}
                         >
                             {showPassword ? 'Hide' : 'Show'}
@@ -161,7 +161,7 @@ export default function Profile({
                     <button
                         type="submit"
                         disabled={loading}
-                        className="flex items-center gap-2 bg-[#8C0368] hover:bg-[#A429A6] text-white px-6 py-2 rounded-full shadow-lg transition-transform hover:scale-105 disabled:opacity-50"
+                        className="flex items-center gap-2 bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary px-6 py-2 rounded-full shadow-lg transition-transform hover:scale-105 disabled:opacity-50"
                     >
                         {loading && <Loader2 className="w-4 h-4 animate-spin"/>}
                         Save Changes

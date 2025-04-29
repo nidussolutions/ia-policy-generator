@@ -1,4 +1,5 @@
 import {ButtonHTMLAttributes} from 'react';
+import {useTheme} from './ThemeContext';
 
 interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     text: string;
@@ -6,6 +7,8 @@ interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function ActionButton({text, onClick, className = '', ...props}: ActionButtonProps) {
+    const { theme } = useTheme();
+
     return (
         <button
             onClick={onClick}

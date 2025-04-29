@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {motion} from "framer-motion";
+import {useTheme} from "./ThemeContext";
 
 interface CheckoutResponse {
     sessionId: string;
@@ -9,6 +10,7 @@ interface CheckoutResponse {
 export default function AnimatedCard({title, value}: { title: string; value: string | number; plan?: string }) {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const { theme } = useTheme();
 
     const startCheckout = async () => {
         try {
