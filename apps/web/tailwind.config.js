@@ -15,7 +15,7 @@ export default {
                         primary: '#222222',
                         secondary: '#666666',
                     },
-                    border: '#E0E0E0',
+                    border: '#E0E0E0' ,
                     card: '#F9FAFB',
                     accent: {
                         blue: '#3B82F6',

@@ -10,10 +10,12 @@ import Error from '@/components/Error';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SiteType } from '@/types/SitesType';
+import { useTheme } from '@/components/ThemeContext';
 
 export default function EditSitePage() {
   const { siteId } = useParams() as { siteId: string };
   const router = useRouter();
+  const { theme } = useTheme();
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
@@ -72,7 +74,7 @@ export default function EditSitePage() {
   if (!site) return <Error page="requested site" err="Site not found" />;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200">
+    <main className="min-h-screen bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary">
       <Layout>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -88,11 +90,11 @@ export default function EditSitePage() {
           >
             <button
               onClick={() => router.back()}
-              className="text-gray-400 hover:text-[#79d3d3] transition"
+              className="text-light-text-secondary dark:text-dark-text-secondary hover:text-light-accent-blue dark:hover:text-dark-accent-blue transition"
             >
               <ArrowLeft size={24} />
             </button>
-            <h1 className="text-3xl font-bold text-white">Edit Site</h1>
+            <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">Edit Site</h1>
           </motion.div>
 
           {error && (
@@ -127,7 +129,7 @@ export default function EditSitePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + idx * 0.1 }}
               >
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-light-text-secondary dark:text-dark-text-secondary mb-1">
                   {label}
                 </label>
                 <input
@@ -137,7 +139,7 @@ export default function EditSitePage() {
                     setSite({ ...(site as SiteType), [key]: e.target.value })
                   }
                   required
-                  className="w-full bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                  className="w-full bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl px-3 py-2 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-light-accent-purple dark:focus:ring-dark-accent-purple"
                 />
               </motion.div>
             ))}
@@ -147,7 +149,7 @@ export default function EditSitePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <label className="block text-sm text-gray-400 mb-1">Notes</label>
+              <label className="block text-sm text-light-text-secondary dark:text-dark-text-secondary mb-1">Notes</label>
               <textarea
                 rows={4}
                 value={site.observations || ''}
@@ -158,14 +160,14 @@ export default function EditSitePage() {
                   })
                 }
                 placeholder="e.g. My site is about..."
-                className="w-full bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                className="w-full bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl px-3 py-2 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-light-accent-purple dark:focus:ring-dark-accent-purple"
               />
             </motion.div>
 
             <motion.button
               type="submit"
               disabled={isSaving}
-              className="w-full bg-[#8C0368] hover:bg-[#A429A6] text-white rounded-xl px-4 py-2 font-semibold transition disabled:opacity-50"
+              className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-background rounded-xl px-4 py-2 font-semibold transition disabled:opacity-50"
               initial={{ scale: 1 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

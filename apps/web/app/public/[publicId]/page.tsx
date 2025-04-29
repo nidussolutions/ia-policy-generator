@@ -5,10 +5,12 @@ import Loading from '@/components/Loading';
 import {ArrowLeft} from 'lucide-react';
 import {useParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
+import {useTheme} from '@/components/ThemeContext';
 import ReactMarkdown from 'react-markdown';
 
 export default function PublicDocumentPage() {
     const {publicId} = useParams() as { publicId: string };
+    const {theme} = useTheme();
     const [document, setDocument] = useState<null | {
         title: string;
         content: string;
@@ -40,19 +42,19 @@ export default function PublicDocumentPage() {
         return <Error err="Document not found" page="requested"/>;
 
     return (
-        <div className="max-w-4xl mx-auto p-6 sm:p-8">
+        <div className="max-w-4xl mx-auto p-6 sm:p-8 bg-light-background dark:bg-dark-background min-h-screen">
             <div className="flex gap-4 mb-6 items-center justify-between sm:justify-start">
                 <button
                     onClick={() => window.history.back()}
-                    className="hover:text-blue-600 text-gray-800 dark:text-white dark:hover:text-blue-600 transition duration-200 ease-in-out p-2 rounded-md border border-transparent hover:border-blue-500"
+                    className="text-light-text-primary dark:text-dark-text-primary hover:text-light-accent-blue dark:hover:text-dark-accent-blue transition duration-200 ease-in-out p-2 rounded-md border border-transparent hover:border-light-accent-blue dark:hover:border-dark-accent-blue"
                 >
                     <ArrowLeft size={24}/>
                 </button>
-                <h1 className="text-4xl sm:text-5xl font-bold text-center text-gray-900 dark:text-white">{document.title}</h1>
+                <h1 className="text-4xl sm:text-5xl font-bold text-center text-light-text-primary dark:text-dark-text-primary">{document.title}</h1>
             </div>
 
             <div
-                className="prose prose-lg prose-blue max-w-none bg-white p-6 rounded-xl shadow-lg dark:bg-gray-800 dark:text-white dark:prose-invert">
+                className="prose prose-lg prose-blue max-w-none bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary dark:prose-invert">
                 <ReactMarkdown>{document.content}</ReactMarkdown>
             </div>
         </div>

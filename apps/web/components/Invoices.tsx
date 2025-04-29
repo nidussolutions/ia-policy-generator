@@ -12,15 +12,18 @@ import {
     Link as LinkIcon,
 } from "lucide-react";
 import React, {useState, useEffect} from "react";
-import {fetcher, InvoicesType} from "@/lib/api";
+import {fetcher} from "@/lib/api";
+import {InvoicesType} from "@/types/SubscriptionsType";
 import useSWR from "swr";
 import {motion, AnimatePresence} from "framer-motion";
+import {useTheme} from "./ThemeContext";
 
 export default function Invoices() {
     const [page, setPage] = useState(1);
     const [loadingPageChange, setLoadingPageChange] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const { theme } = useTheme();
 
     const {data, error, isLoading, mutate, isValidating} = useSWR(
         token ? `${process.env.NEXT_PUBLIC_API_URL}/user/invoices?page=${page}&limit=3` : null,
@@ -60,13 +63,13 @@ export default function Invoices() {
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-6"
+            className="bg-light-card/90 dark:bg-dark-card/90 backdrop-blur-lg border border-light-border dark:border-dark-border p-6 rounded-2xl shadow-2xl space-y-6"
         >
             <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-white">Invoices</h2>
+                <h2 className="text-lg font-semibold text-light-text-primary dark:text-dark-text-primary">Invoices</h2>
                 <button
                     onClick={handleUpdate}
-                    className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
+                    className="flex items-center gap-2 text-sm text-light-accent-purple dark:text-dark-accent-purple hover:underline disabled:opacity-50"
                     disabled={loadingUpdate}
                     aria-label="Update invoices"
                 >
@@ -79,7 +82,7 @@ export default function Invoices() {
             </div>
 
             {error && <p className="text-red-500 text-sm">Error loading invoices.</p>}
-            {(isLoading || loadingPageChange) && <p className="text-gray-400 text-sm">Loading invoices...</p>}
+            {(isLoading || loadingPageChange) && <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">Loading invoices...</p>}
 
             {!isLoading && invoices.length > 0 ? (
                 <>
@@ -92,12 +95,12 @@ export default function Invoices() {
                                     animate={{opacity: 1, y: 0}}
                                     exit={{opacity: 0, y: -10}}
                                     transition={{duration: 0.3}}
-                                    className="border border-white/10 rounded-2xl p-5 space-y-4 shadow-lg "
+                                    className="border border-light-border dark:border-dark-border rounded-2xl p-5 space-y-4 shadow-lg bg-light-background/50 dark:bg-dark-background/50"
                                 >
                                     <div className="flex justify-between items-center">
-                                        <div className="flex items-center gap-2 text-sm text-gray-300">
+                                        <div className="flex items-center gap-2 text-sm text-light-text-primary dark:text-dark-text-primary">
                                             <Receipt size={16}/>
-                                            <span className="text-gray-400">Invoice ID:</span>
+                                            <span className="text-light-text-secondary dark:text-dark-text-secondary">Invoice ID:</span>
                                             <span>{invoice.id}</span>
                                         </div>
                                         {invoice.invoiceUrl && (
@@ -105,7 +108,7 @@ export default function Invoices() {
                                                 href={invoice.invoiceUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1 text-sm text-fuchsia-400 hover:underline"
+                                                className="inline-flex items-center gap-1 text-sm text-light-accent-purple dark:text-dark-accent-purple hover:underline"
                                                 aria-label="Access Invoice"
                                             >
                                                 <LinkIcon size={16}/> Access Invoice
@@ -114,11 +117,11 @@ export default function Invoices() {
                                     </div>
 
                                     <div
-                                        className="flex flex-wrap items-center gap-4 text-sm text-gray-300 justify-between">
+                                        className="flex flex-wrap items-center gap-4 text-sm text-light-text-primary dark:text-dark-text-primary justify-between">
                                         <div className="flex items-center gap-2">
-                                            <CalendarDays size={16} className="text-gray-400"/>
+                                            <CalendarDays size={16} className="text-light-text-secondary dark:text-dark-text-secondary"/>
                                             <div>
-                                                <p className="text-xs text-gray-400">Created on</p>
+                                                <p className="text-xs text-light-text-secondary dark:text-dark-text-secondary">Created on</p>
                                                 <p>{new Date(invoice.createdAt!).toLocaleDateString()}</p>
                                             </div>
                                         </div>
@@ -132,8 +135,8 @@ export default function Invoices() {
                                                 <XCircle size={16} className="text-red-500"/>
                                             )}
                                             <div>
-                                                <p className="text-xs text-gray-400">Status</p>
-                                                <p className="capitalize">{invoice.status}</p>
+                                                <p className="text-xs text-light-text-secondary dark:text-dark-text-secondary">Status</p>
+                                                <p className="capitalize text-light-text-primary dark:text-dark-text-primary">{invoice.status}</p>
                                             </div>
                                         </div>
 
@@ -150,18 +153,18 @@ export default function Invoices() {
                         <button
                             onClick={() => changePage(Math.max(page - 1, 1))}
                             disabled={page === 1 || isValidating}
-                            className="flex items-center gap-2 text-fuchsia-400 hover:underline disabled:text-gray-500"
+                            className="flex items-center gap-2 text-light-accent-purple dark:text-dark-accent-purple hover:underline disabled:text-light-text-secondary dark:disabled:text-dark-text-secondary"
                             aria-label="Previous page"
                         >
                             <ArrowLeft size={16}/> Previous
                         </button>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-light-text-secondary dark:text-dark-text-secondary">
                             Page {page} of {totalPages}
                         </span>
                         <button
                             onClick={() => changePage(page + 1)}
                             disabled={!hasMore || isValidating}
-                            className="flex items-center gap-2 text-fuchsia-400 hover:underline disabled:text-gray-500"
+                            className="flex items-center gap-2 text-light-accent-purple dark:text-dark-accent-purple hover:underline disabled:text-light-text-secondary dark:disabled:text-dark-text-secondary"
                             aria-label="Next page"
                         >
                             Next <ArrowRight size={16}/>
@@ -169,7 +172,7 @@ export default function Invoices() {
                     </div>
                 </>
             ) : (
-                !isLoading && <p className="text-gray-400 text-sm">No invoices found.</p>
+                !isLoading && <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">No invoices found.</p>
             )}
         </motion.div>
     );

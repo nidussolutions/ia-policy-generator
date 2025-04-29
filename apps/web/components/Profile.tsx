@@ -4,6 +4,7 @@ import {Loader2, Lock, Mail, User} from 'lucide-react';
 import React, {useState} from 'react';
 import {putWithAuth} from '@/lib/api';
 import {motion, AnimatePresence} from 'framer-motion';
+import {useTheme} from './ThemeContext';
 
 type ProfileProps = {
     name: string;
@@ -34,6 +35,7 @@ export default function Profile({
                                 }: ProfileProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [success, setSuccess] = useState('');
+    const {theme} = useTheme();
 
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,7 +67,8 @@ export default function Profile({
     const motionTransition = {initial: {opacity: 0, y: 20}, animate: {opacity: 1, y: 0}, transition: {duration: 0.4}};
 
     return (
-        <motion.div {...motionTransition} className="bg-[#1E0359]/30 backdrop-blur-lg p-6 rounded-2xl shadow-2xl">
+        <motion.div {...motionTransition}
+                    className="bg-light-card dark:bg-dark-card backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-light-border dark:border-dark-border">
             <motion.form
                 onSubmit={handleUpdate}
                 className="space-y-6"

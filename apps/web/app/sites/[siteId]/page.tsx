@@ -14,12 +14,14 @@ import { notifyError } from '@/hooks/useToast';
 import ConfirmModal from '@/components/ConfirmModal';
 import { motion } from 'framer-motion';
 import { fetcher } from '@/lib/api';
+import { useTheme } from '@/components/ThemeContext';
 
 export default function DocumentPage() {
   const router = useRouter();
   const { siteId } = useParams() as { siteId: string };
   const [deletingDocId, setDeletingDocId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const { theme } = useTheme();
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 
@@ -79,11 +81,11 @@ export default function DocumentPage() {
         >
           <button
             onClick={() => window.history.back()}
-            className="hover:text-blue-600 dark:text-white dark:hover:text-blue-600 transition"
+            className="text-light-text-primary dark:text-dark-text-primary hover:text-light-accent-blue dark:hover:text-dark-accent-blue transition"
           >
             <ArrowLeft size={24} />
           </button>
-          <h1 className="text-2xl font-bold">Generated Documents</h1>
+          <h1 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">Generated Documents</h1>
           <div className="ml-auto">
             <ActionButton
               text="New Document"
@@ -95,10 +97,10 @@ export default function DocumentPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="overflow-x-auto rounded bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-90 shadow backdrop-blur-md"
+          className="overflow-x-auto rounded bg-light-card dark:bg-dark-card shadow backdrop-blur-md border border-light-border dark:border-dark-border"
         >
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="bg-gradient-to-r from-purple-100 to-purple-300 dark:from-purple-700 dark:to-purple-800 text-gray-700 uppercase text-xs dark:text-gray-200">
+          <table className="w-full text-sm text-left text-light-text-secondary dark:text-dark-text-secondary">
+            <thead className="bg-light-accent-purple/20 dark:bg-dark-accent-purple/20 text-light-text-primary dark:text-dark-text-primary uppercase text-xs">
               <tr>
                 <th className="px-4 py-3">Title</th>
                 <th className="px-4 py-3">Type</th>
@@ -114,28 +116,28 @@ export default function DocumentPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <td className="px-4 py-3 dark:text-gray-200">{doc.title}</td>
-                  <td className="px-4 py-3 dark:text-gray-200">{doc.type}</td>
-                  <td className="px-4 py-3 dark:text-gray-200">
+                  <td className="px-4 py-3 text-light-text-primary dark:text-dark-text-primary">{doc.title}</td>
+                  <td className="px-4 py-3 text-light-text-primary dark:text-dark-text-primary">{doc.type}</td>
+                  <td className="px-4 py-3 text-light-text-primary dark:text-dark-text-primary">
                     {new Date(doc.updatedAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-2 justify-center items-center dark:text-white dark:hover:text-blue-600 transition">
+                    <div className="flex gap-2 justify-center items-center text-light-text-primary dark:text-dark-text-primary transition">
                       <Link
                         href={`docs/edit/${doc.id}`}
-                        className="text-blue-600 hover:underline"
+                        className="text-light-accent-blue dark:text-dark-accent-blue hover:underline"
                       >
                         Edit
                       </Link>
                       <Link
                         href={`/public/${doc.publicId}`}
-                        className="text-orange-600 hover:underline"
+                        className="text-light-accent-purple dark:text-dark-accent-purple hover:underline"
                       >
                         View
                       </Link>
                       <button
                         onClick={() => handleDelete(doc.id!)}
-                        className="text-red-600 hover:underline transition duration-200 dark:text-red-500"
+                        className="text-red-600 hover:text-red-700 hover:underline transition duration-200"
                       >
                         Delete
                       </button>

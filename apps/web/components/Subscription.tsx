@@ -8,6 +8,7 @@ import {PlanType} from '@/types/PlanType';
 import {SubscriptionType} from "@/types/SubscriptionsType";
 import {useCheckout} from "@/hooks/useCheckout";
 import {useRouter} from "next/navigation";
+import {useTheme} from "./ThemeContext";
 
 const statusLabel: Record<string, string> = {
     active: "Active",
@@ -26,6 +27,7 @@ const formatDate = (dateString: string) =>
 const Subscription = () => {
     const {accessPortalClient} = useCheckout();
     const router = useRouter();
+    const { theme } = useTheme();
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
@@ -115,12 +117,12 @@ const Subscription = () => {
             initial={{opacity: 0, y: 10}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="bg-[#1E0359]/30 backdrop-blur-lg dark:border border-white/10 p-6 rounded-2xl shadow-2xl space-y-3"
+            className="bg-light-card/90 dark:bg-dark-card/90 backdrop-blur-lg border border-light-border dark:border-dark-border p-6 rounded-2xl shadow-2xl space-y-3"
         >
             <div className="flex justify-between items-start flex-wrap gap-4">
                 <div>
-                    <h2 className="text-lg font-semibold text-white">Current Plan</h2>
-                    <p className="text-sm text-gray-300">
+                    <h2 className="text-lg font-semibold text-light-text-primary dark:text-dark-text-primary">Current Plan</h2>
+                    <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
                         <strong>Type:</strong>{" "}
                         {plan ? plan.name.charAt(0).toUpperCase() + plan.name.slice(1) : "Loading..."}
                     </p>
@@ -129,7 +131,7 @@ const Subscription = () => {
                 <button
                     onClick={handleUpdate}
                     disabled={loadingUpdate}
-                    className="flex items-center gap-2 text-sm text-fuchsia-400 hover:underline disabled:opacity-50"
+                    className="flex items-center gap-2 text-sm text-light-accent-purple dark:text-dark-accent-purple hover:underline disabled:opacity-50"
                 >
                     {loadingUpdate ? (
                         <>
@@ -144,22 +146,22 @@ const Subscription = () => {
             </div>
 
             {(error || userError) && <p className="text-red-500 text-sm">Error loading subscription.</p>}
-            {(isLoading || loadingUser) && <p className="text-gray-400 text-sm">Loading subscription...</p>}
+            {(isLoading || loadingUser) && <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">Loading subscription...</p>}
 
             {subscription ? (
-                <div className="text-sm text-gray-300 space-y-1">
+                <div className="text-sm text-light-text-secondary dark:text-dark-text-secondary space-y-1">
                     <span
                         className={`inline-block px-2 py-1 rounded-full text-xs font-semibold text-white ${subscription.status !== "active" ? "bg-blue-600" : subscription.cancelAtPeriodEnd ? "bg-yellow-600" : "bg-green-600"}`}>
                         {subscription.cancelAtPeriodEnd ? "Active - Not Renewing" : statusLabel[subscription.status] || subscription.status}
                     </span>
 
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary mt-1">
                         <strong>{subscription.cancelAtPeriodEnd ? "Ends on" : "Next charge on"}:</strong>{" "}
                         {subscription.currentPeriodEnd ? formatDate(subscription.currentPeriodEnd) : "---"}
                     </p>
                 </div>
             ) : (
-                <p className="text-sm text-gray-400">No active subscription at the moment.</p>
+                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">No active subscription at the moment.</p>
             )}
 
             {plan && buttonProps && (

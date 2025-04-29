@@ -5,16 +5,16 @@ import Link from 'next/link';
 export default function Footer() {
     return (
         <footer
-            className="w-full z-50 bg-[#030526]/80 backdrop-blur-md shadow-lg"
+            className="w-full z-50 bg-[#030526]/80 dark:bg-dark-card backdrop-blur-md shadow-lg"
         >
-            <div className="max-w-6xl mx-auto px-4 py-10 text-sm items-center flex justify-between items-center">
+            <div className="max-w-6xl mx-auto px-4 py-10 text-sm text-white dark:text-dark-text-primary items-center flex justify-between items-center">
                 <div>
-                    <h3 className="font-semibold mb-2">Legal</h3>
+                    <h3 className="font-semibold mb-2 text-white dark:text-dark-text-primary">Legal</h3>
                     <ul className="space-y-1">
                         <li>
                             <Link
                                 href="/jur/politica-de-privacidade"
-                                className="hover:underline"
+                                className="hover:underline text-white dark:text-dark-text-secondary"
                                 target="_blank"
                             >
                                 Privacy Policy
@@ -23,7 +23,7 @@ export default function Footer() {
                         <li>
                             <Link
                                 href="/jur/termos-de-uso"
-                                className="hover:underline"
+                                className="hover:underline text-white dark:text-dark-text-secondary"
                                 target="_blank"
                             >
                                 Terms of Use
@@ -32,7 +32,7 @@ export default function Footer() {
                         <li>
                             <Link
                                 href="/jur/politica-de-cookies"
-                                className="hover:underline"
+                                className="hover:underline text-white dark:text-dark-text-secondary"
                                 target="_blank"
                             >
                                 Cookie Policy
@@ -42,12 +42,12 @@ export default function Footer() {
                 </div>
 
                 <div>
-                    <h3 className="font-semibold mb-2">Contact</h3>
+                    <h3 className="font-semibold mb-2 text-white dark:text-dark-text-primary">Contact</h3>
                     <ul className="space-y-1">
                         <li>
                             <a
                                 href="mailto:contato@nidussolutions.com"
-                                className="hover:underline"
+                                className="hover:underline text-white dark:text-dark-text-secondary"
                             >
                                 contato@nidussolutions.com
                             </a>

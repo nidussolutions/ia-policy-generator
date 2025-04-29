@@ -11,6 +11,7 @@ import { fetcher } from '@/lib/api';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
+import { useTheme } from '@/components/ThemeContext';
 
 type Site = {
   id: string;
@@ -22,6 +23,7 @@ export default function SitesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deletingSiteId, setDeletingSiteId] = useState<string | null>(null);
   const { token, loading: authLoading } = useAuth();
+  const { theme } = useTheme();
 
   const { data, error, isLoading, mutate } = useSWR(
     token ? `${process.env.NEXT_PUBLIC_API_URL}/sites` : null,
@@ -61,7 +63,7 @@ export default function SitesPage() {
   if (error) return <Error page="sites listing" err={error} />;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200">
+    <main className="min-h-screen bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary">
       <Layout>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -73,13 +75,13 @@ export default function SitesPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex justify-between items-center border-b border-[#8C0368]/20 pb-4"
+            className="flex justify-between items-center border-b border-light-border dark:border-dark-border pb-4"
           >
-            <h1 className="text-3xl font-bold text-white">Your Sites</h1>
+            <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">Your Sites</h1>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/sites/new"
-                className="bg-[#8C0368] hover:bg-[#A429A6] text-white px-4 py-2 rounded transition duration-200"
+                className="bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-background px-4 py-2 rounded transition duration-200"
               >
                 + New Site
               </Link>
@@ -91,7 +93,7 @@ export default function SitesPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-gray-400 text-center"
+              className="text-light-text-secondary dark:text-dark-text-secondary text-center"
             >
               You don&apos;t have any sites registered yet.
             </motion.p>
@@ -105,32 +107,32 @@ export default function SitesPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + idx * 0.05 }}
-                  className="p-4 bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl flex justify-between items-center"
+                  className="p-4 bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl flex justify-between items-center"
                 >
                   <div>
-                    <h2 className="text-xl font-semibold text-white">
+                    <h2 className="text-xl font-semibold text-light-text-primary dark:text-dark-text-primary">
                       {site.name || ''}
                     </h2>
-                    <p className="text-gray-400 mt-1">{site.domain}</p>
+                    <p className="text-light-text-secondary dark:text-dark-text-secondary mt-1">{site.domain}</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Link
                       href={`/sites/${site.id}/`}
-                      className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
+                      className="text-light-accent-purple dark:text-dark-accent-purple hover:text-light-accent-blue dark:hover:text-dark-accent-blue hover:underline transition duration-200"
                     >
                       Access
                     </Link>
-                    <span className="text-gray-600">|</span>
+                    <span className="text-light-text-secondary dark:text-dark-text-secondary">|</span>
                     <Link
                       href={`/sites/edit/${site.id}`}
-                      className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
+                      className="text-light-accent-purple dark:text-dark-accent-purple hover:text-light-accent-blue dark:hover:text-dark-accent-blue hover:underline transition duration-200"
                     >
                       Edit
                     </Link>
-                    <span className="text-gray-600">|</span>
+                    <span className="text-light-text-secondary dark:text-dark-text-secondary">|</span>
                     <button
                       onClick={() => handleDelete(site.id)}
-                      className="text-[#8C0368] hover:text-[#A429A6] hover:underline transition duration-200"
+                      className="text-light-accent-purple dark:text-dark-accent-purple hover:text-light-accent-blue dark:hover:text-dark-accent-blue hover:underline transition duration-200"
                     >
                       Delete
                     </button>
@@ -143,7 +145,7 @@ export default function SitesPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-gray-400 text-center"
+              className="text-light-text-secondary dark:text-dark-text-secondary text-center"
             >
               You don&apos;t have any sites registered yet.
             </motion.p>
