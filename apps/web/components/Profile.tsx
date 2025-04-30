@@ -4,8 +4,8 @@ import {Loader2, Lock, Mail, User} from 'lucide-react';
 import React, {useState} from 'react';
 import {putWithAuth} from '@/lib/api';
 import {motion, AnimatePresence} from 'framer-motion';
-import {useTheme} from './ThemeContext';
 import {useI18n} from '@/contexts/I18nContext';
+import {useRouter} from 'next/navigation';
 
 type ProfileProps = {
     name: string;
@@ -34,9 +34,9 @@ export default function Profile({
                                     error,
                                     token,
                                 }: ProfileProps) {
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [success, setSuccess] = useState('');
-    const {theme} = useTheme();
     const {t} = useI18n();
 
     const handleUpdate = async (e: React.FormEvent) => {
@@ -59,8 +59,11 @@ export default function Profile({
             );
             if (!res.id) throw new Error();
             setSuccess(t('profile.success.updated'));
-        } catch {
+        } catch (err) {
+            console.error('Error updating profile:', err);
             setError(t('profile.errors.updateFailed'));
+            localStorage.removeItem('token');
+            router.push('/auth/login');
         } finally {
             setLoading(false);
         }

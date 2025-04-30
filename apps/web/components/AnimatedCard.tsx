@@ -46,6 +46,18 @@ export default function AnimatedCard({title, value}: { title: string; value: str
         }
     };
 
+    if (error) {
+        return (
+            <motion.div
+                initial={{opacity: 0, y: 8}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.4}}
+                className="p-4 bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl text-center shadow-lg transition-all duration-300 ease-in-out flex flex-col h-full justify-center"
+            >
+                <p className="text-sm text-red-500">{error}</p>
+            </motion.div>
+        );
+    }
 
     return (
         <motion.div

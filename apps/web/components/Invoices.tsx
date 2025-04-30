@@ -14,7 +14,6 @@ import {fetcher} from "@/lib/api";
 import {InvoicesType} from "@/types/SubscriptionsType";
 import useSWR from "swr";
 import {motion, AnimatePresence} from "framer-motion";
-import {useTheme} from "./ThemeContext";
 import {useI18n} from "@/hooks/useI18n";
 
 export default function Invoices() {
@@ -22,7 +21,6 @@ export default function Invoices() {
     const [loadingPageChange, setLoadingPageChange] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const {theme} = useTheme();
     const {t} = useI18n();
 
     const {data, error, isLoading, mutate} = useSWR(
@@ -45,11 +43,6 @@ export default function Invoices() {
         } finally {
             setLoadingUpdate(false);
         }
-    };
-
-    const changePage = (newPage: number) => {
-        setLoadingPageChange(true);
-        setPage(newPage);
     };
 
     useEffect(() => {

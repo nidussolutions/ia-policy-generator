@@ -9,7 +9,6 @@ import {PlanType} from '@/types/PlanType';
 import {SubscriptionType} from "@/types/SubscriptionsType";
 import {useCheckout} from "@/hooks/useCheckout";
 import {useRouter} from "next/navigation";
-import {useTheme} from "./ThemeContext";
 
 const statusLabel: Record<string, string> = {
     active: "Active",
@@ -28,7 +27,6 @@ const formatDate = (dateString: string) =>
 const Subscription = () => {
     const {accessPortalClient} = useCheckout();
     const router = useRouter();
-    const {theme} = useTheme();
     const {t} = useI18n();
     const [subscription, setSubscription] = useState<SubscriptionType | null>(null);
     const [plan, setPlan] = useState<PlanType | null>(null);

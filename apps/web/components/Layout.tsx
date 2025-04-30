@@ -3,14 +3,12 @@
 import React from 'react';
 import Header from './Header';
 import {MotionConfig, motion} from 'framer-motion';
-import {useTheme} from './ThemeContext';
 
 interface Props {
     children: React.ReactNode;
 }
 
 export default function Layout({children}: Props) {
-    const {theme} = useTheme();
 
     return (
         <div

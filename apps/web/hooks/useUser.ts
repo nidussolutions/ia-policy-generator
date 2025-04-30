@@ -2,8 +2,10 @@
 
 import { UserType } from '@/types/UserType';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function useUser() {
+  const router = useRouter();
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,13 +35,15 @@ export function useUser() {
       } catch (err) {
         console.error(err);
         setError('Error fetching user information');
+        localStorage.removeItem('token');
+        router.push('/auth/login');
       } finally {
         setLoading(false);
       }
     };
 
     fetchUser();
-  }, []);
+  }, [router]);
 
   return { user, loading, error };
 }

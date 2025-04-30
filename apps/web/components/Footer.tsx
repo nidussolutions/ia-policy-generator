@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import {useTheme} from './ThemeContext';
 import {useI18n} from '@/contexts/I18nContext';
 
 export default function Footer() {
