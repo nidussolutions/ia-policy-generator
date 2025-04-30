@@ -1,4 +1,9 @@
 export const pt = {
+    cookieConsent: {
+        message: 'Este site usa cookies para garantir que você obtenha a melhor experiência em nosso site. Ao continuar a usar este site, você aceita nossas políticas.',
+        accept: 'Aceitar',
+        learnMore: 'Saiba Mais',
+    },
     header: {
         brand: 'Legal Forge',
         dashboard: 'Painel',

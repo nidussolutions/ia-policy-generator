@@ -1,4 +1,9 @@
 export const en = {
+    cookieConsent: {
+        message: 'This website uses cookies to ensure you get the best experience on our website. By continuing to use this site, you accept our policies.',
+        accept: 'Accept',
+        learnMore: 'Learn More',
+    },
     header: {
         brand: 'Legal Forge',
         dashboard: 'Dashboard',

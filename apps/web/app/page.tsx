@@ -8,6 +8,7 @@ import {LanguageSelector} from '@/components/LanguageSelector';
 import {useTheme} from '@/components/ThemeContext';
 import Image from 'next/image';
 import {useState} from 'react';
+import CookieConsent from '@/components/CookieConsent';
 
 const containerVariants = {
     hidden: {},
@@ -373,6 +374,9 @@ export default function HomePage() {
                     ))}
                 </div>
             </motion.section>
+
+            {/* Cookie Consent Banner */}
+            <CookieConsent />
         </main>
     );
 }
