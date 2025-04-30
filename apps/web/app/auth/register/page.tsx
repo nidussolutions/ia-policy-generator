@@ -95,7 +95,6 @@ export default function RegisterPage() {
           setCompanyIdError('');
         }
       } else if (companyId.length < 3) {
-        // For international IDs, just check minimum length
         setCompanyIdError('Company ID is too short');
         ok = false;
       } else {

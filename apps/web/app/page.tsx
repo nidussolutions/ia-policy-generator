@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import {motion} from 'framer-motion';
 import {ShieldCheck, Globe, Code2, Menu, X, Sun, Moon} from 'lucide-react';
-import {useI18n} from '../contexts/I18nContext';
-import {LanguageSelector} from '../components/LanguageSelector';
-import {useTheme} from '../components/ThemeContext';
+import {useI18n} from '@/contexts/I18nContext';
+import {LanguageSelector} from '@/components/LanguageSelector';
+import {useTheme} from '@/components/ThemeContext';
 import Image from 'next/image';
 import {useState} from 'react';
 
