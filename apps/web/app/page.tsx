@@ -2,12 +2,9 @@
 
 import Link from 'next/link';
 import {motion} from 'framer-motion';
-import {ShieldCheck, Globe, Code2, Menu, X, Sun, Moon} from 'lucide-react';
+import {ShieldCheck, Globe, Code2} from 'lucide-react';
 import {useI18n} from '@/contexts/I18nContext';
-import {LanguageSelector} from '@/components/LanguageSelector';
-import {useTheme} from '@/components/ThemeContext';
 import Image from 'next/image';
-import {useState} from 'react';
 import CookieConsent from '@/components/CookieConsent';
 import HeaderPublic from "@/components/HeaderPublic";
 
@@ -32,7 +29,7 @@ export default function HomePage() {
         <main
             className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background">
             {/* Navbar */}
-            <HeaderPublic />
+            <HeaderPublic/>
 
             {/* Hero */}
             <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-16">
@@ -269,7 +266,7 @@ export default function HomePage() {
             </motion.section>
 
             {/* Cookie Consent Banner */}
-            <CookieConsent />
+            <CookieConsent/>
         </main>
     );
 }
