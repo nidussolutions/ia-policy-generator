@@ -163,6 +163,8 @@ export const en = {
         placeholderPassword: 'Create a secure password',
         cnpjCpf: 'CNPJ or CPF',
         placeholderCnpjCpf: 'Enter your CNPJ or CPF',
+        termsConsent: 'I agree to the Terms of Use',
+        termsConsentError: 'You must agree to the Terms of Use',
         alreadyHaveAccount: 'Already have an account?',
         button: 'Create Account',
         logIn: 'Log In',

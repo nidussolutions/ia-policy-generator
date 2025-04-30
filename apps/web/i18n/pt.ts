@@ -173,6 +173,8 @@ export const pt = {
         button: 'Criar conta',
         cnpjCpf: 'CPF ou CNPJ',
         placeholderCnpjCpf: 'Digite seu CPF ou CNPJ',
+        termsConsent: 'Eu concordo com os Termos de Uso',
+        termsConsentError: 'Você deve concordar com os Termos de Uso',
         alreadyHaveAccount: 'Já tem uma conta?',
         logIn: 'Entrar',
     },
