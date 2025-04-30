@@ -1,25 +1,27 @@
 import {Router} from 'express'
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
-import {AuthRequest} from "../middlewares/authMiddlewares";
 import {PrismaClient} from "../../generated/prisma";
+import {MailerSend, EmailParams, Sender, Recipient} from "mailersend";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: Number(process.env.EMAIL_PORT) || 2525,
-    secure: process.env.EMAIL_SECURE === 'true',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+router.post('/forgot-password', async (req , res): Promise<any> => {
+    const { email } = req.body;
 
-router.post('/forgot-password', async (req: AuthRequest, res): Promise<any> => {
-    const {email} = req.body;
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const mailerSend = new MailerSend({
+        apiKey: process.env.API_KEY as string,
+    });
+    const sentFrom = new Sender(process.env.EMAIL_USER as string, "Legal Forge");
+
+    const recipients = [
+        new Recipient(email, email.split('@')[0]),
+    ];
 
     try {
         const user = await prisma.users.findUnique({where: {email}});
@@ -38,13 +40,67 @@ router.post('/forgot-password', async (req: AuthRequest, res): Promise<any> => {
 
         const resetLink = `${process.env.FRONTEND_URL}/auth/reset-password?token=${token}`;
 
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Password Reset',
-            html: `<p>Click <a href="${resetLink}">here</a> to reset your password. Link expires in 1 hour.</p>`,
-        });
-
+        const emailParams = new EmailParams()
+            .setFrom(sentFrom)
+            .setTo(recipients)
+            .setReplyTo(sentFrom)
+            .setSubject("Reset your password")
+            .setHtml(`
+                  <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                      <title>Password Reset</title>
+                      <style>
+                        body {
+                          font-family: Arial, sans-serif;
+                          background-color: #f6f6f6;
+                          margin: 0;
+                          padding: 0;
+                        }
+                        .container {
+                          background-color: #ffffff;
+                          max-width: 400px;
+                          margin: 40px auto;
+                          padding: 30px 20px;
+                          border-radius: 8px;
+                          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                          text-align: center;
+                        }
+                        .btn {
+                          display: inline-block;
+                          margin-top: 20px;
+                          padding: 12px 30px;
+                          background-color: #007bff;
+                          color: #fff !important;
+                          text-decoration: none;
+                          border-radius: 5px;
+                          font-weight: bold;
+                          font-size: 16px;
+                        }
+                        .footer {
+                          margin-top: 30px;
+                          font-size: 12px;
+                          color: #888;
+                        }
+                      </style>
+                    </head>
+                    <body>
+                      <div class="container">
+                            <h2>Password Reset</h2>                            
+                            <p>Hi, ${user.name}</p>
+                            <p>We received a request to reset your password. Click the button below to set a new password.</p>
+                            <a href="${resetLink}" class="btn">Reset Password</a>
+                            <p>If you didn't request this, please ignore this email.</p>
+                            <p>Thank you,</p>   
+                            <p>The Legal Forge Team</p>
+                        <div class="footer">
+                          &copy; 2024 Legal Forge. All rights reserved.
+                        </div>
+                      </div>
+                    </body>
+                    </html>     
+            `)
+        await mailerSend.email.send(emailParams);
         res.status(200).json({message: 'Password reset link sent'});
     } catch (error) {
         console.error(error);
