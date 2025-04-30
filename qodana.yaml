@@ -25,4 +25,4 @@ exclude:
   - name: Eslint
   - name: All
     paths:
-      - apps\server\generated\prisma\runtime
+      - apps/server/generated/*
