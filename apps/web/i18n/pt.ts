@@ -345,5 +345,20 @@ export const pt = {
                 button: 'Obter Plano Mensal'
             }
         }
+    },
+    contact: {
+        title: 'Entre em Contato',
+        form: {
+            name: 'Nome',
+            phone: 'Telefone',
+            subject: 'Assunto',
+            message: 'Mensagem',
+            submit: 'Enviar Mensagem'
+        },
+        success: {
+            title: 'Mensagem Enviada!',
+            message: 'Obrigado por entrar em contato! Responderemos em breve.',
+            backToHome: 'Voltar para o Início'
+        }
     }
 } as const;

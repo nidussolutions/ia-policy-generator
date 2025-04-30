@@ -19,7 +19,7 @@ export default function Footer() {
                     <ul className="space-y-1">
                         <li>
                             <Link
-                                href="/jur/politica-de-privacidade"
+                                href="/jur/privacy-policy"
                                 className="hover:underline text-light-text-secondary dark:text-dark-text-secondary"
                                 target="_blank"
                             >

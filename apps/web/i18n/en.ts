@@ -329,5 +329,20 @@ export const en = {
                 button: 'Get Monthly Plan'
             }
         }
+    },
+    contact: {
+        title: 'Contact Us',
+        form: {
+            name: 'Name',
+            phone: 'Phone',
+            subject: 'Subject',
+            message: 'Message',
+            submit: 'Send Message'
+        },
+        success: {
+            title: 'Message Sent!',
+            message: 'Thank you for contacting us! We will respond shortly.',
+            backToHome: 'Back to Home'
+        }
     }
 } as const;
