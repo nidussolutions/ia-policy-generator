@@ -9,21 +9,37 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-    const [theme, setTheme] = useState('light');
+    // Check for system preference
+    const getInitialTheme = () => {
+        // Check if we're in the browser
+        if (typeof window !== 'undefined') {
+            // Check for saved theme in localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                return savedTheme;
+            }
+
+            // Check for system preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            }
+        }
+
+        // Default to light
+        return 'light';
+    };
+
+    const [theme, setTheme] = useState(getInitialTheme);
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
-            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-        }
-    }, []);
+        // Apply theme class to document
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+    }, [theme]);
 
     const toggleTheme = () => {
         setTheme((prevTheme) => {
             const newTheme = prevTheme === 'light' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
-            document.documentElement.classList.toggle('dark', newTheme === 'dark');
             return newTheme;
         });
     };
