@@ -6,43 +6,6 @@ import {updatePlan} from "../service/plans";
 const router = Router();
 const prisma = new PrismaClient();
 
-
-router.post('/', authMiddleware, async (req: AuthRequest, res) => {
-    const {name, description, price} = req.body;
-
-    try {
-        const existingPlan = await prisma.plans.findUnique({
-            where: {price},
-        });
-
-        if (existingPlan) {
-            res.status(400).json({message: 'Plan already exists'});
-            return
-        }
-
-        const newPlan = await prisma.plans.create({
-            data: {
-                name,
-                description,
-                price,
-            },
-        });
-
-        res.status(201).json({
-            message: 'Plan created successfully',
-            plan: {
-                id: newPlan.id,
-                name: newPlan.name,
-                description: newPlan.description,
-                price: newPlan.price,
-            },
-        });
-    } catch (error) {
-        console.error('Error during creating plan:', error);
-        res.status(500).json({message: 'Internal server error'});
-    }
-})
-
 router.put('/upgrade', authMiddleware, async (req: AuthRequest, res) => {
     const {planId} = req.body;
     const userId = req.userId;
