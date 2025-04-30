@@ -3,7 +3,6 @@ import {generateAiDocument} from '../service/iaService';
 import {AuthRequest, authMiddleware} from '../middlewares/authMiddlewares';
 import {PrismaClient} from '../../generated/prisma';
 import {checkDocumentLimit} from '../middlewares/checkDocumentLimit';
-import {crawlSite} from '../service/crawlSite';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -47,7 +46,6 @@ router.post(
                 language: site.language,
                 observations,
                 plan: currentPlan?.name?.toLowerCase() || 'free',
-                // crawl: await crawlSite(site.domain),
             });
 
             const doc = await prisma.document.create({
