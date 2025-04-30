@@ -20,7 +20,6 @@ export default function ProfilePage() {
     const [password, setPassword] = useState('');
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loading, setLoading] = useState(true);
-    const [loadingCheckout, setLoadingCheckout] = useState(false);
     const [error, setError] = useState('');
 
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -49,7 +48,7 @@ export default function ProfilePage() {
         fetchProfile().finally();
     }, [token, router]);
 
-    if (loading || !plan || loadingCheckout) return <Loading page={loadingCheckout ? "Checkout" : "Profile"}/>;
+    if (loading || !plan) return <Loading page={"Profile"}/>;
 
     return (
         <>

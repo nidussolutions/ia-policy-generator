@@ -5,7 +5,6 @@ import { en } from '../i18n/en';
 import { pt } from '../i18n/pt';
 
 export type Language = 'en' | 'pt';
-type TranslationKeys = keyof typeof en;
 
 const translations = {
   en,

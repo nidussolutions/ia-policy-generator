@@ -1,11 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import {useTheme} from './ThemeContext';
-import {useI18n} from '../contexts/I18nContext';
+import {useI18n} from '@/contexts/I18nContext';
 
 export default function Footer() {
-    const {theme} = useTheme();
     const {t} = useI18n();
 
     return (
@@ -19,7 +17,7 @@ export default function Footer() {
                     <ul className="space-y-1">
                         <li>
                             <Link
-                                href="/jur/politica-de-privacidade"
+                                href="/jur/privacy-policy"
                                 className="hover:underline text-light-text-secondary dark:text-dark-text-secondary"
                                 target="_blank"
                             >

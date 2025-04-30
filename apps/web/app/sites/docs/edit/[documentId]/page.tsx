@@ -8,12 +8,10 @@ import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 import {motion} from 'framer-motion';
 import {useParams, useRouter} from 'next/navigation';
-import {useTheme} from '@/components/ThemeContext';
 
 export default function DocumentEditPage() {
     const {documentId} = useParams() as { documentId: string };
     const router = useRouter();
-    const {theme} = useTheme();
     const token =
         typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 

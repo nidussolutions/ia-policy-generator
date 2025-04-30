@@ -4,6 +4,8 @@ import React, {useState} from 'react';
 import {motion} from 'framer-motion';
 import {useForm} from '@formspree/react';
 import Link from 'next/link';
+import {useI18n} from '@/contexts/I18nContext';
+import HeaderPublic from "@/components/HeaderPublic";
 
 const itemVariants = {
     hidden: {opacity: 0, y: 20},
@@ -16,6 +18,7 @@ const itemVariants = {
 
 export default function ContactPage() {
     const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMS_KEY as string);
+    const {t} = useI18n();
     const [form, setForm] = useState({
         name: '',
         phone: '',
@@ -40,10 +43,10 @@ export default function ContactPage() {
                     className="max-w-2xl mx-auto bg-light-card dark:bg-dark-card p-8 rounded-2xl backdrop-blur-md border border-light-border dark:border-dark-border shadow-lg"
                 >
                     <h1 className="text-3xl font-bold mb-6 text-center text-light-text-primary dark:text-dark-text-primary">
-                        Mensagem Enviada!
+                        {t('contact.success.title')}
                     </h1>
                     <p className="text-center text-light-text-secondary dark:text-dark-text-secondary">
-                        Obrigado por entrar em contato! Responderemos em breve.
+                        {t('contact.success.message')}
                     </p>
                     <div className="flex justify-center">
                         <Link href="/">
@@ -52,7 +55,7 @@ export default function ContactPage() {
                                 className="mt-6 px-6 py-2 bg-light-accent-purple dark:bg-dark-accent-purple text-light-background dark:text-dark-background rounded-full font-medium shadow-lg backdrop-blur-sm"
                                 variants={itemVariants}
                             >
-                                Voltar para o Início
+                                {t('contact.success.backToHome')}
                             </motion.button>
                         </Link>
                     </div>
@@ -63,57 +66,26 @@ export default function ContactPage() {
 
     return (
         <main className="bg-light-background dark:bg-dark-background">
-            <header className="w-full max-w-6xl mx-auto flex items-center justify-between py-6 px-4">
-                <div className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">
-                    <Link href="/">Legal Forge</Link>
-                </div>
-                <nav className="hidden md:flex space-x-8 text-light-text-secondary dark:text-dark-text-secondary">
-                    <Link href="/#features" className="hover:text-light-text-primary dark:hover:text-dark-text-primary transition">
-                        Features
-                    </Link>
-                    <Link href="/#pricing" className="hover:text-light-text-primary dark:hover:text-dark-text-primary transition">
-                        Pricing
-                    </Link>
-                    <Link href="/#about" className="hover:text-light-text-primary dark:hover:text-dark-text-primary transition">
-                        About Us
-                    </Link>
-                </nav>
-                <div className="flex items-center space-x-4">
-                    <Link href="/auth/login">
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            className="px-6 py-2 bg-light-accent-purple dark:bg-dark-accent-purple text-light-background dark:text-dark-background rounded-full font-medium shadow-lg backdrop-blur-sm"
-                            variants={itemVariants}
-                        >
-                            Get Started
-                        </motion.button>
-                    </Link>
-                    <Link href="/contact">
-                        <motion.button
-                            whileHover={{scale: 1.05}}
-                            className="px-6 py-2 border border-light-border dark:border-dark-border rounded-full font-medium hover:border-light-text-primary dark:hover:border-dark-text-primary transition"
-                            variants={itemVariants}
-                        >
-                            Talk to an Expert
-                        </motion.button>
-                    </Link>
-                </div>
-            </header>
+            {/* Navbar */}
+            <HeaderPublic/>
+
+            {/* Form */}
             <div
                 className="min-h-screen bg-light-background dark:bg-dark-background py-16 px-4 text-light-text-primary dark:text-dark-text-primary">
                 <motion.div
                     initial={{opacity: 0, y: 20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}
-                    className="max-w-2xl mx-auto bg-light-card dark:bg-dark-card p-8 rounded-2xl backdrop-blur-md border border-light-border dark:border-dark-border shadow-lg"
+                    className="max-w-2xl mx-auto bg-light-card dark:bg-dark-card p-8 rounded-2xl backdrop-blur-md border border-light-border dark:border-dark-accent-blue shadow-lg"
                 >
                     <h1 className="text-3xl font-bold mb-6 text-center text-light-text-primary dark:text-dark-text-primary">
-                        Entre em Contato
+                        {t('contact.title')}
                     </h1>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                                Nome
+                            <label
+                                className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                                {t('contact.form.name')}
                             </label>
                             <input
                                 type="text"
@@ -121,12 +93,13 @@ export default function ContactPage() {
                                 value={form.name}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
+                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-text-secondary text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
                             />
                         </div>
                         <div>
-                            <label className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                                Telefone
+                            <label
+                                className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                                {t('contact.form.phone')}
                             </label>
                             <input
                                 type="tel"
@@ -134,12 +107,13 @@ export default function ContactPage() {
                                 value={form.phone}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
+                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-text-secondary text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
                             />
                         </div>
                         <div>
-                            <label className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                                Assunto
+                            <label
+                                className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                                {t('contact.form.subject')}
                             </label>
                             <input
                                 type="text"
@@ -147,12 +121,13 @@ export default function ContactPage() {
                                 value={form.subject}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
+                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-text-secondary text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
                             />
                         </div>
                         <div>
-                            <label className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                                Mensagem
+                            <label
+                                className="block mb-2 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                                {t('contact.form.message')}
                             </label>
                             <textarea
                                 name="message"
@@ -160,16 +135,16 @@ export default function ContactPage() {
                                 onChange={handleChange}
                                 required
                                 rows={5}
-                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
+                                className="w-full px-4 py-2 rounded-lg bg-light-background dark:bg-dark-background border border-light-border dark:border-dark-text-secondary text-light-text-primary dark:text-dark-text-primary focus:ring-light-accent-blue dark:focus:ring-dark-accent-blue focus:border-light-accent-blue dark:focus:border-dark-accent-blue"
                             ></textarea>
                         </div>
                         <motion.button
                             whileHover={{scale: 1.03}}
                             whileTap={{scale: 0.97}}
                             type="submit"
-                            className="w-full bg-light-accent-blue dark:bg-dark-accent-blue text-light-background dark:text-dark-background font-semibold py-2 rounded-lg transition shadow hover:shadow-md"
+                            className="w-full bg-light-accent-blue dark:bg-dark-accent-blue text-light-background dark:text-dark-text-primary font-semibold py-2 rounded-lg transition shadow hover:shadow-md"
                         >
-                            Enviar Mensagem
+                            {t('contact.form.submit')}
                         </motion.button>
                     </form>
                 </motion.div>

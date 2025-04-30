@@ -5,12 +5,10 @@ import Loading from '@/components/Loading';
 import {ArrowLeft} from 'lucide-react';
 import {useParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
-import {useTheme} from '@/components/ThemeContext';
 import ReactMarkdown from 'react-markdown';
 
 export default function PublicDocumentPage() {
     const {publicId} = useParams() as { publicId: string };
-    const {theme} = useTheme();
     const [document, setDocument] = useState<null | {
         title: string;
         content: string;

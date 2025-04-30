@@ -44,9 +44,20 @@ export default function DashboardPage() {
                         headers: {Authorization: `Bearer ${token}`},
                     }
                 );
-                if (resUser.status === 401) throw new Error('Token expired');
+
+                if (resUser.status === 401) {
+                    setError(t('dashboard.errors.tokenExpired'));
+                    localStorage.removeItem('token');
+                    router.push('/auth/login');
+                    return;
+                }
+
                 const userJson = await resUser.json();
-                if (!resUser.ok) throw new Error(userJson.message);
+
+                if (!resUser.ok) {
+                    setError(userJson.message || 'Failed to fetch user profile');
+                    return;
+                }
 
                 const resMetrics = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL}/dashboard/metrics`,
@@ -54,7 +65,20 @@ export default function DashboardPage() {
                         headers: {Authorization: `Bearer ${token}`},
                     }
                 );
+
+                if (resMetrics.status === 401) {
+                    setError(t('dashboard.errors.tokenExpired'));
+                    localStorage.removeItem('token');
+                    router.push('/auth/login');
+                    return;
+                }
+
                 const metricsJson = await resMetrics.json();
+
+                if (!resMetrics.ok) {
+                    setError(metricsJson.message || 'Failed to fetch metrics data');
+                    return;
+                }
 
                 const resLog = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL}/dashboard/logs`,
@@ -62,13 +86,26 @@ export default function DashboardPage() {
                         headers: {Authorization: `Bearer ${token}`},
                     }
                 );
+
+                if (resLog.status === 401) {
+                    setError(t('dashboard.errors.tokenExpired'));
+                    localStorage.removeItem('token');
+                    router.push('/auth/login');
+                    return;
+                }
+
                 const logsJson = await resLog.json();
+
+                if (!resLog.ok) {
+                    setError(logsJson.message || 'Failed to fetch logs data');
+                    return;
+                }
 
                 setUserData(userJson);
                 setMetrics(metricsJson);
                 setActivities(logsJson.logs || []);
-            } catch (err: any) {
-                console.error('Error loading dashboard data:', err.message);
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (err) {
                 setError(t('dashboard.errors.loadingError'));
                 localStorage.removeItem('token');
                 router.push('/auth/login');
@@ -77,8 +114,10 @@ export default function DashboardPage() {
             }
         };
 
-        fetchData();
-    }, [authLoading, isAuthenticated, token, router]);
+        fetchData().then(() => {
+            setLoading(false);
+        });
+    }, [authLoading, isAuthenticated, token, router, t]);
 
     if (authLoading || loading) return <Loading page="dashboard"/>;
     if (error) return <div className="text-center text-red-500 p-6">{error}</div>;

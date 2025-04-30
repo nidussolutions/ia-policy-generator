@@ -1,8 +1,6 @@
 "use client";
 
 import {
-    ArrowLeft,
-    ArrowRight,
     CalendarDays,
     CheckCircle,
     Clock,
@@ -16,19 +14,16 @@ import {fetcher} from "@/lib/api";
 import {InvoicesType} from "@/types/SubscriptionsType";
 import useSWR from "swr";
 import {motion, AnimatePresence} from "framer-motion";
-import {useTheme} from "./ThemeContext";
 import {useI18n} from "@/hooks/useI18n";
 
 export default function Invoices() {
-    const [page, setPage] = useState(1);
     const [loadingPageChange, setLoadingPageChange] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const {theme} = useTheme();
     const {t} = useI18n();
 
     const {data, error, isLoading, mutate} = useSWR(
-        token ? `${process.env.NEXT_PUBLIC_API_URL}/user/invoices?page=${page}&limit=3` : null,
+        token ? `${process.env.NEXT_PUBLIC_API_URL}/user/invoices` : null,
         (url: string) => fetcher(url, token!)
     );
 
@@ -43,20 +38,15 @@ export default function Invoices() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            mutate();
+            await mutate();
         } finally {
             setLoadingUpdate(false);
         }
     };
 
-    const changePage = (newPage: number) => {
-        setLoadingPageChange(true);
-        setPage(newPage);
-    };
-
     useEffect(() => {
         mutate().finally(() => setLoadingPageChange(false));
-    }, [page, mutate]);
+    }, [mutate]);
 
     return (
         <motion.div

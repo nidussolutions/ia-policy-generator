@@ -6,7 +6,7 @@ import {motion, AnimatePresence} from 'framer-motion';
 import {Menu, X, Sun, Moon, Globe} from 'lucide-react';
 import {useAuth} from '@/hooks/useAuth';
 import {useTheme} from './ThemeContext';
-import {useI18n, Language} from '@/contexts/I18nContext';
+import {useI18n} from '@/contexts/I18nContext';
 
 export default function Header() {
     const {isAuthenticated, logout} = useAuth();
