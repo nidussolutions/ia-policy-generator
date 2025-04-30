@@ -5,6 +5,7 @@ import Layout from '@/components/Layout';
 import {useRouter} from 'next/navigation';
 import {useCheckout} from '@/hooks/useCheckout';
 import {useTheme} from '@/components/ThemeContext';
+import {useI18n} from '@/contexts/I18nContext';
 
 const containerVariants = {
     hidden: {},

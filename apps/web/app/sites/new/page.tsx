@@ -9,8 +9,10 @@ import { ToastContainer } from 'react-toastify';
 import { notifyError } from '@/hooks/useToast';
 import { motion } from 'framer-motion';
 import { SiteType } from '@/types/SitesType';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function NewSitePage() {
+  const { t } = useI18n();
   const [site, setSite] = useState<SiteType>({
     name: '',
     domain: '',
@@ -75,30 +77,30 @@ export default function NewSitePage() {
             >
               <ArrowLeft size={24} />
             </button>
-            <h1 className="text-3xl font-bold text-white">New Site</h1>
+            <h1 className="text-3xl font-bold text-white">{t('sites.new.title')}</h1>
           </motion.div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {[
               {
-                label: 'Site Name',
+                label: t('sites.new.siteName'),
                 name: 'name',
-                placeholder: 'e.g. My Website',
+                placeholder: t('sites.new.placeholders.siteName'),
               },
               {
-                label: 'Domain',
+                label: t('sites.new.domain'),
                 name: 'domain',
-                placeholder: 'e.g. my-site.com',
+                placeholder: t('sites.new.placeholders.domain'),
               },
               {
-                label: 'Language',
+                label: t('sites.new.language'),
                 name: 'language',
-                placeholder: 'e.g. en-US, pt-BR',
+                placeholder: t('sites.new.placeholders.language'),
               },
               {
-                label: 'Legislation',
+                label: t('sites.new.legislation'),
                 name: 'legislation',
-                placeholder: 'e.g. GDPR, LGPD',
+                placeholder: t('sites.new.placeholders.legislation'),
               },
             ].map(({ label, name, placeholder }, idx) => (
               <motion.div
@@ -127,10 +129,10 @@ export default function NewSitePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <label className="block text-sm text-gray-400 mb-1">Notes</label>
+              <label className="block text-sm text-gray-400 mb-1">{t('sites.new.notes')}</label>
               <textarea
                 name="observations"
-                placeholder="e.g. My site is about..."
+                placeholder={t('sites.new.placeholders.notes')}
                 value={site.observations}
                 onChange={handleChange}
                 rows={4}
@@ -146,7 +148,7 @@ export default function NewSitePage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {loading ? 'Saving...' : 'Create Site'}
+              {loading ? t('sites.new.buttons.saving') : t('sites.new.buttons.create')}
             </motion.button>
           </form>
         </motion.div>

@@ -10,6 +10,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import { fetcher } from '@/lib/api';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useI18n } from '@/contexts/I18nContext';
 import { motion } from 'framer-motion';
 
 type Site = {
@@ -22,6 +23,7 @@ export default function SitesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deletingSiteId, setDeletingSiteId] = useState<string | null>(null);
   const { token, loading: authLoading } = useAuth();
+  const { t } = useI18n();
 
   const { data, error, isLoading, mutate } = useSWR(
     token ? `${process.env.NEXT_PUBLIC_API_URL}/sites` : null,
@@ -37,7 +39,7 @@ export default function SitesPage() {
       mutate().finally();
     } catch (err) {
       console.error('Error deleting site:', err);
-      notifyError('Error deleting site');
+      notifyError(t('sites.errors.deleteFailed'));
     }
   };
 
@@ -75,13 +77,13 @@ export default function SitesPage() {
             transition={{ delay: 0.2 }}
             className="flex justify-between items-center border-b border-light-border dark:border-dark-border pb-4"
           >
-            <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">Your Sites</h1>
+            <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">{t('sites.title')}</h1>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/sites/new"
                 className="bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-background px-4 py-2 rounded transition duration-200"
               >
-                + New Site
+                {t('sites.newSite')}
               </Link>
             </motion.div>
           </motion.div>
@@ -93,7 +95,7 @@ export default function SitesPage() {
               transition={{ delay: 0.3 }}
               className="text-light-text-secondary dark:text-dark-text-secondary text-center"
             >
-              You don&apos;t have any sites registered yet.
+              {t('sites.noSites')}
             </motion.p>
           )}
 
@@ -118,21 +120,21 @@ export default function SitesPage() {
                       href={`/sites/${site.id}/`}
                       className="text-light-accent-purple dark:text-dark-accent-purple hover:text-light-accent-blue dark:hover:text-dark-accent-blue hover:underline transition duration-200"
                     >
-                      Access
+                      {t('sites.actions.access')}
                     </Link>
                     <span className="text-light-text-secondary dark:text-dark-text-secondary">|</span>
                     <Link
                       href={`/sites/edit/${site.id}`}
                       className="text-light-accent-purple dark:text-dark-accent-purple hover:text-light-accent-blue dark:hover:text-dark-accent-blue hover:underline transition duration-200"
                     >
-                      Edit
+                      {t('sites.actions.edit')}
                     </Link>
                     <span className="text-light-text-secondary dark:text-dark-text-secondary">|</span>
                     <button
                       onClick={() => handleDelete(site.id)}
                       className="text-light-accent-purple dark:text-dark-accent-purple hover:text-light-accent-blue dark:hover:text-dark-accent-blue hover:underline transition duration-200"
                     >
-                      Delete
+                      {t('sites.actions.delete')}
                     </button>
                   </div>
                 </motion.div>
@@ -145,7 +147,7 @@ export default function SitesPage() {
               transition={{ delay: 0.3 }}
               className="text-light-text-secondary dark:text-dark-text-secondary text-center"
             >
-              You don&apos;t have any sites registered yet.
+              {t('sites.noSites')}
             </motion.p>
           )}
         </motion.div>

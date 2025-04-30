@@ -8,6 +8,7 @@ import {motion} from 'framer-motion';
 import {useTheme} from '@/components/ThemeContext';
 import { sendGTMEvent } from '@next/third-parties/google'
 import React, {useEffect} from 'react';
+import {useI18n} from '@/contexts/I18nContext';
 
 
 const StatusMessage = ({
@@ -22,6 +23,7 @@ const StatusMessage = ({
     message: string;
 }) => {
     const {theme} = useTheme();
+    const {t} = useI18n();
 
     return (
         <motion.div
@@ -42,6 +44,7 @@ const StatusMessage = ({
 export default function PaymentConfirmationPage() {
     const {status} = useParams() as { status: string };
     const {theme} = useTheme();
+    const {t} = useI18n();
 
     useEffect(() => {
       sendGTMEvent({ event: 'conversion', value: 1.0 })
@@ -54,8 +57,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={CheckCircle}
                         color="text-green-500 dark:text-green-400"
-                        title="Payment Confirmed"
-                        message="Your subscription is active! We're glad to have you with us!"
+                        title={t('payment.confirmation.approved.title')}
+                        message={t('payment.confirmation.approved.message')}
                     />
                 );
             case 'pending':
@@ -63,8 +66,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={Hourglass}
                         color="text-yellow-500 dark:text-yellow-400"
-                        title="Payment Pending"
-                        message="We're waiting for payment confirmation. Please check again later."
+                        title={t('payment.confirmation.pending.title')}
+                        message={t('payment.confirmation.pending.message')}
                     />
                 );
             case 'rejected':
@@ -72,8 +75,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={XCircle}
                         color="text-red-500 dark:text-red-400"
-                        title="Payment Rejected"
-                        message="Your payment was rejected. Please verify your details and try again."
+                        title={t('payment.confirmation.rejected.title')}
+                        message={t('payment.confirmation.rejected.message')}
                     />
                 );
             case 'failure':
@@ -81,8 +84,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={XCircle}
                         color="text-red-500 dark:text-red-400"
-                        title="Payment Failed"
-                        message="Your payment could not be processed. Please try again or contact support."
+                        title={t('payment.confirmation.failure.title')}
+                        message={t('payment.confirmation.failure.message')}
                     />
                 );
             case 'cancelled':
@@ -90,8 +93,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={XCircle}
                         color="text-red-500 dark:text-red-400"
-                        title="Payment Cancelled"
-                        message="Your payment was cancelled. If this was not you, contact support."
+                        title={t('payment.confirmation.cancelled.title')}
+                        message={t('payment.confirmation.cancelled.message')}
                     />
                 );
             default:
@@ -102,7 +105,7 @@ export default function PaymentConfirmationPage() {
                         transition={{duration: 0.4}}
                         className={`text-center ${theme === 'light' ? 'text-light-text-secondary' : 'text-dark-text-secondary'}`}
                     >
-                        <h2 className="text-2xl font-semibold mb-2">Processing...</h2>
+                        <h2 className="text-2xl font-semibold mb-2">{t('payment.confirmation.processing.title')}</h2>
                         <p>We’re processing your payment. This may take a few minutes.</p>
                     </motion.div>
                 );
@@ -142,7 +145,7 @@ export default function PaymentConfirmationPage() {
                                 }
                             `}
                         >
-                            Back to Dashboard
+                            {t('payment.confirmation.backToDashboard')}
                         </Link>
                     </motion.div>
                 </motion.div>
