@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --light-background: #f8f9fa;
+  --light-card: #ffffff;
+  --light-border: #e2e8f0;
+  --light-text-primary: #1a202c;
+  --light-text-secondary: #4a5568;
+  --light-accent-purple: #6b46c1;
+  --light-accent-blue: #3182ce;
+
+  --dark-background: #1a202c;
+  --dark-card: #2d3748;
+  --dark-border: #4a5568;
+  --dark-text-primary: #f7fafc;
+  --dark-text-secondary: #a0aec0;
+  --dark-accent-purple: #9f7aea;
+  --dark-accent-blue: #63b3ed;
+}
+
+.dark {
+  --background: var(--dark-background);
+  --card: var(--dark-card);
+  --border: var(--dark-border);
+  --text-primary: var(--dark-text-primary);
+  --text-secondary: var(--dark-text-secondary);
+  --accent-purple: var(--dark-accent-purple);
+  --accent-blue: var(--dark-accent-blue);
+}
+
+.light {
+  --background: var(--light-background);
+  --card: var(--light-card);
+  --border: var(--light-border);
+  --text-primary: var(--light-text-primary);
+  --text-secondary: var(--light-text-secondary);
+  --accent-purple: var(--light-accent-purple);
+  --accent-blue: var(--light-accent-blue);
+}
+
+body {
+  @apply bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary;
+}
