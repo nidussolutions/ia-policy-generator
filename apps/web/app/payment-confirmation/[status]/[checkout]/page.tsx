@@ -10,7 +10,6 @@ import {sendGTMEvent} from '@next/third-parties/google'
 import React, {useEffect} from 'react';
 import {useI18n} from '@/contexts/I18nContext';
 
-
 const StatusMessage = ({
                            icon: Icon,
                            color,
@@ -23,7 +22,6 @@ const StatusMessage = ({
     message: string;
 }) => {
     const {theme} = useTheme();
-    const {t} = useI18n();
 
     return (
         <motion.div

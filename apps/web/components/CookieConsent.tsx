@@ -2,7 +2,6 @@
 
 import React, {useState, useEffect} from 'react';
 import {useI18n} from '@/contexts/I18nContext';
-import {useTheme} from './ThemeContext';
 import {motion} from 'framer-motion';
 
 const CookieConsent: React.FC = () => {

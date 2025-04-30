@@ -23,3 +23,6 @@ profile:
 linter: jetbrains/qodana-js:2024.3
 exclude:
   - name: Eslint
+  - name: All
+    paths:
+      - apps\server\generated\prisma\runtime
