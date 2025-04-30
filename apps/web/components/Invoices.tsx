@@ -17,14 +17,13 @@ import {motion, AnimatePresence} from "framer-motion";
 import {useI18n} from "@/hooks/useI18n";
 
 export default function Invoices() {
-    const [page, setPage] = useState(1);
     const [loadingPageChange, setLoadingPageChange] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     const {t} = useI18n();
 
     const {data, error, isLoading, mutate} = useSWR(
-        token ? `${process.env.NEXT_PUBLIC_API_URL}/user/invoices?page=${page}&limit=3` : null,
+        token ? `${process.env.NEXT_PUBLIC_API_URL}/user/invoices` : null,
         (url: string) => fetcher(url, token!)
     );
 
@@ -39,7 +38,7 @@ export default function Invoices() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            mutate();
+            await mutate();
         } finally {
             setLoadingUpdate(false);
         }
@@ -47,7 +46,7 @@ export default function Invoices() {
 
     useEffect(() => {
         mutate().finally(() => setLoadingPageChange(false));
-    }, [page, mutate]);
+    }, [mutate]);
 
     return (
         <motion.div
