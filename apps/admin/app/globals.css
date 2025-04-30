@@ -1,45 +1,52 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --light-background: #f8f9fa;
-  --light-card: #ffffff;
-  --light-border: #e2e8f0;
-  --light-text-primary: #1a202c;
-  --light-text-secondary: #4a5568;
-  --light-accent-purple: #6b46c1;
-  --light-accent-blue: #3182ce;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  --dark-background: #1a202c;
-  --dark-card: #2d3748;
-  --dark-border: #4a5568;
-  --dark-text-primary: #f7fafc;
-  --dark-text-secondary: #a0aec0;
-  --dark-accent-purple: #9f7aea;
-  --dark-accent-blue: #63b3ed;
+@theme {
+    /* Light Theme Colors */
+    --color-light-background: oklch(1 0 0); /* #FFFFFF */
+    --color-light-text-primary: oklch(0.27 0 0); /* #222222 */
+    --color-light-text-secondary: oklch(0.45 0 0); /* #666666 */
+    --color-light-border: oklch(0.88 0 0); /* #E0E0E0 */
+    --color-light-card: oklch(0.98 0.003 101.86); /* #F9FAFB */
+    /* Light Accent Colors */
+    --color-light-accent-blue: oklch(0.57 0.19 262.05); /* #3B82F6 */
+    --color-light-accent-purple: oklch(0.54 0.22 295.37); /* #7C3AED */
+    /* Light Special Colors */
+    --color-light-deep-blue: oklch(0.97 0.02 252.37); /* #F0F4FF */
+    /* Light Purple Variations */
+    --color-light-purple: oklch(0.54 0.22 295.37); /* #7C3AED */
+    --color-light-purple-light: oklch(0.96 0.03 235.41); /* #EBF4FF */
+    --color-light-purple-hover: oklch(0.48 0.22 295.37); /* #6D28D9 */
+    /* Dark Theme Colors */
+    --color-dark-background: oklch(0.16 0 0); /* #18181B */
+    --color-dark-text-primary: oklch(0.96 0.01 252.37); /* #F3F4F6 */
+    --color-dark-text-secondary: oklch(0.69 0.002 96.08); /* #A1A1AA */
+    --color-dark-border: oklch(0.19 0 0); /* #27272A */
+    --color-dark-card: oklch(0.18 0.002 276.23); /* #23232A */
+    --color-dark-disabled: oklch(0.19 0 0); /* #27272A */
+    /* Dark Accent Colors */
+    --color-dark-accent-blue: oklch(0.57 0.19 262.05); /* #3B82F6 */
+    --color-dark-accent-purple: oklch(0.55 0.19 262.05); /* #6366F1 */
+    /* Dark Special Colors */
+    --color-dark-deep-blue: oklch(0.11 0.02 252.37); /* #030526 */
+    /* Dark Purple Variations */
+    --color-dark-purple: oklch(0.45 0.22 328.24); /* #8C0368 */
+    --color-dark-purple-light: oklch(0.21 0.19 276.23); /* #1E035A */
+    --color-dark-purple-hover: oklch(0.52 0.25 328.24); /* #A429A6 */
 }
-
-.dark {
-  --background: var(--dark-background);
-  --card: var(--dark-card);
-  --border: var(--dark-border);
-  --text-primary: var(--dark-text-primary);
-  --text-secondary: var(--dark-text-secondary);
-  --accent-purple: var(--dark-accent-purple);
-  --accent-blue: var(--dark-accent-blue);
-}
-
-.light {
-  --background: var(--light-background);
-  --card: var(--light-card);
-  --border: var(--light-border);
-  --text-primary: var(--light-text-primary);
-  --text-secondary: var(--light-text-secondary);
-  --accent-purple: var(--light-accent-purple);
-  --accent-blue: var(--light-accent-blue);
+* {
+    transition: opacity 0.3s ease-in-out;
 }
 
 body {
-  @apply bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary;
+    opacity: 1;
+}
+
+body[data-loading='true'] {
+    opacity: 0;
+}
+
+button {
+    cursor: pointer;
 }
