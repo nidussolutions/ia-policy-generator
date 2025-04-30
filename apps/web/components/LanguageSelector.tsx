@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function LanguageSelector() {
   const { language, changeLanguage } = useI18n();

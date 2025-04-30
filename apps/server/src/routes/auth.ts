@@ -3,7 +3,6 @@ import {PrismaClient} from '../../generated/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Stripe from "stripe";
-import axios from 'axios';
 
 const router = Router();
 const prisma = new PrismaClient();
