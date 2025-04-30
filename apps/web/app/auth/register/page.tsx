@@ -32,11 +32,13 @@ export default function RegisterPage() {
   const [companyId, setCompanyId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [termsConsent, setTermsConsent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [companyIdError, setCompanyIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [termsConsentError, setTermsConsentError] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -101,6 +103,15 @@ export default function RegisterPage() {
         setCompanyIdError('');
       }
     }
+
+    // Validate terms consent
+    if (!termsConsent) {
+      setTermsConsentError(t('register.termsConsentError'));
+      ok = false;
+    } else {
+      setTermsConsentError('');
+    }
+
     return ok;
   };
 
@@ -249,8 +260,34 @@ export default function RegisterPage() {
               <p className="mt-1 text-sm text-red-400">{passwordError}</p>
             )}
           </motion.div>
-          {/* Submit */}
+          {/* Terms Consent */}
+          <motion.div variants={itemVariants} className="flex items-start">
+            <div className="flex items-center h-5">
+              <input
+                id="terms-consent"
+                type="checkbox"
+                checked={termsConsent}
+                onChange={(e) => setTermsConsent(e.target.checked)}
+                className="w-4 h-4 border border-gray-300 rounded bg-[#030526]/20 focus:ring-[#8C0368] focus:ring-1"
+              />
+            </div>
+            <label
+              htmlFor="terms-consent"
+              className="ml-2 text-sm text-gray-300"
+            >
+              {t('register.termsConsent')}{' '}
+              <Link href="/jur/termos-de-uso" className="text-[#A429A6] hover:underline" target="_blank">
+                {t('footer.termsOfUse')}
+              </Link>
+            </label>
+          </motion.div>
+          {termsConsentError && (
+            <motion.p variants={itemVariants} className="mt-1 text-sm text-red-400">
+              {termsConsentError}
+            </motion.p>
+          )}
 
+          {/* Submit */}
           <motion.button
             type="submit"
             disabled={loading}
