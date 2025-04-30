@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { postWithAuth } from '@/lib/api';
 import { ArrowLeft } from 'lucide-react';
@@ -10,9 +10,11 @@ import { notifyError } from '@/hooks/useToast';
 import { motion } from 'framer-motion';
 import { SiteType } from '@/types/SitesType';
 import { useI18n } from '@/contexts/I18nContext';
+import { useTheme } from '@/components/ThemeContext';
 
 export default function NewSitePage() {
   const { t } = useI18n();
+  const { theme } = useTheme();
   const [site, setSite] = useState<SiteType>({
     name: '',
     domain: '',
@@ -55,7 +57,7 @@ export default function NewSitePage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] text-gray-200">
+    <main className="min-h-screen bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary">
       <Layout>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -73,11 +75,11 @@ export default function NewSitePage() {
           >
             <button
               onClick={() => router.back()}
-              className="text-gray-400 hover:text-[#79d3d3] transition"
+              className="text-light-text-secondary dark:text-dark-text-secondary hover:text-light-accent-blue dark:hover:text-dark-accent-blue transition"
             >
               <ArrowLeft size={24} />
             </button>
-            <h1 className="text-3xl font-bold text-white">{t('sites.new.title')}</h1>
+            <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">{t('sites.new.title')}</h1>
           </motion.div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -109,7 +111,7 @@ export default function NewSitePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + idx * 0.1 }}
               >
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-light-text-secondary dark:text-dark-text-secondary mb-1">
                   {label}
                 </label>
                 <input
@@ -119,7 +121,7 @@ export default function NewSitePage() {
                   value={(site as any)[name]}
                   onChange={handleChange}
                   required
-                  className="w-full bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                  className="w-full bg-light-card dark:bg-dark-card/40 backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl px-3 py-2 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-light-accent-purple dark:focus:ring-dark-accent-purple"
                 />
               </motion.div>
             ))}
@@ -129,21 +131,21 @@ export default function NewSitePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <label className="block text-sm text-gray-400 mb-1">{t('sites.new.notes')}</label>
+              <label className="block text-sm text-light-text-secondary dark:text-dark-text-secondary mb-1">{t('sites.new.notes')}</label>
               <textarea
                 name="observations"
                 placeholder={t('sites.new.placeholders.notes')}
                 value={site.observations}
                 onChange={handleChange}
                 rows={4}
-                className="w-full bg-[#1E0359]/40 backdrop-blur-md border border-[#8C0368]/30 rounded-xl px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8C0368]"
+                className="w-full bg-light-card dark:bg-dark-card/40 backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl px-3 py-2 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-light-accent-purple dark:focus:ring-dark-accent-purple"
               />
             </motion.div>
 
             <motion.button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#8C0368] hover:bg-[#A429A6] text-white rounded-xl px-4 py-2 font-semibold transition disabled:opacity-50"
+              className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-purple-hover dark:hover:bg-dark-purple-hover text-light-background dark:text-dark-background rounded-xl px-4 py-2 font-semibold transition disabled:opacity-50"
               initial={{ scale: 1 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
