@@ -92,6 +92,7 @@ export const pt = {
             email: 'E-mail',
             newPassword: 'Nova Senha',
         },
+        placeholderPassword: 'Digite sua nova senha',
         placeholders: {
             password: 'Deixe em branco para manter a atual',
         },
@@ -214,4 +215,130 @@ export const pt = {
             page: 'Página {page} de {totalPages}',
         },
     },
+    loading: {
+        title: 'Carregando {page}...',
+        description: 'Por favor, aguarde enquanto preparamos a página.',
+    },
+    sites: {
+        title: 'Seus Sites',
+        newSite: '+ Novo Site',
+        noSites: 'Você ainda não tem nenhum site registrado.',
+        actions: {
+            access: 'Acessar',
+            edit: 'Editar',
+            delete: 'Excluir'
+        },
+        errors: {
+            deleteFailed: 'Erro ao excluir o site'
+        },
+        new: {
+            title: 'Novo Site',
+            siteName: 'Nome do Site',
+            domain: 'Domínio',
+            language: 'Idioma',
+            legislation: 'Legislação',
+            notes: 'Observações',
+            placeholders: {
+                siteName: 'ex: Meu Website',
+                domain: 'ex: meu-site.com',
+                language: 'ex: pt-BR, en-US',
+                legislation: 'ex: LGPD, GDPR',
+                notes: 'ex: Meu site é sobre...'
+            },
+            buttons: {
+                create: 'Criar Site',
+                saving: 'Salvando...'
+            }
+        },
+        view: {
+            title: 'Documentos Gerados',
+            columns: {
+                title: 'Título',
+                type: 'Tipo',
+                lastUpdated: 'Última Atualização',
+                actions: 'Ações'
+            },
+            actions: {
+                edit: 'Editar',
+                view: 'Visualizar',
+                delete: 'Excluir',
+                newDocument: 'Novo Documento'
+            }
+        },
+        edit: {
+            title: 'Editar Site',
+            success: 'Site atualizado com sucesso!',
+            buttons: {
+                save: 'Salvar Alterações',
+                saving: 'Salvando...'
+            }
+        }
+    },
+    payment: {
+        confirmation: {
+            approved: {
+                title: 'Pagamento Confirmado',
+                message: 'Sua assinatura está ativa! Estamos felizes em tê-lo conosco!'
+            },
+            pending: {
+                title: 'Pagamento Pendente',
+                message: 'Estamos aguardando a confirmação do pagamento. Por favor, verifique novamente mais tarde.'
+            },
+            rejected: {
+                title: 'Pagamento Rejeitado',
+                message: 'Seu pagamento foi rejeitado. Por favor, verifique seus dados e tente novamente.'
+            },
+            failure: {
+                title: 'Pagamento Falhou',
+                message: 'Seu pagamento não pôde ser processado. Por favor, tente novamente ou entre em contato com o suporte.'
+            },
+            cancelled: {
+                title: 'Pagamento Cancelado',
+                message: 'Seu pagamento foi cancelado. Se não foi você, entre em contato com o suporte.'
+            },
+            processing: {
+                title: 'Processando...',
+                message: 'Estamos processando seu pagamento. Isso pode levar alguns minutos.'
+            },
+            backToDashboard: 'Voltar ao Painel'
+        }
+    },
+    pricingPage: {
+        title: 'Escolha Seu Plano',
+        description: 'Encontre o plano perfeito para as necessidades do seu negócio e comece a gerar documentos legais em segundos.',
+        plans: {
+            free: {
+                title: 'Gratuito',
+                price: '$0 / mês',
+                features: [
+                    '1 documento',
+                    '1 site',
+                    'IA Básica'
+                ],
+                button: 'Continuar gratuitamente'
+            },
+            annual: {
+                title: 'Anual',
+                price: '$40 / ano',
+                badge: 'Melhor Valor',
+                features: [
+                    'Documentos ilimitados',
+                    'Até 10 sites',
+                    'IA Premium',
+                    'Atualizações prioritárias'
+                ],
+                button: 'Obter Plano Anual'
+            },
+            monthly: {
+                title: 'Mensal',
+                price: '$5 / mês',
+                features: [
+                    'Documentos ilimitados',
+                    'Até 10 sites',
+                    'IA Avançada'
+                ],
+                button: 'Obter Plano Mensal'
+            }
+        }
+    }
 } as const;

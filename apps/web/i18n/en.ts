@@ -89,6 +89,7 @@ export const en = {
             email: 'Email',
             newPassword: 'New Password',
         },
+        placeholderPassword: 'Enter new password',
         placeholders: {
             password: 'Leave blank to keep current',
         },
@@ -198,4 +199,130 @@ export const en = {
         createdOn: 'Created on',
         status: 'Status',
     },
+    loading: {
+        title: 'Loading {page}...',
+        description: 'Please wait while we are preparing the page.',
+    },
+    sites: {
+        title: 'Your Sites',
+        newSite: '+ New Site',
+        noSites: 'You don\'t have any sites registered yet.',
+        actions: {
+            access: 'Access',
+            edit: 'Edit',
+            delete: 'Delete'
+        },
+        errors: {
+            deleteFailed: 'Error deleting site'
+        },
+        new: {
+            title: 'New Site',
+            siteName: 'Site Name',
+            domain: 'Domain',
+            language: 'Language',
+            legislation: 'Legislation',
+            notes: 'Notes',
+            placeholders: {
+                siteName: 'e.g. My Website',
+                domain: 'e.g. my-site.com',
+                language: 'e.g. en-US, pt-BR',
+                legislation: 'e.g. GDPR, LGPD',
+                notes: 'e.g. My site is about...'
+            },
+            buttons: {
+                create: 'Create Site',
+                saving: 'Saving...'
+            }
+        },
+        view: {
+            title: 'Generated Documents',
+            columns: {
+                title: 'Title',
+                type: 'Type',
+                lastUpdated: 'Last Updated',
+                actions: 'Actions'
+            },
+            actions: {
+                edit: 'Edit',
+                view: 'View',
+                delete: 'Delete',
+                newDocument: 'New Document'
+            }
+        },
+        edit: {
+            title: 'Edit Site',
+            success: 'Site updated successfully!',
+            buttons: {
+                save: 'Save Changes',
+                saving: 'Saving...'
+            }
+        }
+    },
+    payment: {
+        confirmation: {
+            approved: {
+                title: 'Payment Confirmed',
+                message: 'Your subscription is active! We\'re glad to have you with us!'
+            },
+            pending: {
+                title: 'Payment Pending',
+                message: 'We\'re waiting for payment confirmation. Please check again later.'
+            },
+            rejected: {
+                title: 'Payment Rejected',
+                message: 'Your payment was rejected. Please verify your details and try again.'
+            },
+            failure: {
+                title: 'Payment Failed',
+                message: 'Your payment could not be processed. Please try again or contact support.'
+            },
+            cancelled: {
+                title: 'Payment Cancelled',
+                message: 'Your payment was cancelled. If this was not you, contact support.'
+            },
+            processing: {
+                title: 'Processing...',
+                message: 'We\'re processing your payment. This may take a few minutes.'
+            },
+            backToDashboard: 'Back to Dashboard'
+        }
+    },
+    pricingPage: {
+        title: 'Choose Your Plan',
+        description: 'Find the perfect plan for your business needs and start generating legal documents in seconds.',
+        plans: {
+            free: {
+                title: 'Free',
+                price: '$0 / month',
+                features: [
+                    '1 document',
+                    '1 website',
+                    'Basic AI'
+                ],
+                button: 'Continue for free'
+            },
+            annual: {
+                title: 'Annual',
+                price: '$40 / year',
+                badge: 'Best Value',
+                features: [
+                    'Unlimited documents',
+                    'Up to 10 websites',
+                    'Premium AI',
+                    'Priority updates'
+                ],
+                button: 'Get Annual Plan'
+            },
+            monthly: {
+                title: 'Monthly',
+                price: '$5 / month',
+                features: [
+                    'Unlimited documents',
+                    'Up to 10 websites',
+                    'Advanced AI'
+                ],
+                button: 'Get Monthly Plan'
+            }
+        }
+    }
 } as const;

@@ -260,7 +260,7 @@ export default function RegisterPage() {
           >
             {loading ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" /> {t("profile.registering")}
+                <Loader2 className="w-5 h-5 animate-spin" /> {t("profile.login.registering")}
               </>
             ) : (
               <p>{t('register.button')}</p>

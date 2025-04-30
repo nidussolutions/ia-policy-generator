@@ -6,8 +6,9 @@ import Link from 'next/link';
 import Layout from '@/components/Layout';
 import {motion} from 'framer-motion';
 import {useTheme} from '@/components/ThemeContext';
-import { sendGTMEvent } from '@next/third-parties/google'
+import {sendGTMEvent} from '@next/third-parties/google'
 import React, {useEffect} from 'react';
+import {useI18n} from '@/contexts/I18nContext';
 
 
 const StatusMessage = ({
@@ -22,6 +23,7 @@ const StatusMessage = ({
     message: string;
 }) => {
     const {theme} = useTheme();
+    const {t} = useI18n();
 
     return (
         <motion.div
@@ -42,10 +44,11 @@ const StatusMessage = ({
 export default function PaymentConfirmationPage() {
     const {status} = useParams() as { status: string };
     const {theme} = useTheme();
+    const {t} = useI18n();
 
     useEffect(() => {
-      sendGTMEvent({ event: 'conversion', value: 1.0 })
-    },[]);
+        sendGTMEvent({event: 'conversion', value: 1.0})
+    }, []);
 
     const renderStatus = () => {
         switch (status) {
@@ -54,8 +57,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={CheckCircle}
                         color="text-green-500 dark:text-green-400"
-                        title="Payment Confirmed"
-                        message="Your subscription is active! We're glad to have you with us!"
+                        title={t('payment.confirmation.approved.title')}
+                        message={t('payment.confirmation.approved.message')}
                     />
                 );
             case 'pending':
@@ -63,8 +66,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={Hourglass}
                         color="text-yellow-500 dark:text-yellow-400"
-                        title="Payment Pending"
-                        message="We're waiting for payment confirmation. Please check again later."
+                        title={t('payment.confirmation.pending.title')}
+                        message={t('payment.confirmation.pending.message')}
                     />
                 );
             case 'rejected':
@@ -72,8 +75,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={XCircle}
                         color="text-red-500 dark:text-red-400"
-                        title="Payment Rejected"
-                        message="Your payment was rejected. Please verify your details and try again."
+                        title={t('payment.confirmation.rejected.title')}
+                        message={t('payment.confirmation.rejected.message')}
                     />
                 );
             case 'failure':
@@ -81,8 +84,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={XCircle}
                         color="text-red-500 dark:text-red-400"
-                        title="Payment Failed"
-                        message="Your payment could not be processed. Please try again or contact support."
+                        title={t('payment.confirmation.failure.title')}
+                        message={t('payment.confirmation.failure.message')}
                     />
                 );
             case 'cancelled':
@@ -90,8 +93,8 @@ export default function PaymentConfirmationPage() {
                     <StatusMessage
                         icon={XCircle}
                         color="text-red-500 dark:text-red-400"
-                        title="Payment Cancelled"
-                        message="Your payment was cancelled. If this was not you, contact support."
+                        title={t('payment.confirmation.cancelled.title')}
+                        message={t('payment.confirmation.cancelled.message')}
                     />
                 );
             default:
@@ -102,8 +105,8 @@ export default function PaymentConfirmationPage() {
                         transition={{duration: 0.4}}
                         className={`text-center ${theme === 'light' ? 'text-light-text-secondary' : 'text-dark-text-secondary'}`}
                     >
-                        <h2 className="text-2xl font-semibold mb-2">Processing...</h2>
-                        <p>We’re processing your payment. This may take a few minutes.</p>
+                        <h2 className="text-2xl font-semibold mb-2">{t('payment.confirmation.processing.title')}</h2>
+                        <p>{t('payment.confirmation.processing.message')}</p>
                     </motion.div>
                 );
         }
@@ -117,10 +120,10 @@ export default function PaymentConfirmationPage() {
                     animate={{opacity: 1, scale: 1}}
                     transition={{duration: 0.5}}
                     className={`
-                        ${theme === 'light' 
-                            ? 'bg-light-card border-light-border text-light-text-primary' 
-                            : 'bg-dark-purple-light/40 border-dark-purple/30 text-dark-text-primary'
-                        }
+                        ${theme === 'light'
+                        ? 'bg-light-card border-light-border text-light-text-primary'
+                        : 'bg-dark-purple-light/40 border-dark-purple/30 text-dark-text-primary'
+                    }
                         backdrop-blur-md border rounded-2xl shadow-lg p-8 max-w-lg w-full
                     `}
                 >
@@ -137,12 +140,12 @@ export default function PaymentConfirmationPage() {
                             className={`
                                 inline-block font-semibold py-2 px-4 rounded-xl transition duration-200
                                 ${theme === 'light'
-                                    ? 'bg-light-accent-purple hover:bg-light-purple-hover text-light-background'
-                                    : 'bg-dark-purple hover:bg-dark-purple-hover text-dark-text-primary'
-                                }
+                                ? 'bg-light-accent-purple hover:bg-light-purple-hover text-light-background'
+                                : 'bg-dark-purple hover:bg-dark-purple-hover text-dark-text-primary'
+                            }
                             `}
                         >
-                            Back to Dashboard
+                            {t('payment.confirmation.backToDashboard')}
                         </Link>
                     </motion.div>
                 </motion.div>

@@ -10,8 +10,10 @@ import Error from '@/components/Error';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SiteType } from '@/types/SitesType';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function EditSitePage() {
+  const { t } = useI18n();
   const { siteId } = useParams() as { siteId: string };
   const router = useRouter();
   const token =
@@ -57,7 +59,7 @@ export default function EditSitePage() {
         setError(err.error || 'Failed to update');
       } else {
         await mutate();
-        setSuccess('Site updated successfully!');
+        setSuccess(t('sites.edit.success'));
       }
     } catch (err) {
       console.error(err);
@@ -92,7 +94,7 @@ export default function EditSitePage() {
             >
               <ArrowLeft size={24} />
             </button>
-            <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">Edit Site</h1>
+            <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">{t('sites.edit.title')}</h1>
           </motion.div>
 
           {error && (
@@ -116,10 +118,10 @@ export default function EditSitePage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {[
-              { label: 'Site Name', key: 'name' },
-              { label: 'Domain', key: 'domain' },
-              { label: 'Language', key: 'language' },
-              { label: 'Legislation', key: 'legislation' },
+              { label: t('sites.new.siteName'), key: 'name' },
+              { label: t('sites.new.domain'), key: 'domain' },
+              { label: t('sites.new.language'), key: 'language' },
+              { label: t('sites.new.legislation'), key: 'legislation' },
             ].map(({ label, key }, idx) => (
               <motion.div
                 key={key}
@@ -147,7 +149,7 @@ export default function EditSitePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <label className="block text-sm text-light-text-secondary dark:text-dark-text-secondary mb-1">Notes</label>
+              <label className="block text-sm text-light-text-secondary dark:text-dark-text-secondary mb-1">{t('sites.new.notes')}</label>
               <textarea
                 rows={4}
                 value={site.observations || ''}
@@ -157,7 +159,7 @@ export default function EditSitePage() {
                     observations: e.target.value,
                   })
                 }
-                placeholder="e.g. My site is about..."
+                placeholder={t('sites.new.placeholders.notes')}
                 className="w-full bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl px-3 py-2 text-light-text-primary dark:text-dark-text-primary placeholder-light-text-secondary dark:placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-light-accent-purple dark:focus:ring-dark-accent-purple"
               />
             </motion.div>
@@ -170,7 +172,7 @@ export default function EditSitePage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? t('sites.edit.buttons.saving') : t('sites.edit.buttons.save')}
             </motion.button>
           </form>
         </motion.div>

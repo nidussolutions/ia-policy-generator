@@ -14,8 +14,10 @@ import { notifyError } from '@/hooks/useToast';
 import ConfirmModal from '@/components/ConfirmModal';
 import { motion } from 'framer-motion';
 import { fetcher } from '@/lib/api';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function DocumentPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const { siteId } = useParams() as { siteId: string };
   const [deletingDocId, setDeletingDocId] = useState<string | null>(null);
@@ -83,10 +85,10 @@ export default function DocumentPage() {
           >
             <ArrowLeft size={24} />
           </button>
-          <h1 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">Generated Documents</h1>
+          <h1 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">{t('sites.view.title')}</h1>
           <div className="ml-auto">
             <ActionButton
-              text="New Document"
+              text={t('sites.view.actions.newDocument')}
               onClick={() => router.push(`/sites/docs/${siteId}/new`)}
             />
           </div>
@@ -100,10 +102,10 @@ export default function DocumentPage() {
           <table className="w-full text-sm text-left text-light-text-secondary dark:text-dark-text-secondary">
             <thead className="bg-light-accent-purple/20 dark:bg-dark-accent-purple/20 text-light-text-primary dark:text-dark-text-primary uppercase text-xs">
               <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Last Updated</th>
-                <th className="px-4 py-3 text-center">Actions</th>
+                <th className="px-4 py-3">{t('sites.view.columns.title')}</th>
+                <th className="px-4 py-3">{t('sites.view.columns.type')}</th>
+                <th className="px-4 py-3">{t('sites.view.columns.lastUpdated')}</th>
+                <th className="px-4 py-3 text-center">{t('sites.view.columns.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -125,19 +127,19 @@ export default function DocumentPage() {
                         href={`docs/edit/${doc.id}`}
                         className="text-light-accent-blue dark:text-dark-accent-blue hover:underline"
                       >
-                        Edit
+                        {t('sites.view.actions.edit')}
                       </Link>
                       <Link
                         href={`/public/${doc.publicId}`}
                         className="text-light-accent-purple dark:text-dark-accent-purple hover:underline"
                       >
-                        View
+                        {t('sites.view.actions.view')}
                       </Link>
                       <button
                         onClick={() => handleDelete(doc.id!)}
                         className="text-red-600 hover:text-red-700 hover:underline transition duration-200"
                       >
-                        Delete
+                        {t('sites.view.actions.delete')}
                       </button>
                     </div>
                   </td>

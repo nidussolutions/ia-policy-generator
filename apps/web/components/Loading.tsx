@@ -1,10 +1,12 @@
 import Header from './Header';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface LoadingProps {
   page: string;
 }
 
 export default function Loading({ page }: LoadingProps) {
+  const { t } = useI18n();
 
   return (
       <div className="flex flex-col bg-light-background dark:bg-dark-background min-h-screen">
@@ -15,10 +17,10 @@ export default function Loading({ page }: LoadingProps) {
               <div className="w-12 h-12 border-4 border-t-4 border-light-accent-purple dark:border-dark-accent-purple border-solid rounded-full animate-spin"></div>
             </div>
             <p className="text-xl text-light-text-primary dark:text-dark-text-primary font-semibold mb-4">
-              Loading {page}...
+              {t('loading.title').replace('{page}', page)}
             </p>
             <p className="mt-2 text-sm text-light-text-secondary dark:text-dark-text-secondary">
-              Please wait while we are preparing the page.
+              {t('loading.description')}
             </p>
           </div>
         </div>
