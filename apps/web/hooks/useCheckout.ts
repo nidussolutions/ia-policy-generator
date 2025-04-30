@@ -46,15 +46,23 @@ export function useCheckout() {
       setError('Erro ao buscar planos');
       console.error('Erro ao buscar planos:', error);
     }
-  }, []); // Empty dependency array means this runs once on component mount
+  }, []);
 
   // Function to initiate checkout
   const startCheckout = async (plan: string) => {
     setLoading(true);
     setError(null); // Reset error
 
+    console.log(plan)
+
     try {
       const token = localStorage.getItem('token');
+
+      if(!token) {
+        console.log('token')
+        setError('Token não encontrado');
+        return;
+      }
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/plans/create-checkout-session`,
@@ -114,7 +122,7 @@ export function useCheckout() {
       const data: CheckoutResponse = await response.json();
 
       if (data.url) {
-        window.location.href = data.url; // Redirect to the customer portal URL
+        window.location.href = data.url;
       } else {
         setError('Error accessing the customer portal');
       }

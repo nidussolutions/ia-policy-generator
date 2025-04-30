@@ -92,6 +92,7 @@ export const pt = {
             email: 'E-mail',
             newPassword: 'Nova Senha',
         },
+        placeholderPassword: 'Digite sua nova senha',
         placeholders: {
             password: 'Deixe em branco para manter a atual',
         },

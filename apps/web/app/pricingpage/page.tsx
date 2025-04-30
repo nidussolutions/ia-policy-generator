@@ -4,7 +4,6 @@ import {motion} from 'framer-motion';
 import Layout from '@/components/Layout';
 import {useRouter} from 'next/navigation';
 import {useCheckout} from '@/hooks/useCheckout';
-import {useTheme} from '@/components/ThemeContext';
 import {useI18n} from '@/contexts/I18nContext';
 
 const containerVariants = {
@@ -24,7 +23,7 @@ const itemVariants = {
 export default function PricingPage() {
     const router = useRouter();
     const {startCheckout} = useCheckout();
-    const {theme} = useTheme();
+    const {t} = useI18n();
 
     const handleSubscription = async (plan: string) => {
         if (plan == 'free') return router.push('/dashboard');
@@ -49,14 +48,13 @@ export default function PricingPage() {
                         className="text-4xl md:text-6xl font-extrabold mb-6 text-center text-light-text-primary dark:text-dark-text-primary"
                         variants={itemVariants}
                     >
-                        Choose Your Plan
+                        {t('pricingPage.title')}
                     </motion.h1>
                     <motion.p
                         className="max-w-xl text-light-text-secondary dark:text-dark-text-secondary text-center mb-12"
                         variants={itemVariants}
                     >
-                        Find the perfect plan for your business needs and start generating
-                        legal documents in seconds.
+                        {t('pricingPage.description')}
                     </motion.p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -65,21 +63,21 @@ export default function PricingPage() {
                             className="p-8 bg-light-card dark:bg-dark-card rounded-2xl text-center backdrop-blur-md border border-light-border dark:border-dark-border"
                             variants={itemVariants}
                         >
-                            <h3 className="text-2xl font-semibold mb-2 text-light-text-primary dark:text-dark-text-primary">Free</h3>
+                            <h3 className="text-2xl font-semibold mb-2 text-light-text-primary dark:text-dark-text-primary">{t('pricingPage.plans.free.title')}</h3>
                             <p className="text-lg font-bold mb-4 text-light-accent-purple dark:text-dark-accent-purple">
-                                $0 / month
+                                {t('pricingPage.plans.free.price')}
                             </p>
                             <ul className="space-y-2 text-light-text-secondary dark:text-dark-text-secondary mb-6">
-                                <li>1 document</li>
-                                <li>1 website</li>
-                                <li>Basic AI</li>
+                                <li>{t('pricingPage.plans.free.features.0')}</li>
+                                <li>{t('pricingPage.plans.free.features.1')}</li>
+                                <li>{t('pricingPage.plans.free.features.2')}</li>
                             </ul>
                             <motion.button
                                 whileHover={{scale: 1.05}}
                                 onClick={() => handleSubscription('free')}
                                 className="w-full py-3 bg-light-accent-purple dark:bg-dark-accent-purple text-white rounded-full font-medium transition-transform"
                             >
-                                Continue for free
+                                {t('pricingPage.plans.free.button')}
                             </motion.button>
                         </motion.div>
 
@@ -90,24 +88,24 @@ export default function PricingPage() {
                         >
                             <div
                                 className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-light-accent-purple dark:bg-dark-accent-purple text-white text-xs font-bold py-1 px-4 rounded-full">
-                                Best Value
+                                {t('pricingPage.plans.annual.badge')}
                             </div>
-                            <h3 className="text-3xl font-semibold mb-2 text-light-text-primary dark:text-dark-text-primary">Annual</h3>
+                            <h3 className="text-3xl font-semibold mb-2 text-light-text-primary dark:text-dark-text-primary">{t('pricingPage.plans.annual.title')}</h3>
                             <p className="text-lg font-bold mb-4 text-light-accent-purple dark:text-dark-accent-purple">
-                                $40 / year
+                                {t('pricingPage.plans.annual.price')}
                             </p>
                             <ul className="space-y-2 text-light-text-secondary dark:text-dark-text-secondary mb-6">
-                                <li>Unlimited documents</li>
-                                <li>Up to 10 websites</li>
-                                <li>Premium AI</li>
-                                <li>Priority updates</li>
+                                <li>{t('pricingPage.plans.annual.features.0')}</li>
+                                <li>{t('pricingPage.plans.annual.features.1')}</li>
+                                <li>{t('pricingPage.plans.annual.features.2')}</li>
+                                <li>{t('pricingPage.plans.annual.features.3')}</li>
                             </ul>
                             <motion.button
                                 whileHover={{scale: 1.05}}
                                 onClick={() => handleSubscription('annual')}
                                 className="w-full py-3 bg-light-accent-purple dark:bg-dark-accent-purple text-white rounded-full font-medium transition-transform"
                             >
-                                Get Annual Plan
+                                {t('pricingPage.plans.annual.button')}
                             </motion.button>
                         </motion.div>
 
@@ -116,22 +114,22 @@ export default function PricingPage() {
                             variants={itemVariants}
                         >
                             <h3 className="text-2xl font-semibold mb-2 text-light-text-primary dark:text-dark-text-primary">
-                                Monthly
+                                {t('pricingPage.plans.monthly.title')}
                             </h3>
                             <p className="text-lg font-bold mb-4 text-light-accent-blue dark:text-dark-accent-blue">
-                                $5 / month
+                                {t('pricingPage.plans.monthly.price')}
                             </p>
                             <ul className="space-y-2 text-light-text-secondary dark:text-dark-text-secondary mb-6">
-                                <li>Unlimited documents</li>
-                                <li>Up to 10 websites</li>
-                                <li>Advanced AI</li>
+                                <li>{t('pricingPage.plans.monthly.features.0')}</li>
+                                <li>{t('pricingPage.plans.monthly.features.1')}</li>
+                                <li>{t('pricingPage.plans.monthly.features.2')}</li>
                             </ul>
                             <motion.button
                                 whileHover={{scale: 1.05}}
                                 onClick={() => handleSubscription('monthly')}
                                 className="w-full py-3 bg-light-accent-blue dark:bg-dark-accent-blue text-white rounded-full font-medium transition-transform"
                             >
-                                Get Monthly Plan
+                                {t('pricingPage.plans.monthly.button')}
                             </motion.button>
                         </motion.div>
                     </div>

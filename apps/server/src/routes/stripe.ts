@@ -29,6 +29,8 @@ router.post('/create-checkout-session', authMiddleware, async (req: AuthRequest,
             }
         });
 
+        console.log(plan);
+
         if (!plan) {
             res.status(400).json({message: 'Plano não encontrado'});
             return;

@@ -89,6 +89,7 @@ export const en = {
             email: 'Email',
             newPassword: 'New Password',
         },
+        placeholderPassword: 'Enter new password',
         placeholders: {
             password: 'Leave blank to keep current',
         },

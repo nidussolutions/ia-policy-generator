@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Layout from '@/components/Layout';
 import {motion} from 'framer-motion';
 import {useTheme} from '@/components/ThemeContext';
-import { sendGTMEvent } from '@next/third-parties/google'
+import {sendGTMEvent} from '@next/third-parties/google'
 import React, {useEffect} from 'react';
 import {useI18n} from '@/contexts/I18nContext';
 
@@ -47,8 +47,8 @@ export default function PaymentConfirmationPage() {
     const {t} = useI18n();
 
     useEffect(() => {
-      sendGTMEvent({ event: 'conversion', value: 1.0 })
-    },[]);
+        sendGTMEvent({event: 'conversion', value: 1.0})
+    }, []);
 
     const renderStatus = () => {
         switch (status) {
@@ -106,7 +106,7 @@ export default function PaymentConfirmationPage() {
                         className={`text-center ${theme === 'light' ? 'text-light-text-secondary' : 'text-dark-text-secondary'}`}
                     >
                         <h2 className="text-2xl font-semibold mb-2">{t('payment.confirmation.processing.title')}</h2>
-                        <p>We’re processing your payment. This may take a few minutes.</p>
+                        <p>{t('payment.confirmation.processing.message')}</p>
                     </motion.div>
                 );
         }
@@ -120,10 +120,10 @@ export default function PaymentConfirmationPage() {
                     animate={{opacity: 1, scale: 1}}
                     transition={{duration: 0.5}}
                     className={`
-                        ${theme === 'light' 
-                            ? 'bg-light-card border-light-border text-light-text-primary' 
-                            : 'bg-dark-purple-light/40 border-dark-purple/30 text-dark-text-primary'
-                        }
+                        ${theme === 'light'
+                        ? 'bg-light-card border-light-border text-light-text-primary'
+                        : 'bg-dark-purple-light/40 border-dark-purple/30 text-dark-text-primary'
+                    }
                         backdrop-blur-md border rounded-2xl shadow-lg p-8 max-w-lg w-full
                     `}
                 >
@@ -140,9 +140,9 @@ export default function PaymentConfirmationPage() {
                             className={`
                                 inline-block font-semibold py-2 px-4 rounded-xl transition duration-200
                                 ${theme === 'light'
-                                    ? 'bg-light-accent-purple hover:bg-light-purple-hover text-light-background'
-                                    : 'bg-dark-purple hover:bg-dark-purple-hover text-dark-text-primary'
-                                }
+                                ? 'bg-light-accent-purple hover:bg-light-purple-hover text-light-background'
+                                : 'bg-dark-purple hover:bg-dark-purple-hover text-dark-text-primary'
+                            }
                             `}
                         >
                             {t('payment.confirmation.backToDashboard')}

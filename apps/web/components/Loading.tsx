@@ -1,5 +1,5 @@
 import Header from './Header';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface LoadingProps {
   page: string;
