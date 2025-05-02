@@ -7,17 +7,23 @@ import {MailerSend, EmailParams, Sender, Recipient} from "mailersend";
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/forgot-password', async (req , res): Promise<any> => {
-    const { email } = req.body;
+router.post('/forgot-password', async (req, res): Promise<any> => {
+    const {email} = req.body;
 
-    if (!email) {
-        return res.status(400).json({ message: 'Email is required' });
+    console.log('Attempting to send email to:', email);
+
+    if (!email || !email.includes('@')) {
+        return res.status(400).json({message: 'Invalid email format'});
     }
 
     const mailerSend = new MailerSend({
         apiKey: process.env.API_KEY as string,
     });
-    const sentFrom = new Sender(process.env.EMAIL_USER as string, "Legal Forge");
+
+    const sentFrom = new Sender(
+        "no-reply@thelegalforge.com",
+        "Legal Forge"
+    );
 
     const recipients = [
         new Recipient(email, email.split('@')[0]),
@@ -43,7 +49,6 @@ router.post('/forgot-password', async (req , res): Promise<any> => {
         const emailParams = new EmailParams()
             .setFrom(sentFrom)
             .setTo(recipients)
-            .setReplyTo(sentFrom)
             .setSubject("Reset your password")
             .setHtml(`
                   <!DOCTYPE html>
@@ -102,9 +107,19 @@ router.post('/forgot-password', async (req , res): Promise<any> => {
             `)
         await mailerSend.email.send(emailParams);
         res.status(200).json({message: 'Password reset link sent'});
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({message: 'Server error', error});
+        console.log('Email sent successfully');
+    } catch (error: any) {
+        console.error('Error details:', error);
+        if (error.name === 'MailerSendError') {
+            return res.status(400).json({
+                message: 'Failed to send email',
+                details: error.message
+            });
+        }
+        res.status(500).json({
+            message: 'An unexpected error occurred',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 
