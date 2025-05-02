@@ -32,18 +32,5 @@ export const en = {
     common: {
         loading: "Loading...",
         Resetting: "Resetting...",
-    },
-    resetPassword: {
-        title: "Reset Password",
-        email: "Email address",
-        password: "New Password",
-        sendResetLink: "Send Reset Link",
-        resetLinkSent: "Reset link sent to your email address",
-        success: "Password reset successfully",
-        error: "An error occurred while sending the reset link",
-        newPassword: "Enter your new password below",
-        newPasswordConfirm: "Confirm your new password",
-        youCan: "you can",
-        withNew: "with your new password",
     }
 }

@@ -106,6 +106,7 @@ export const pt = {
             hide: 'Ocultar',
             saveChanges: 'Salvar Alterações',
         },
+
         errors: {
             passwordRequirements: 'A senha deve ter pelo menos 6 caracteres e incluir um caractere especial.',
             updateFailed: 'Erro ao atualizar o perfil. Por favor, tente novamente.',
@@ -128,6 +129,10 @@ export const pt = {
                 title: 'Pro',
                 description: 'Para empresas que precisam de mais recursos.',
                 cta: 'Assinar Agora',
+            },
+            status: {
+                active: 'Ativo',
+                inactive: 'Inativo',
             },
             update: {
                 title: 'Atualizar Assinatura',
@@ -651,5 +656,22 @@ export const pt = {
             },
             compliance: 'Documento elaborado em conformidade com as legislações vigentes, em especial a LGPD.'
         }
+    },
+    common: {
+        loading: "Carregando...",
+        Resetting: "Resetando...",
+    },
+    resetPassword: {
+        title: "Redefinir Senha",
+        email: "Endereço de email",
+        password: "Nova Senha",
+        sendResetLink: "Enviar Link de Redefinição",
+        resetLinkSent: "Link de redefinição enviado para seu endereço de email",
+        success: "Senha redefinida com sucesso",
+        error: "Ocorreu um erro ao enviar o link de redefinição",
+        newPassword: "Digite sua nova senha abaixo",
+        newPasswordConfirm: "Confirme sua nova senha",
+        youCan: "você pode",
+        withNew: "com sua nova senha",
     }
 } as const;

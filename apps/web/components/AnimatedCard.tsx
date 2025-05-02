@@ -1,32 +1,52 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {motion} from "framer-motion";
+import {Loader2} from "lucide-react";
 
 interface CheckoutResponse {
     sessionId: string;
     url: string;
 }
 
-export default function AnimatedCard({title, value}: { title: string; value: string | number; plan?: string }) {
+interface AnimatedCardProps {
+    title: string;
+    value: string | number;
+    icon?: React.ReactNode;
+    variant?: "purple" | "blue" | "green" | "gold";
+}
+
+const variantStyles = {
+    purple: "from-light-accent-purple to-light-purple dark:from-dark-purple dark:to-dark-purple-hover",
+    blue: "from-light-accent-blue to-light-purple dark:from-dark-accent-blue dark:to-dark-purple-hover",
+    green: "from-light-accent-green to-light-purple dark:from-dark-accent-green dark:to-dark-purple-hover",
+    gold: "from-yellow-400 to-yellow-600 dark:from-yellow-500 dark:to-yellow-700",
+};
+
+export default function AnimatedCard({
+                                         title,
+                                         value,
+                                         icon,
+                                         variant = "purple",
+                                     }: AnimatedCardProps) {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const startCheckout = async () => {
         try {
-            setLoading(true)
-            const token = localStorage.getItem('token');
-            console.log(process.env.NEXT_PUBLIC_API_URL);
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/create-checkout-session`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            setLoading(true);
+            const token = localStorage.getItem("token");
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/plans/create-checkout-session`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             if (!response.ok) {
-                setError('Erro ao iniciar checkout');
-                console.log(response);
+                setError("Erro ao iniciar checkout");
                 return;
             }
 
@@ -35,12 +55,10 @@ export default function AnimatedCard({title, value}: { title: string; value: str
             if (data?.url) {
                 window.location.href = data.url;
             } else {
-                setError('Erro ao iniciar checkout');
+                setError("Erro ao iniciar checkout");
             }
-
         } catch (err: any) {
-            setError(err.message || 'Erro desconhecido');
-            console.error('Erro ao iniciar checkout:', err);
+            setError(err.message || "Erro desconhecido");
         } finally {
             setLoading(false);
         }
@@ -52,7 +70,7 @@ export default function AnimatedCard({title, value}: { title: string; value: str
                 initial={{opacity: 0, y: 8}}
                 animate={{opacity: 1, y: 0}}
                 transition={{duration: 0.4}}
-                className="p-4 bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl text-center shadow-lg transition-all duration-300 ease-in-out flex flex-col h-full justify-center"
+                className="p-4 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl text-center shadow-lg flex flex-col h-full justify-center"
             >
                 <p className="text-sm text-red-500">{error}</p>
             </motion.div>
@@ -64,22 +82,31 @@ export default function AnimatedCard({title, value}: { title: string; value: str
             initial={{opacity: 0, y: 8}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className="p-4 bg-light-card dark:bg-dark-card backdrop-blur-md border border-light-border dark:border-dark-border rounded-xl text-center shadow-lg transition-all duration-300 ease-in-out flex flex-col h-full justify-center"
+            className={`p-6 rounded-2xl shadow-lg flex flex-col items-center justify-center h-full bg-gradient-to-br ${variantStyles[variant]} transition-all duration-300 ease-in-out`}
         >
+            {icon && (
+                <div className="mb-2 flex items-center justify-center">
+                    {icon}
+                </div>
+            )}
             <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">{title}</p>
-            <p className="text-1xl font-bold text-light-text-primary dark:text-dark-text-primary mt-2">{value}</p>
-            {value === 'Free'
-                && (
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <button
-                            disabled={loading}
-                            className="mt-2 w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary py-2 rounded-lg text-sm font-semibold disabled:bg-light-border dark:disabled:bg-dark-disabled"
-                            onClick={() => startCheckout()}
-                        >
-                            {loading ? 'Loading...' : 'Subscribe'}
-                        </button>
-                    </div>
-                )}
+            <p className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mt-2">{value}</p>
+            {value === "Free" && (
+                <button
+                    disabled={loading}
+                    className="mt-4 w-full flex items-center justify-center gap-2 bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 text-light-accent-purple dark:text-dark-accent-purple font-semibold py-2 rounded-lg text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={startCheckout}
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 className="w-4 h-4 animate-spin"/>
+                            Loading...
+                        </>
+                    ) : (
+                        "Upgrade"
+                    )}
+                </button>
+            )}
         </motion.div>
     );
 }

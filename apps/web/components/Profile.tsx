@@ -1,7 +1,7 @@
 'use client';
 
 import {Loader2, Lock, Mail, User} from 'lucide-react';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {putWithAuth} from '@/lib/api';
 import {motion, AnimatePresence} from 'framer-motion';
 import {useI18n} from '@/contexts/I18nContext';
@@ -21,6 +21,51 @@ type ProfileProps = {
     token: string;
 };
 
+const textVariants = {
+    enter: (direction: number) => ({
+        y: direction > 0 ? 20 : -20,
+        opacity: 0
+    }),
+    center: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+        }
+    },
+    exit: (direction: number) => ({
+        y: direction < 0 ? 20 : -20,
+        opacity: 0
+    })
+};
+
+const formVariants = {
+    hidden: {opacity: 0, scale: 0.95},
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 0.3,
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const inputGroupVariants = {
+    hidden: {opacity: 0, y: 20},
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 200,
+            damping: 20
+        }
+    }
+};
+
 export default function Profile({
                                     name,
                                     email,
@@ -37,7 +82,12 @@ export default function Profile({
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [success, setSuccess] = useState('');
-    const {t} = useI18n();
+    const {t, language} = useI18n();
+    const [textDirection, setTextDirection] = useState(0);
+
+    useEffect(() => {
+        setTextDirection(prev => prev + 1);
+    }, [language]);
 
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,7 +107,9 @@ export default function Profile({
                 {name, email, password: password || undefined},
                 token
             );
-            if (!res.id) throw new Error();
+            if (!res.id) {
+                setError(t('profile.errors.updateFailed'));
+            }
             setSuccess(t('profile.success.updated'));
         } catch (err) {
             console.error('Error updating profile:', err);
@@ -69,45 +121,64 @@ export default function Profile({
         }
     };
 
-    const motionTransition = {initial: {opacity: 0, y: 20}, animate: {opacity: 1, y: 0}, transition: {duration: 0.4}};
-
     return (
-        <motion.div {...motionTransition}
-                    className="bg-light-card dark:bg-dark-card backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-light-border dark:border-dark-border">
+        <motion.div
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+            className="bg-light-card dark:bg-dark-card backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-light-border dark:border-dark-border"
+        >
             <motion.form
                 onSubmit={handleUpdate}
                 className="space-y-6"
-                initial={{opacity: 0, scale: 0.95}}
-                animate={{opacity: 1, scale: 1}}
-                transition={{duration: 0.3}}
+                variants={formVariants}
             >
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                     {error && (
                         <motion.p
+                            key={`error-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
                             className="text-red-500 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-4 py-2 rounded-lg"
-                            initial={{opacity: 0, y: -10}}
-                            animate={{opacity: 1, y: 0}}
-                            exit={{opacity: 0, y: -10}}
                         >
                             {error}
                         </motion.p>
                     )}
                     {success && (
                         <motion.p
+                            key={`success-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
                             className="text-green-600 dark:text-green-300 bg-green-100 dark:bg-green-900/30 px-4 py-2 rounded-lg"
-                            initial={{opacity: 0, y: -10}}
-                            animate={{opacity: 1, y: 0}}
-                            exit={{opacity: 0, y: -10}}
                         >
                             {success}
                         </motion.p>
                     )}
                 </AnimatePresence>
 
-                <motion.div {...motionTransition} transition={{delay: 0.1}}>
-                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">{t('profile.fields.name')}</label>
+                <motion.div variants={inputGroupVariants}>
+                    <AnimatePresence mode="wait">
+                        <motion.label
+                            key={`name-label-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                            className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1"
+                        >
+                            {t('profile.fields.name')}
+                        </motion.label>
+                    </AnimatePresence>
                     <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
+            <span
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <User size={18}/>
             </span>
                         <input
@@ -121,10 +192,23 @@ export default function Profile({
                     </div>
                 </motion.div>
 
-                <motion.div {...motionTransition} transition={{delay: 0.2}}>
-                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">{t('profile.fields.email')}</label>
+                <motion.div variants={inputGroupVariants}>
+                    <AnimatePresence mode="wait">
+                        <motion.label
+                            key={`email-label-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                            className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1"
+                        >
+                            {t('profile.fields.email')}
+                        </motion.label>
+                    </AnimatePresence>
                     <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
+            <span
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <Mail size={18}/>
             </span>
                         <input
@@ -138,10 +222,23 @@ export default function Profile({
                     </div>
                 </motion.div>
 
-                <motion.div {...motionTransition} transition={{delay: 0.3}}>
-                    <label className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1">{t('profile.fields.newPassword')}</label>
+                <motion.div variants={inputGroupVariants}>
+                    <AnimatePresence mode="wait">
+                        <motion.label
+                            key={`password-label-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                            className="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1"
+                        >
+                            {t('profile.fields.newPassword')}
+                        </motion.label>
+                    </AnimatePresence>
                     <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
+            <span
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary">
               <Lock size={18}/>
             </span>
                         <input
@@ -152,25 +249,46 @@ export default function Profile({
                             placeholder={t('profile.placeholders.password')}
                             aria-label={t('profile.fields.newPassword')}
                         />
-                        <button
-                            type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary"
-                            onClick={() => setShowPassword((prev) => !prev)}
-                        >
-                            {showPassword ? t('profile.buttons.hide') : t('profile.buttons.show')}
-                        </button>
+                        <AnimatePresence mode="wait">
+                            <motion.button
+                                key={`toggle-${language}`}
+                                variants={textVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                custom={textDirection}
+                                type="button"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                                {showPassword ? t('profile.buttons.hide') : t('profile.buttons.show')}
+                            </motion.button>
+                        </AnimatePresence>
                     </div>
                 </motion.div>
 
-                <motion.div className="flex justify-end" {...motionTransition} transition={{delay: 0.4}}>
-                    <button
+                <motion.div className="flex justify-end" variants={inputGroupVariants}>
+                    <motion.button
                         type="submit"
                         disabled={loading}
-                        className="flex items-center gap-2 bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary px-6 py-2 rounded-full shadow-lg transition-transform hover:scale-105 disabled:opacity-50"
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
+                        className="flex items-center gap-2 bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary px-6 py-2 rounded-full shadow-lg transition-colors disabled:opacity-50"
                     >
                         {loading && <Loader2 className="w-4 h-4 animate-spin"/>}
-                        {t('profile.buttons.saveChanges')}
-                    </button>
+                        <AnimatePresence mode="wait">
+                            <motion.span
+                                key={`submit-${language}`}
+                                variants={textVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                custom={textDirection}
+                            >
+                                {t('profile.buttons.saveChanges')}
+                            </motion.span>
+                        </AnimatePresence>
+                    </motion.button>
                 </motion.div>
             </motion.form>
         </motion.div>

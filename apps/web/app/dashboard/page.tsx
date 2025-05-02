@@ -5,14 +5,66 @@ import {useRouter} from 'next/navigation';
 import {UserType} from '@/types/UserType';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
-import ActionButton from '@/components/ActionButton';
 import {useAuth} from '@/hooks/useAuth';
 import {useI18n} from '@/contexts/I18nContext';
-import {motion} from 'framer-motion';
+import {motion, AnimatePresence} from 'framer-motion';
 import AnimatedCard from '@/components/AnimatedCard';
+import {Globe, FileText, Clock, Crown, Plus, FileCheck, Book, Activity} from 'lucide-react';
+
+const containerVariants = {
+    hidden: {opacity: 0},
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2,
+        },
+    },
+};
+
+const itemVariants = {
+    hidden: {opacity: 0, y: 20},
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: 'spring',
+            stiffness: 100,
+            damping: 12,
+        },
+    },
+};
+
+const buttonVariants = {
+    hover: {
+        scale: 1.05,
+        transition: {
+            type: 'spring',
+            stiffness: 400,
+            damping: 10,
+        },
+    },
+    tap: {scale: 0.95},
+};
+
+const textVariants = {
+    enter: (direction: number) => ({
+        y: direction > 0 ? 20 : -20,
+        opacity: 0
+    }),
+    center: {
+        y: 0,
+        opacity: 1
+    },
+    exit: (direction: number) => ({
+        y: direction < 0 ? 20 : -20,
+        opacity: 0
+    })
+};
 
 export default function DashboardPage() {
     const router = useRouter();
+    const [textDirection, setTextDirection] = useState(0);
     const {token, isAuthenticated, loading: authLoading} = useAuth();
     const {t} = useI18n();
     const [loading, setLoading] = useState(true);
@@ -20,6 +72,10 @@ export default function DashboardPage() {
     const [metrics, setMetrics] = useState({sites: 0, documents: 0});
     const [activities, setActivities] = useState<string[]>([]);
     const [error, setError] = useState<string>('');
+
+    useEffect(() => {
+        setTextDirection(prev => prev + 1);
+    }, [t]);
 
     useEffect(() => {
         if (authLoading) return;
@@ -123,92 +179,199 @@ export default function DashboardPage() {
     if (error) return <div className="text-center text-red-500 p-6">{error}</div>;
     if (!userData) return null;
 
+
+    if (authLoading || loading) return <Loading page="dashboard"/>;
+    if (error) {
+        return (
+            <div
+                className="min-h-screen flex items-center justify-center bg-gradient-to-br from-light-background via-light-card to-light-background dark:from-dark-background dark:via-dark-card dark:to-dark-background">
+                <motion.div
+                    initial={{opacity: 0, scale: 0.9}}
+                    animate={{opacity: 1, scale: 1}}
+                    className="p-8 rounded-2xl backdrop-blur-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-gray-800/20 shadow-2xl text-red-400 text-center"
+                >
+                    {error}
+                </motion.div>
+            </div>
+        );
+    }
+    if (!userData) return null;
+
     return (
         <main
-            className="min-h-screen bg-light-background dark:bg-dark-background text-light-text-primary dark:text-dark-text-primary">
+            className="min-h-screen bg-gradient-to-br from-light-background via-light-card to-light-background dark:from-dark-background dark:via-dark-card dark:to-dark-background">
             <Layout>
                 <motion.div
-                    initial={{opacity: 0, y: 12}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.5}}
-                    className="p-6 space-y-8"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="p-8 space-y-8"
                 >
-                    <motion.h1
-                        initial={{opacity: 0, x: -20}}
-                        animate={{opacity: 1, x: 0}}
-                        transition={{delay: 0.2}}
-                        className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary"
-                    >
-                        {t('dashboard.greeting').replace('{name}', userData.name)}
-                    </motion.h1>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <AnimatedCard title={t('dashboard.metrics.connectedSites')} value={metrics.sites}/>
-                        <AnimatedCard
-                            title={t('dashboard.metrics.generatedDocuments')}
-                            value={metrics.documents}
-                        />
-                        <AnimatedCard
-                            title={t('dashboard.metrics.lastLogin')}
-                            value={new Date(userData.lastLogin).toLocaleString()}
-                        />
-                        <AnimatedCard title={t('dashboard.metrics.plan')} value={userData?.plan?.name || 'Free'}/>
-                    </div>
-
+                    {/* Greeting Section */}
                     <motion.div
-                        initial={{opacity: 0, y: 10}}
-                        animate={{opacity: 1, y: 0}}
-                        transition={{delay: 0.3}}
+                        variants={itemVariants}
+                        className="flex items-center gap-4 bg-white/5 dark:bg-black/5 p-6 rounded-2xl backdrop-blur-sm border border-white/10 dark:border-gray-800/10"
                     >
-                        <h2 className="text-xl font-semibold mb-4 text-light-text-primary dark:text-dark-text-primary">
-                            {t('dashboard.actions.title')}
-                        </h2>
-                        <div className="flex flex-col md:flex-row gap-4">
-                            <ActionButton
-                                className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary"
-                                text={t('dashboard.actions.registerSite')}
-                                onClick={() => router.push('/sites/new')}
-                            />
-                            <ActionButton
-                                className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary"
-                                text={t('dashboard.actions.generateDocument')}
-                                onClick={() => router.push('/sites')}
-                            />
-                            <ActionButton
-                                className="w-full bg-light-accent-purple dark:bg-dark-accent-purple hover:bg-light-accent-blue dark:hover:bg-dark-accent-blue text-light-background dark:text-dark-text-primary"
-                                text={t('dashboard.actions.checkTerms')}
-                                onClick={() => router.push('/sites')}
-                            />
+                        <div className="flex-1">
+                            <AnimatePresence mode="wait" initial={false}>
+                                <motion.h1
+                                    key={`greeting-${textDirection}`}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    custom={textDirection}
+                                    className="text-3xl font-bold bg-gradient-to-r from-light-accent-purple to-light-purple dark:from-dark-purple dark:to-dark-purple-hover bg-clip-text text-transparent"
+                                >
+                                    {t('dashboard.greeting').replace('{name}', userData.name)}
+                                </motion.h1>
+                            </AnimatePresence>
+                            <p className="text-light-text-secondary dark:text-dark-text-secondary mt-2">
+                                {new Date().toLocaleDateString(undefined, {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })}
+                            </p>
                         </div>
                     </motion.div>
 
-                    <motion.div
-                        initial={{opacity: 0, y: 10}}
-                        animate={{opacity: 1, y: 0}}
-                        transition={{delay: 0.4}}
-                    >
-                        <h2 className="text-xl font-semibold mb-4 text-light-text-primary dark:text-dark-text-primary">
-                            {t('dashboard.activities.title')}
-                        </h2>
-                        <ul className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl divide-y divide-light-border dark:divide-dark-border">
-                            {activities.length === 0 ? (
-                                <li className="p-4 text-light-text-secondary dark:text-dark-text-secondary">
-                                    {t('dashboard.activities.noActivities')}
-                                </li>
-                            ) : (
-                                activities.slice(0, 5).map((a, idx) => (
-                                    <motion.li
-                                        key={idx}
-                                        initial={{opacity: 0}}
-                                        animate={{opacity: 1}}
-                                        transition={{delay: 0.5 + idx * 0.1}}
-                                        className="p-4 text-light-text-primary dark:text-dark-text-primary"
+                    {/* Metrics Grid */}
+                    <motion.div variants={itemVariants}
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <AnimatePresence mode="wait">
+                            <AnimatedCard
+                                key={`sites-${textDirection}`}
+                                icon={<Globe className="w-6 h-6"/>}
+                                title={t('dashboard.metrics.connectedSites')}
+                                value={metrics.sites}
+                                variant="purple"
+                            />
+                            <AnimatedCard
+                                key={`docs-${textDirection}`}
+                                icon={<FileText className="w-6 h-6"/>}
+                                title={t('dashboard.metrics.generatedDocuments')}
+                                value={metrics.documents}
+                                variant="blue"
+                            />
+                            <AnimatedCard
+                                key={`login-${textDirection}`}
+                                icon={<Clock className="w-6 h-6"/>}
+                                title={t('dashboard.metrics.lastLogin')}
+                                value={new Date(userData.lastLogin).toLocaleString()}
+                                variant="green"
+                            />
+                            <AnimatedCard
+                                key={`plan-${textDirection}`}
+                                icon={<Crown className="w-6 h-6"/>}
+                                title={t('dashboard.metrics.plan')}
+                                value={userData?.plan?.name || 'Free'}
+                                variant="gold"
+                            />
+                        </AnimatePresence>
+                    </motion.div>
+
+                    {/* Actions Section */}
+                    <motion.div variants={itemVariants}>
+                        <AnimatePresence mode="wait">
+                            <motion.h2
+                                key={`actions-${textDirection}`}
+                                variants={textVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                custom={textDirection}
+                                className="text-xl font-semibold mb-6 flex items-center gap-2 text-light-text-primary dark:text-dark-text-primary"
+                            >
+                                <Activity className="w-5 h-5"/>
+                                {t('dashboard.actions.title')}
+                            </motion.h2>
+                        </AnimatePresence>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <AnimatePresence mode="wait">
+                                {['registerSite', 'generateDocument', 'checkTerms'].map((action, index) => (
+                                    <motion.button
+                                        key={`${action}-${textDirection}`}
+                                        variants={buttonVariants}
+                                        whileHover="hover"
+                                        whileTap="tap"
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        custom={textDirection}
+                                        onClick={() => router.push(action === 'registerSite' ? '/sites/new' : '/sites')}
+                                        className={`p-4 rounded-xl bg-gradient-to-r ${
+                                            index === 0
+                                                ? 'from-light-accent-purple to-light-purple dark:from-dark-purple dark:to-dark-purple-hover'
+                                                : index === 1
+                                                    ? 'from-light-accent-blue to-light-purple dark:from-dark-accent-blue dark:to-dark-purple-hover'
+                                                    : 'from-light-accent-green to-light-purple dark:from-dark-accent-green dark:to-dark-purple-hover'
+                                        } text-white shadow-lg shadow-light-accent-purple/20 dark:shadow-dark-accent-purple/20 flex items-center gap-3 justify-center`}
                                     >
-                                        {a}
-                                    </motion.li>
-                                ))
-                            )}
-                        </ul>
+                                        {index === 0 ? <Plus className="w-5 h-5"/> : index === 1 ?
+                                            <FileCheck className="w-5 h-5"/> : <Book className="w-5 h-5"/>}
+                                        {t(`dashboard.actions.${action}`)}
+                                    </motion.button>
+                                ))}
+                            </AnimatePresence>
+                        </div>
+                    </motion.div>
+
+                    {/* Activities Section */}
+                    <motion.div variants={itemVariants}>
+                        <AnimatePresence mode="wait">
+                            <motion.h2
+                                key={`activities-${textDirection}`}
+                                variants={textVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                custom={textDirection}
+                                className="text-xl font-semibold mb-6 flex items-center gap-2 text-light-text-primary dark:text-dark-text-primary"
+                            >
+                                <Activity className="w-5 h-5"/>
+                                {t('dashboard.activities.title')}
+                            </motion.h2>
+                        </AnimatePresence>
+                        <div
+                            className="bg-white/5 dark:bg-black/5 rounded-2xl backdrop-blur-sm border border-white/10 dark:border-gray-800/10 overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                {activities.length === 0 ? (
+                                    <motion.div
+                                        key={`no-activities-${textDirection}`}
+                                        variants={textVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        custom={textDirection}
+                                        className="p-6 text-center text-light-text-secondary dark:text-dark-text-secondary"
+                                    >
+                                        {t('dashboard.activities.noActivities')}
+                                    </motion.div>
+                                ) : (
+                                    <ul className="divide-y divide-white/5 dark:divide-gray-800/5">
+                                        {activities.slice(0, 5).map((activity, idx) => (
+                                            <motion.li
+                                                key={`${idx}-${textDirection}`}
+                                                variants={textVariants}
+                                                initial="enter"
+                                                animate="center"
+                                                exit="exit"
+                                                custom={textDirection}
+                                                className="p-4 hover:bg-white/5 dark:hover:bg-black/5 transition-colors flex items-center gap-3"
+                                            >
+                                                <div
+                                                    className="w-2 h-2 rounded-full bg-light-accent-purple dark:bg-dark-accent-purple"/>
+                                                <span className="text-light-text-primary dark:text-dark-text-primary">
+                          {activity}
+                        </span>
+                                            </motion.li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </motion.div>
                 </motion.div>
             </Layout>
