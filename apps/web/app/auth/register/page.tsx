@@ -199,7 +199,7 @@ export default function RegisterPage() {
                                 whileHover={{scale: 1.05}}
                                 whileTap={{scale: 0.95}}
                             >
-                                <UserPlus className="w-7 h-7"/>
+                                <UserPlus className="w-7 h-7 text-light-accent-purple dark:text-dark-purple"/>
                                 <AnimatePresence mode="wait">
                                     <motion.span
                                         key={`logo-${language}`}

@@ -30,6 +30,20 @@ export const pt = {
         error: "Ocorreu um erro durante o login"
     },
     common: {
-        loading: "Carregando..."
+        loading: "Carregando...",
+        Resetting: "Reiniciando...",
+    },
+    resetPassword: {
+        title: "Redefinir Senha",
+        email: "Endereço de email",
+        password: "Nova Senha",
+        sendResetLink: "Enviar Link de Redefinição",
+        resetLinkSent: "Link de redefinição enviado para seu endereço de email",
+        success: "Senha redefinida com sucesso",
+        error: "Ocorreu um erro ao enviar o link de redefinição",
+        newPassword: "Digite sua nova senha abaixo",
+        newPasswordConfirm: "Confirme sua nova senha",
+        youCan: "você pode",
+        withNew: "com sua nova senha",
     }
 }

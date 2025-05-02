@@ -123,7 +123,7 @@ export default function LoginPage() {
                                 whileHover={{scale: 1.05}}
                                 whileTap={{scale: 0.95}}
                             >
-                                <LogIn className="w-7 h-7"/>
+                                <LogIn className="w-7 h-7 text-light-accent-purple dark:text-dark-purple"/>
                                 <AnimatePresence mode="wait">
                                     <motion.span
                                         key={`logo-${language}`}
