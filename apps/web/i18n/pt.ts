@@ -673,5 +673,35 @@ export const pt = {
         newPasswordConfirm: "Confirme sua nova senha",
         youCan: "você pode",
         withNew: "com sua nova senha",
+    },
+    document: {
+        title: 'Documentos',
+        new: {
+            pageTitle: 'Novo Documento',
+            title: 'Criar Documento',
+            type: 'Tipo de Documento',
+            observations: 'Observações',
+            placeholders: {
+                title: 'Politica de Privacidade #1',
+                type: 'ex: Política de Privacidade, Termos de Serviço',
+                observations: 'ex: Este documento é para...'
+            },
+            generate: 'Gerar Documento',
+            generating: 'Gerando Documento...',
+        },
+        edit: {
+            save: 'Salvar Alterações',
+            saving: 'Salvando...',
+            publicLink: 'Link Público',
+            embedCode: 'Código de Incorporação',
+            height: 'Altura',
+            theme: 'Tema',
+            themeLight: 'Claro',
+            themeDark: 'Escuro',
+            embedCodeLabel: 'Copie o código abaixo para incorporar o documento em seu site:',
+            copyEmbed: 'Copiar Código de Incorporação',
+            copy: 'Copiar',
+            copied: 'Copiado!',
+        }
     }
 } as const;

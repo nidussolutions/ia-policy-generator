@@ -20,7 +20,7 @@ export default function Layout({children}: Props) {
                     initial={{opacity: 0}}
                     animate={{opacity: 1}}
                     exit={{opacity: 0}}
-                    className="p-6 mt-8 max-w-5xl mx-auto"
+                    className="p-6 max-w-5xl mx-auto"
                 >
                     <div className="w-full max-w-5xl mx-auto">
                         {children}
