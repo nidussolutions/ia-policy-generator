@@ -4,37 +4,45 @@
 
 @theme {
     /* Light Theme Colors */
-    --color-light-background: oklch(1 0 0); /* #FFFFFF */
-    --color-light-text-primary: oklch(0.27 0 0); /* #222222 */
-    --color-light-text-secondary: oklch(0.45 0 0); /* #666666 */
-    --color-light-border: oklch(0.88 0 0); /* #E0E0E0 */
-    --color-light-card: oklch(0.98 0.003 101.86); /* #F9FAFB */
+    --color-light-background: #FFFFFF;
+    --color-light-text-primary: #1A1B25;
+    --color-light-text-secondary: #4A4B57;
+    --color-light-border: #E8E9F0;
+    --color-light-card: #F9FAFF;
+
     /* Light Accent Colors */
-    --color-light-accent-blue: oklch(0.57 0.19 262.05); /* #3B82F6 */
-    --color-light-accent-purple: oklch(0.54 0.22 295.37); /* #7C3AED */
+    --color-light-accent-blue: #4285F4;
+    --color-light-accent-purple: #8B5CF6;
+
     /* Light Special Colors */
-    --color-light-deep-blue: oklch(0.97 0.02 252.37); /* #F0F4FF */
+    --color-light-deep-blue: #F0F4FF;
+
     /* Light Purple Variations */
-    --color-light-purple: oklch(0.54 0.22 295.37); /* #7C3AED */
-    --color-light-purple-light: oklch(0.96 0.03 235.41); /* #EBF4FF */
-    --color-light-purple-hover: oklch(0.48 0.22 295.37); /* #6D28D9 */
+    --color-light-purple: #8B5CF6;
+    --color-light-purple-light: #EEF2FF;
+    --color-light-purple-hover: #7C3AED;
+
     /* Dark Theme Colors */
-    --color-dark-background: oklch(0.16 0 0); /* #18181B */
-    --color-dark-text-primary: oklch(0.96 0.01 252.37); /* #F3F4F6 */
-    --color-dark-text-secondary: oklch(0.69 0.002 96.08); /* #A1A1AA */
-    --color-dark-border: oklch(0.19 0 0); /* #27272A */
-    --color-dark-card: oklch(0.18 0.002 276.23); /* #23232A */
-    --color-dark-disabled: oklch(0.19 0 0); /* #27272A */
+    --color-dark-background: #13141A;
+    --color-dark-text-primary: #F8F9FF;
+    --color-dark-text-secondary: #B4B5C6;
+    --color-dark-border: #27282F;
+    --color-dark-card: #1E1F26;
+    --color-dark-disabled: #2A2B32;
+
     /* Dark Accent Colors */
-    --color-dark-accent-blue: oklch(0.57 0.19 262.05); /* #3B82F6 */
-    --color-dark-accent-purple: oklch(0.55 0.19 262.05); /* #6366F1 */
+    --color-dark-accent-blue: #4285F4;
+    --color-dark-accent-purple: #6366F1;
+
     /* Dark Special Colors */
-    --color-dark-deep-blue: oklch(0.11 0.02 252.37); /* #030526 */
+    --color-dark-deep-blue: #0A0C1E;
+
     /* Dark Purple Variations */
-    --color-dark-purple: oklch(0.45 0.22 328.24); /* #8C0368 */
-    --color-dark-purple-light: oklch(0.21 0.19 276.23); /* #1E035A */
-    --color-dark-purple-hover: oklch(0.52 0.25 328.24); /* #A429A6 */
+    --color-dark-purple: #9333EA;
+    --color-dark-purple-light: #2E1065;
+    --color-dark-purple-hover: #A855F7;
 }
+
 * {
     transition: opacity 0.3s ease-in-out;
 }
