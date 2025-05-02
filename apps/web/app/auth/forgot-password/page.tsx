@@ -40,9 +40,9 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#030526] via-[#1E0359] to-[#030526] px-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[var(--color-dark-deep-blue)] via-[var(--color-dark-purple-light)] to-[var(--color-dark-deep-blue)] px-4">
       <motion.div
-        className="w-full max-w-md p-8 bg-[#1E0359]/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-[#8C0368]/20"
+        className="w-full max-w-md p-8 bg-[var(--color-dark-card)]/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-[var(--color-dark-purple)]/20"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -50,19 +50,19 @@ export default function ForgotPasswordPage() {
         <motion.div className="text-center mb-6" variants={itemVariants}>
           <Link
             href="/auth/login"
-            className="inline-flex items-center gap-2 text-3xl font-extrabold text-[#A429A6]"
+            className="inline-flex items-center gap-2 text-3xl font-extrabold text-[var(--color-dark-purple)]"
           >
             <ArrowLeft className="w-6 h-6" />
             Back
           </Link>
-          <h2 className="mt-4 text-xl font-semibold text-gray-200">
+          <h2 className="mt-4 text-xl font-semibold text-[var(--color-dark-text-primary)]">
             Forgot your password?
           </h2>
         </motion.div>
 
         {sent ? (
           <motion.div
-            className="text-center text-green-400"
+            className="text-center text-emerald-400"
             variants={itemVariants}
           >
             Recovery email sent! Please check your inbox.
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
           <motion.form className="space-y-6" variants={containerVariants}>
             {error && (
               <motion.div
-                className="mb-4 text-sm text-red-400 bg-red-900/30 px-4 py-2 rounded-lg text-center"
+                className="mb-4 text-sm text-red-400 bg-[var(--color-dark-deep-blue)]/30 px-4 py-2 rounded-lg text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
@@ -80,11 +80,11 @@ export default function ForgotPasswordPage() {
             )}
 
             <motion.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-[var(--color-dark-text-secondary)] mb-1">
                 Email
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--color-dark-text-secondary)]">
                   <Mail size={18} />
                 </span>
                 <input
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="youremail@example.com"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg bg-[#030526]/20 border border-transparent focus:border-[#8C0368] focus:ring-0 text-gray-200 placeholder-gray-500"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg bg-[var(--color-dark-deep-blue)]/20 border border-transparent focus:border-[var(--color-dark-purple)] focus:ring-0 text-[var(--color-dark-text-primary)] placeholder-[var(--color-dark-text-secondary)]"
                 />
               </div>
             </motion.div>
@@ -101,7 +101,7 @@ export default function ForgotPasswordPage() {
             <motion.button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full py-3 rounded-full font-medium bg-[#8C0368] hover:bg-[#A429A6] transition-transform disabled:opacity-50 disabled:cursor-not-allowed text-white"
+              className="w-full py-3 rounded-full font-medium bg-[var(--color-dark-purple)] hover:bg-[var(--color-dark-purple-hover)] transition-transform disabled:opacity-50 disabled:cursor-not-allowed text-[var(--color-dark-text-primary)]"
               variants={itemVariants}
             >
               {loading ? 'Sending...' : 'Send Recovery Email'}
