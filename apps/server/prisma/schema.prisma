@@ -39,15 +39,15 @@ model Users {
 }
 
 model Site {
-  id          String   @id @default(uuid())
-  name        String
-  domain      String
-  language    String
-  legislation String
-  observation String   @default("")
-  ownerId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(uuid())
+  name         String
+  domain       String
+  language     String
+  legislation  String
+  observations String   @default("")
+  ownerId      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   owner     Users      @relation(fields: [ownerId], references: [id])
   documents Document[]

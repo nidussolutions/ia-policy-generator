@@ -17,7 +17,7 @@ interface AnimatedCardProps {
 const variantStyles = {
     purple: "from-light-accent-purple to-light-purple dark:from-dark-purple dark:to-dark-purple-hover",
     blue: "from-light-accent-blue to-light-purple dark:from-dark-accent-blue dark:to-dark-purple-hover",
-    green: "from-light-accent-green to-light-purple dark:from-dark-accent-green dark:to-dark-purple-hover",
+    green: "from-light-accent-blue to-light-purple dark:from-dark-accent-green dark:to-dark-purple-hover",
     gold: "from-yellow-400 to-yellow-600 dark:from-yellow-500 dark:to-yellow-700",
 };
 
@@ -89,8 +89,8 @@ export default function AnimatedCard({
                     {icon}
                 </div>
             )}
-            <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">{title}</p>
-            <p className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mt-2">{value}</p>
+            <p className="text-sm text-dark-text-primary">{title}</p>
+            <p className="text-2xl font-bold text-dark-text-primary mt-2">{value}</p>
             {value === "Free" && (
                 <button
                     disabled={loading}

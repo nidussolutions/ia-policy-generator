@@ -239,7 +239,7 @@ export default function DashboardPage() {
 
                     {/* Metrics Grid */}
                     <motion.div variants={itemVariants}
-                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-dark-text-primary">
                         <AnimatePresence mode="wait">
                             <AnimatedCard
                                 key={`sites-${textDirection}`}
@@ -305,8 +305,8 @@ export default function DashboardPage() {
                                             index === 0
                                                 ? 'from-light-accent-purple to-light-purple dark:from-dark-purple dark:to-dark-purple-hover'
                                                 : index === 1
-                                                    ? 'from-light-accent-blue to-light-purple dark:from-dark-accent-blue dark:to-dark-purple-hover'
-                                                    : 'from-light-accent-green to-light-purple dark:from-dark-accent-green dark:to-dark-purple-hover'
+                                                    ? 'from-dark-accent-purple to-light-purple dark:from-dark-accent-blue dark:to-dark-purple-hover'
+                                                    : 'from-light-accent-blue to-light-purple dark:from-dark-accent-green dark:to-dark-purple-hover'
                                         } text-white shadow-lg shadow-light-accent-purple/20 dark:shadow-dark-accent-purple/20 flex items-center gap-3 justify-center`}
                                     >
                                         {index === 0 ? <Plus className="w-5 h-5"/> : index === 1 ?

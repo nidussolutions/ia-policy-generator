@@ -56,7 +56,6 @@ export default function EditSitePage() {
         (url) => fetcher(url, token)
     );
 
-
     useEffect(() => {
         setTextDirection(prev => prev + 1);
     }, [language]);
