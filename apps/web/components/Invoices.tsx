@@ -16,11 +16,70 @@ import useSWR from "swr";
 import {motion, AnimatePresence} from "framer-motion";
 import {useI18n} from "@/hooks/useI18n";
 
+const textVariants = {
+    enter: (direction: number) => ({
+        y: direction > 0 ? 20 : -20,
+        opacity: 0
+    }),
+    center: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+        }
+    },
+    exit: (direction: number) => ({
+        y: direction < 0 ? 20 : -20,
+        opacity: 0
+    })
+};
+
+const containerVariants = {
+    hidden: {opacity: 0, y: 20},
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.4,
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const invoiceVariants = {
+    hidden: {opacity: 0, scale: 0.95, y: 20},
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 200,
+            damping: 20
+        }
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.95,
+        y: -20,
+        transition: {
+            duration: 0.2
+        }
+    }
+};
+
 export default function Invoices() {
     const [loadingPageChange, setLoadingPageChange] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
+    const [textDirection, setTextDirection] = useState(0);
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const {t} = useI18n();
+    const {t, language} = useI18n();
+
+    useEffect(() => {
+        setTextDirection(prev => prev + 1);
+    }, [language]);
 
     const {data, error, isLoading, mutate} = useSWR(
         token ? `${process.env.NEXT_PUBLIC_API_URL}/user/invoices` : null,
@@ -50,62 +109,153 @@ export default function Invoices() {
 
     return (
         <motion.div
-            initial={{opacity: 0, y: 20}}
-            animate={{opacity: 1, y: 0}}
-            transition={{duration: 0.4}}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
             className="bg-light-card/90 dark:bg-dark-card/90 backdrop-blur-lg border border-light-border dark:border-dark-border p-6 rounded-2xl shadow-2xl space-y-6"
         >
             <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-light-text-primary dark:text-dark-text-primary">{t('invoices.title')}</h2>
-                <button
+                <AnimatePresence mode="wait" initial={false}>
+                    <motion.h2
+                        key={`title-${language}`}
+                        variants={textVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        custom={textDirection}
+                        className="text-lg font-semibold text-light-text-primary dark:text-dark-text-primary"
+                    >
+                        {t('invoices.title')}
+                    </motion.h2>
+                </AnimatePresence>
+                <motion.button
                     onClick={handleUpdate}
+                    whileHover={{scale: 1.05}}
+                    whileTap={{scale: 0.95}}
                     className="flex items-center gap-2 text-sm text-light-accent-purple dark:text-dark-accent-purple hover:underline disabled:opacity-50"
                     disabled={loadingUpdate}
                     aria-label={t('invoices.updateAriaLabel')}
                 >
-                    {loadingUpdate ? (
-                        <><RefreshCw className="animate-spin" size={16}/> {t('invoices.updating')}</>
-                    ) : (
-                        <><RefreshCw size={16}/> {t('invoices.update')}</>
-                    )}
-                </button>
+                    <RefreshCw className={loadingUpdate ? "animate-spin" : ""} size={16}/>
+                    <AnimatePresence mode="wait" initial={false}>
+                        <motion.span
+                            key={`update-${language}-${loadingUpdate}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                        >
+                            {loadingUpdate ? t('invoices.updating') : t('invoices.update')}
+                        </motion.span>
+                    </AnimatePresence>
+                </motion.button>
             </div>
 
-            {error && <p className="text-red-500 text-sm">{t('invoices.errorLoading')}</p>}
-            {(isLoading || loadingPageChange) &&
-                <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">{t('invoices.loading')}</p>}
+            <AnimatePresence mode="wait" initial={false}>
+                {error && (
+                    <motion.p
+                        key="error"
+                        variants={textVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        custom={textDirection}
+                        className="text-red-500 text-sm"
+                    >
+                        {t('invoices.errorLoading')}
+                    </motion.p>
+                )}
 
-            {!isLoading && invoices.length > 0 ? (
-                <>
-                    <div className="space-y-4">
+                {(isLoading || loadingPageChange) && (
+                    <motion.p
+                        key="loading"
+                        variants={textVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        custom={textDirection}
+                        className="text-light-text-secondary dark:text-dark-text-secondary text-sm"
+                    >
+                        {t('invoices.loading')}
+                    </motion.p>
+                )}
+
+                {!isLoading && invoices.length === 0 && (
+                    <motion.p
+                        key="no-invoices"
+                        variants={textVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        custom={textDirection}
+                        className="text-light-text-secondary dark:text-dark-text-secondary text-sm"
+                    >
+                        {t('invoices.noInvoices')}
+                    </motion.p>
+                )}
+
+                {!isLoading && invoices.length > 0 && (
+                    <motion.div
+                        key="invoices-list"
+                        className="space-y-4"
+                        variants={containerVariants}
+                    >
                         <AnimatePresence mode="wait">
                             {invoices.map((invoice) => (
                                 <motion.div
                                     key={invoice.id}
-                                    initial={{opacity: 0, y: 10}}
-                                    animate={{opacity: 1, y: 0}}
-                                    exit={{opacity: 0, y: -10}}
-                                    transition={{duration: 0.3}}
+                                    variants={invoiceVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
                                     className="border border-light-border dark:border-dark-border rounded-2xl p-5 space-y-4 shadow-lg bg-light-background/50 dark:bg-dark-background/50"
                                 >
+                                    {/* ... (resto do conteúdo do invoice permanece o mesmo, apenas adicionando AnimatePresence para os textos) ... */}
                                     <div className="flex justify-between items-center">
                                         <div
                                             className="flex items-center gap-2 text-sm text-light-text-primary dark:text-dark-text-primary">
                                             <Receipt size={16}/>
-                                            <span
-                                                className="text-light-text-secondary dark:text-dark-text-secondary">{t('invoices.invoiceId')}</span>
+                                            <AnimatePresence mode="wait" initial={false}>
+                                                <motion.span
+                                                    key={`invoice-id-${language}`}
+                                                    variants={textVariants}
+                                                    initial="enter"
+                                                    animate="center"
+                                                    exit="exit"
+                                                    custom={textDirection}
+                                                    className="text-light-text-secondary dark:text-dark-text-secondary"
+                                                >
+                                                    {t('invoices.invoiceId')}
+                                                </motion.span>
+                                            </AnimatePresence>
                                             <span>{invoice.id}</span>
                                         </div>
+
                                         {invoice.invoiceUrl && (
-                                            <a
+                                            <motion.a
                                                 href={invoice.invoiceUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
+                                                whileHover={{scale: 1.05}}
+                                                whileTap={{scale: 0.95}}
                                                 className="inline-flex items-center gap-1 text-sm text-light-accent-purple dark:text-dark-accent-purple hover:underline"
                                                 aria-label={t('invoices.accessInvoiceAriaLabel')}
                                             >
-                                                <LinkIcon size={16}/> {t('invoices.accessInvoice')}
-                                            </a>
+                                                <LinkIcon size={16}/>
+                                                <AnimatePresence mode="wait" initial={false}>
+                                                    <motion.span
+                                                        key={`access-invoice-${language}`}
+                                                        variants={textVariants}
+                                                        initial="enter"
+                                                        animate="center"
+                                                        exit="exit"
+                                                        custom={textDirection}
+                                                    >
+                                                        {t('invoices.accessInvoice')}
+                                                    </motion.span>
+                                                </AnimatePresence>
+                                            </motion.a>
                                         )}
                                     </div>
 
@@ -141,12 +291,9 @@ export default function Invoices() {
                                 </motion.div>
                             ))}
                         </AnimatePresence>
-                    </div>
-                </>
-            ) : (
-                !isLoading &&
-                <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm">{t('invoices.noInvoices')}</p>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 }

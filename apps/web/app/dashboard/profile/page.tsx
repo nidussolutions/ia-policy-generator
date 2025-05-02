@@ -1,28 +1,77 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {ArrowLeft} from 'lucide-react';
-import {PlanType} from '@/types/PlanType';
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { PlanType } from '@/types/PlanType';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Invoices from '@/components/Invoices';
 import Subscription from '@/components/Subscription';
 import Profile from '@/components/Profile';
-import {motion} from 'framer-motion';
-import {useI18n} from '@/contexts/I18nContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useI18n } from '@/contexts/I18nContext';
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2,
+        },
+    },
+};
+
+const textVariants = {
+    enter: (direction: number) => ({
+        y: direction > 0 ? 20 : -20,
+        opacity: 0
+    }),
+    center: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+        }
+    },
+    exit: (direction: number) => ({
+        y: direction < 0 ? 20 : -20,
+        opacity: 0
+    })
+};
+
+const sectionVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 200,
+            damping: 20
+        }
+    }
+};
 
 export default function ProfilePage() {
     const router = useRouter();
-    const {t} = useI18n();
+    const { t, language } = useI18n();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [plan, setPlan] = useState<PlanType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [textDirection, setTextDirection] = useState(0);
 
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
+
+    useEffect(() => {
+        setTextDirection(prev => prev + 1);
+    }, [language]);
 
     useEffect(() => {
         if (!token) {
@@ -33,7 +82,7 @@ export default function ProfilePage() {
             try {
                 const res = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL}/user/profile`,
-                    {headers: {Authorization: `Bearer ${token}`}}
+                    { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const data = await res.json();
                 setName(data.name);
@@ -48,70 +97,103 @@ export default function ProfilePage() {
         fetchProfile().finally();
     }, [token, router]);
 
-    if (loading || !plan) return <Loading page={"Profile"}/>;
+    if (loading || !plan) return <Loading page={"Profile"} />;
 
     return (
-        <>
-            <Layout>
+        <Layout>
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="max-w-3xl mx-auto space-y-8 p-6"
+            >
+                {/* Back & Title */}
                 <motion.div
-                    className="max-w-3xl mx-auto space-y-8 p-6"
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.5, ease: 'easeOut'}}
+                    className="flex items-center gap-4"
+                    variants={sectionVariants}
                 >
-                    {/* Back & Title */}
-                    <motion.div
-                        className="flex items-center gap-4 "
-                        initial={{opacity: 0, x: -20}}
-                        animate={{opacity: 1, x: 0}}
-                        transition={{delay: 0.1, duration: 0.4}}
+                    <motion.button
+                        onClick={() => router.back()}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                     >
-                        <button onClick={() => router.back()}>
-                            <ArrowLeft className="w-6 h-6 text-gray-200 hover:text-[#8C0368] transition-colors"/>
-                        </button>
-                        <h1 className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">{t("profile.title")}</h1>
-                    </motion.div>
-
-                    {/* Profile Form */}
-                    <motion.div
-                        initial={{opacity: 0, y: 20}}
-                        animate={{opacity: 1, y: 0}}
-                        transition={{delay: 0.2, duration: 0.5}}
-                    >
-                        <Profile
-                            name={name}
-                            email={email}
-                            password={password}
-                            setName={setName}
-                            setEmail={setEmail}
-                            setPassword={setPassword}
-                            error={error}
-                            setError={setError}
-                            token={token}
-                            setLoading={setLoading}
-                            loading={loading}
-                        />
-                    </motion.div>
-
-                    {/* Subscription */}
-                    <motion.div
-                        initial={{opacity: 0, y: 20}}
-                        animate={{opacity: 1, y: 0}}
-                        transition={{delay: 0.3, duration: 0.5}}
-                    >
-                        <Subscription/>
-                    </motion.div>
-
-                    {/* Invoices */}
-                    <motion.div
-                        initial={{opacity: 0, y: 20}}
-                        animate={{opacity: 1, y: 0}}
-                        transition={{delay: 0.4, duration: 0.5}}
-                    >
-                        <Invoices/>
-                    </motion.div>
+                        <ArrowLeft className="w-6 h-6 text-gray-200 hover:text-[#8C0368] transition-colors" />
+                    </motion.button>
+                    <AnimatePresence mode="wait" initial={false}>
+                        <motion.h1
+                            key={`title-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                            className="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary"
+                        >
+                            {t("profile.title")}
+                        </motion.h1>
+                    </AnimatePresence>
                 </motion.div>
-            </Layout>
-        </>
+
+                {/* Profile Form */}
+                <motion.div variants={sectionVariants}>
+                    <AnimatePresence mode="wait" initial={false}>
+                        <motion.div
+                            key={`profile-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                        >
+                            <Profile
+                                name={name}
+                                email={email}
+                                password={password}
+                                setName={setName}
+                                setEmail={setEmail}
+                                setPassword={setPassword}
+                                error={error}
+                                setError={setError}
+                                token={token}
+                                setLoading={setLoading}
+                                loading={loading}
+                            />
+                        </motion.div>
+                    </AnimatePresence>
+                </motion.div>
+
+                {/* Subscription */}
+                <motion.div variants={sectionVariants}>
+                    <AnimatePresence mode="wait" initial={false}>
+                        <motion.div
+                            key={`subscription-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                        >
+                            <Subscription />
+                        </motion.div>
+                    </AnimatePresence>
+                </motion.div>
+
+                {/* Invoices */}
+                <motion.div variants={sectionVariants}>
+                    <AnimatePresence mode="wait" initial={false}>
+                        <motion.div
+                            key={`invoices-${language}`}
+                            variants={textVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            custom={textDirection}
+                        >
+                            <Invoices />
+                        </motion.div>
+                    </AnimatePresence>
+                </motion.div>
+            </motion.div>
+        </Layout>
     );
 }

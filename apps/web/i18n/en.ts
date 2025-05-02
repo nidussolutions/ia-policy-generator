@@ -119,6 +119,10 @@ export const en = {
                 free: 'Free',
                 pro: 'Pro',
             },
+            status: {
+                active: 'Active',
+                inactive: 'Inactive',
+            },
             noPlan: 'No plan selected',
             update: {
                 title: 'Update Subscription',
@@ -634,6 +638,52 @@ export const en = {
                 email: 'Email:'
             },
             compliance: 'Document prepared in compliance with current legislation, especially the LGPD.'
+        }
+    },
+    common: {
+        loading: "Loading...",
+        Resetting: "Resetting...",
+    },
+    resetPassword: {
+        title: "Reset Password",
+        email: "Email address",
+        password: "New Password",
+        sendResetLink: "Send Reset Link",
+        resetLinkSent: "Reset link sent to your email address",
+        success: "Password reset successfully",
+        error: "An error occurred while sending the reset link",
+        newPassword: "Enter your new password below",
+        newPasswordConfirm: "Confirm your new password",
+        youCan: "you can",
+        withNew: "with your new password",
+    },
+    document: {
+        new: {
+            pageTitle: "New Document",
+            title: "Create a new document",
+            type: "Document Type",
+            observations: "Observations",
+            placeholders: {
+                title: "e.g. Privacy Policy",
+                type: "e.g. Privacy Policy, Terms of Service, Cookie Policy",
+                observations: "e.g. This document is for a website that sells products online.",
+            },
+            generate: "Create Document",
+            generating: "Generating Document...",
+        },
+        edit: {
+            save: "Save Changes",
+            saving: "Saving Changes...",
+            publicLink: "Public Link",
+            embedCode: "Embed Code",
+            height: 'Height',
+            theme: 'Theme',
+            themeLight: 'Light',
+            themeDark: 'Dark',
+            embedCodeLabel: 'Copy the code below to embed this document on your site:',
+            copyEmbed: 'Copy embed code',
+            copy: 'Copy',
+            copied: 'Copied!',
         }
     }
 } as const;

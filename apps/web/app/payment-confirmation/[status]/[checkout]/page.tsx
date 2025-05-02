@@ -4,22 +4,56 @@ import {useParams} from 'next/navigation';
 import {CheckCircle, XCircle, Hourglass} from 'lucide-react';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
-import {motion} from 'framer-motion';
+import {motion, AnimatePresence} from 'framer-motion';
 import {useTheme} from '@/components/ThemeContext';
-import {sendGTMEvent} from '@next/third-parties/google'
-import React, {useEffect} from 'react';
+import {sendGTMEvent} from '@next/third-parties/google';
+import React, {useEffect, useState} from 'react';
 import {useI18n} from '@/contexts/I18nContext';
+
+const textVariants = {
+    enter: (direction: number) => ({
+        y: direction > 0 ? 20 : -20,
+        opacity: 0
+    }),
+    center: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+        }
+    },
+    exit: (direction: number) => ({
+        y: direction < 0 ? 20 : -20,
+        opacity: 0
+    })
+};
+
+const containerVariants = {
+    hidden: {opacity: 0, scale: 0.98},
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 0.5,
+            staggerChildren: 0.1
+        }
+    }
+};
 
 const StatusMessage = ({
                            icon: Icon,
                            color,
                            title,
                            message,
+                           textDirection
                        }: {
     icon: React.ElementType;
     color: string;
     title: string;
     message: string;
+    textDirection: number;
 }) => {
     const {theme} = useTheme();
 
@@ -28,13 +62,35 @@ const StatusMessage = ({
             initial={{opacity: 0, y: 8}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.4}}
-            className={`text-center ${color} `}
+            className={`text-center ${color}`}
         >
             <Icon size={64} className="mx-auto mb-4"/>
-            <h2 className="text-2xl font-semibold mb-2">{title}</h2>
-            <p className={theme === 'light' ? 'text-light-text-secondary' : 'text-dark-text-secondary'}>
-                {message}
-            </p>
+            <AnimatePresence mode="wait" initial={false}>
+                <motion.h2
+                    key={`title-${title}`}
+                    variants={textVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    custom={textDirection}
+                    className="text-2xl font-semibold mb-2"
+                >
+                    {title}
+                </motion.h2>
+            </AnimatePresence>
+            <AnimatePresence mode="wait" initial={false}>
+                <motion.p
+                    key={`message-${message}`}
+                    variants={textVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    custom={textDirection}
+                    className={theme === 'light' ? 'text-light-text-secondary' : 'text-dark-text-secondary'}
+                >
+                    {message}
+                </motion.p>
+            </AnimatePresence>
         </motion.div>
     );
 };
@@ -42,10 +98,15 @@ const StatusMessage = ({
 export default function PaymentConfirmationPage() {
     const {status} = useParams() as { status: string };
     const {theme} = useTheme();
-    const {t} = useI18n();
+    const {t, language} = useI18n();
+    const [textDirection, setTextDirection] = useState(0);
 
     useEffect(() => {
-        sendGTMEvent({event: 'conversion', value: 1.0})
+        setTextDirection(prev => prev + 1);
+    }, [language]);
+
+    useEffect(() => {
+        sendGTMEvent({event: 'conversion', value: 1.0});
     }, []);
 
     const renderStatus = () => {
@@ -57,6 +118,7 @@ export default function PaymentConfirmationPage() {
                         color="text-green-500 dark:text-green-400"
                         title={t('payment.confirmation.approved.title')}
                         message={t('payment.confirmation.approved.message')}
+                        textDirection={textDirection}
                     />
                 );
             case 'pending':
@@ -66,6 +128,7 @@ export default function PaymentConfirmationPage() {
                         color="text-yellow-500 dark:text-yellow-400"
                         title={t('payment.confirmation.pending.title')}
                         message={t('payment.confirmation.pending.message')}
+                        textDirection={textDirection}
                     />
                 );
             case 'rejected':
@@ -75,6 +138,7 @@ export default function PaymentConfirmationPage() {
                         color="text-red-500 dark:text-red-400"
                         title={t('payment.confirmation.rejected.title')}
                         message={t('payment.confirmation.rejected.message')}
+                        textDirection={textDirection}
                     />
                 );
             case 'failure':
@@ -84,6 +148,7 @@ export default function PaymentConfirmationPage() {
                         color="text-red-500 dark:text-red-400"
                         title={t('payment.confirmation.failure.title')}
                         message={t('payment.confirmation.failure.message')}
+                        textDirection={textDirection}
                     />
                 );
             case 'cancelled':
@@ -93,6 +158,7 @@ export default function PaymentConfirmationPage() {
                         color="text-red-500 dark:text-red-400"
                         title={t('payment.confirmation.cancelled.title')}
                         message={t('payment.confirmation.cancelled.message')}
+                        textDirection={textDirection}
                     />
                 );
             default:
@@ -103,8 +169,31 @@ export default function PaymentConfirmationPage() {
                         transition={{duration: 0.4}}
                         className={`text-center ${theme === 'light' ? 'text-light-text-secondary' : 'text-dark-text-secondary'}`}
                     >
-                        <h2 className="text-2xl font-semibold mb-2">{t('payment.confirmation.processing.title')}</h2>
-                        <p>{t('payment.confirmation.processing.message')}</p>
+                        <AnimatePresence mode="wait" initial={false}>
+                            <motion.h2
+                                key={`processing-title-${language}`}
+                                variants={textVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                custom={textDirection}
+                                className="text-2xl font-semibold mb-2"
+                            >
+                                {t('payment.confirmation.processing.title')}
+                            </motion.h2>
+                        </AnimatePresence>
+                        <AnimatePresence mode="wait" initial={false}>
+                            <motion.p
+                                key={`processing-message-${language}`}
+                                variants={textVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                custom={textDirection}
+                            >
+                                {t('payment.confirmation.processing.message')}
+                            </motion.p>
+                        </AnimatePresence>
                     </motion.div>
                 );
         }
@@ -114,16 +203,16 @@ export default function PaymentConfirmationPage() {
         <Layout>
             <div className="flex justify-center items-center w-full">
                 <motion.div
-                    initial={{opacity: 0, scale: 0.98}}
-                    animate={{opacity: 1, scale: 1}}
-                    transition={{duration: 0.5}}
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
                     className={`
-                        ${theme === 'light'
+            ${theme === 'light'
                         ? 'bg-light-card border-light-border text-light-text-primary'
                         : 'bg-dark-purple-light/40 border-dark-purple/30 text-dark-text-primary'
                     }
-                        backdrop-blur-md border rounded-2xl shadow-lg p-8 max-w-lg w-full
-                    `}
+            backdrop-blur-md border rounded-2xl shadow-lg p-8 max-w-lg w-full
+          `}
                 >
                     {renderStatus()}
 
@@ -136,14 +225,25 @@ export default function PaymentConfirmationPage() {
                         <Link
                             href="/dashboard"
                             className={`
-                                inline-block font-semibold py-2 px-4 rounded-xl transition duration-200
-                                ${theme === 'light'
+                inline-block font-semibold py-2 px-4 rounded-xl transition duration-200
+                ${theme === 'light'
                                 ? 'bg-light-accent-purple hover:bg-light-purple-hover text-light-background'
                                 : 'bg-dark-purple hover:bg-dark-purple-hover text-dark-text-primary'
                             }
-                            `}
+              `}
                         >
-                            {t('payment.confirmation.backToDashboard')}
+                            <AnimatePresence mode="wait" initial={false}>
+                                <motion.span
+                                    key={`back-${language}`}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    custom={textDirection}
+                                >
+                                    {t('payment.confirmation.backToDashboard')}
+                                </motion.span>
+                            </AnimatePresence>
                         </Link>
                     </motion.div>
                 </motion.div>

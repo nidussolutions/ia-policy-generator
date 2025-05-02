@@ -26,7 +26,6 @@ router.get('/', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
             return res.json([sites[0]]);
         }
 
-
         res.json(sites);
     } catch
         (error) {
@@ -59,7 +58,7 @@ router.post(
     authMiddleware,
     checkPlanLimits,
     async (req: AuthRequest, res) => {
-        const {domain, language, legislation, name} = req.body;
+        const {domain, language, legislation, name, observations = ''} = req.body;
 
         try {
             const site = await prisma.site.create({
@@ -68,6 +67,7 @@ router.post(
                     domain,
                     language,
                     legislation,
+                    observations,
                     ownerId: req.userId!,
                 },
             });
@@ -90,7 +90,7 @@ router.post(
 router.put('/:id', authMiddleware, async (req: AuthRequest, res): Promise<any> => {
     const {id} = req.params;
     const userId = req.userId!;
-    const {domain, language, legislation, name} = req.body;
+    const {domain, language, legislation, name, observations = ''} = req.body;
 
     try {
         const site = await prisma.site.findUnique({where: {id}});
@@ -109,6 +109,7 @@ router.put('/:id', authMiddleware, async (req: AuthRequest, res): Promise<any> =
                 domain: domain ? domain : site.domain,
                 language: language ? language : site.language,
                 legislation: legislation ? legislation : site.legislation,
+                observations: observations ? observations : site.observations,
                 name: name ? name : site.name,
             },
         });

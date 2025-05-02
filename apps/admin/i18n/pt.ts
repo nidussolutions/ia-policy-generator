@@ -30,6 +30,7 @@ export const pt = {
         error: "Ocorreu um erro durante o login"
     },
     common: {
-        loading: "Carregando..."
+        loading: "Carregando...",
+        Resetting: "Reiniciando...",
     }
 }

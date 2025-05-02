@@ -30,6 +30,7 @@ export const en = {
         error: "An error occurred during login"
     },
     common: {
-        loading: "Loading..."
+        loading: "Loading...",
+        Resetting: "Resetting...",
     }
 }

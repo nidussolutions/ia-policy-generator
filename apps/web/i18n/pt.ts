@@ -106,6 +106,7 @@ export const pt = {
             hide: 'Ocultar',
             saveChanges: 'Salvar Alterações',
         },
+
         errors: {
             passwordRequirements: 'A senha deve ter pelo menos 6 caracteres e incluir um caractere especial.',
             updateFailed: 'Erro ao atualizar o perfil. Por favor, tente novamente.',
@@ -128,6 +129,10 @@ export const pt = {
                 title: 'Pro',
                 description: 'Para empresas que precisam de mais recursos.',
                 cta: 'Assinar Agora',
+            },
+            status: {
+                active: 'Ativo',
+                inactive: 'Inativo',
             },
             update: {
                 title: 'Atualizar Assinatura',
@@ -650,6 +655,53 @@ export const pt = {
                 email: 'E-mail:'
             },
             compliance: 'Documento elaborado em conformidade com as legislações vigentes, em especial a LGPD.'
+        }
+    },
+    common: {
+        loading: "Carregando...",
+        Resetting: "Resetando...",
+    },
+    resetPassword: {
+        title: "Redefinir Senha",
+        email: "Endereço de email",
+        password: "Nova Senha",
+        sendResetLink: "Enviar Link de Redefinição",
+        resetLinkSent: "Link de redefinição enviado para seu endereço de email",
+        success: "Senha redefinida com sucesso",
+        error: "Ocorreu um erro ao enviar o link de redefinição",
+        newPassword: "Digite sua nova senha abaixo",
+        newPasswordConfirm: "Confirme sua nova senha",
+        youCan: "você pode",
+        withNew: "com sua nova senha",
+    },
+    document: {
+        title: 'Documentos',
+        new: {
+            pageTitle: 'Novo Documento',
+            title: 'Criar Documento',
+            type: 'Tipo de Documento',
+            observations: 'Observações',
+            placeholders: {
+                title: 'Politica de Privacidade #1',
+                type: 'ex: Política de Privacidade, Termos de Serviço',
+                observations: 'ex: Este documento é para...'
+            },
+            generate: 'Gerar Documento',
+            generating: 'Gerando Documento...',
+        },
+        edit: {
+            save: 'Salvar Alterações',
+            saving: 'Salvando...',
+            publicLink: 'Link Público',
+            embedCode: 'Código de Incorporação',
+            height: 'Altura',
+            theme: 'Tema',
+            themeLight: 'Claro',
+            themeDark: 'Escuro',
+            embedCodeLabel: 'Copie o código abaixo para incorporar o documento em seu site:',
+            copyEmbed: 'Copiar Código de Incorporação',
+            copy: 'Copiar',
+            copied: 'Copiado!',
         }
     }
 } as const;
