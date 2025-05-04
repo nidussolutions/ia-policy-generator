@@ -10,20 +10,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET!);
 // Get all plans (from both Stripe and local database)
 router.get('/', adminAuthMiddleware, async (_req: AdminAuthRequest, res: Response) => {
     try {
-        // Get plans from a local database
-        const localPlans = await prisma.plans.findMany({
-            orderBy: {
-                createdAt: 'desc',
-            },
-            select: {
-                id: true,
-                name: true,
-                description: true,
-                type: true,
-                price: true,
-            },
-        });
-
         // Get products and prices from Stripe
         const {data: stripeProducts} = await stripe.products.list({active: true, limit: 100});
         const {data: stripePrices} = await stripe.prices.list({active: true, limit: 100});
