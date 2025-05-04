@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
                 </motion.h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Link href="/admin/users">
+                    <Link href="/users">
                         <motion.div
                             whileHover={{scale: 1.02}}
                             className="bg-light-card dark:bg-dark-card p-6 rounded-lg shadow-md flex flex-col items-center justify-center text-center h-48"
@@ -51,7 +51,7 @@ export default function AdminDashboardPage() {
                         </motion.div>
                     </Link>
 
-                    <Link href="/admin/plans">
+                    <Link href="/plans">
                         <motion.div
                             whileHover={{scale: 1.02}}
                             className="bg-light-card dark:bg-dark-card p-6 rounded-lg shadow-md flex flex-col items-center justify-center text-center h-48"
@@ -64,7 +64,7 @@ export default function AdminDashboardPage() {
                         </motion.div>
                     </Link>
 
-                    <Link href="/admin/sites">
+                    <Link href="/sites">
                         <motion.div
                             whileHover={{scale: 1.02}}
                             className="bg-light-card dark:bg-dark-card p-6 rounded-lg shadow-md flex flex-col items-center justify-center text-center h-48"

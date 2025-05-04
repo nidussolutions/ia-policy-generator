@@ -36,19 +36,13 @@ router.get('/', adminAuthMiddleware, async (_req: AdminAuthRequest, res: Respons
                 name: product.name,
                 description: product.description,
                 prices: prices.map(price => ({
-                    id: price.id,
-                    currency: price.currency,
                     unit_amount: price.unit_amount,
-                    recurring: price.recurring,
                 })),
                 metadata: product.metadata,
             };
         });
 
-        res.status(200).json({
-            localPlans,
-            stripePlans,
-        });
+        res.status(200).json(stripePlans);
     } catch (error) {
         console.error('Error fetching plans:', error);
         res.status(500).json({message: 'Internal server error'});
