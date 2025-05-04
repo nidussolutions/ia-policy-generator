@@ -38,6 +38,16 @@ export const en = {
             access: "Access",
         }
     },
+    users:{
+        title: "Users",
+        noUsers: "No users found.",
+        actions: {
+            edit: "Edit",
+            access: "Access",
+        },
+        noSub: "No subscription",
+        sub: "Active subscription",
+    },
     common: {
         loading: "Loading..."
     }
