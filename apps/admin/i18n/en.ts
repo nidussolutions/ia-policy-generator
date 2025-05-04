@@ -29,6 +29,15 @@ export const en = {
         loggingIn: "Logging in...",
         error: "An error occurred during login"
     },
+    plans: {
+        newPlans: "New Plan",
+        title: "Plans",
+        noPlans: "No plans found.",
+        actions: {
+            edit: "Edit",
+            access: "Access",
+        }
+    },
     common: {
         loading: "Loading...",
         Resetting: "Resetting...",

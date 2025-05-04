@@ -18,10 +18,10 @@ export default function AdminHeader() {
     const toggleMenu = () => setMenuOpen(prev => !prev);
 
     const navItems = [
-        {href: '/admin', label: t('header.dashboard'), icon: <Globe className="w-5 h-5 mr-2"/>},
-        {href: '/admin/users', label: t('header.users'), icon: <Users className="w-5 h-5 mr-2"/>},
-        {href: '/admin/plans', label: t('header.plans'), icon: <CreditCard className="w-5 h-5 mr-2"/>},
-        {href: '/admin/sites', label: t('header.sites'), icon: <Globe className="w-5 h-5 mr-2"/>},
+        {href: '/', label: t('header.dashboard'), icon: <Globe className="w-5 h-5 mr-2"/>},
+        {href: '/users', label: t('header.users'), icon: <Users className="w-5 h-5 mr-2"/>},
+        {href: '/plans', label: t('header.plans'), icon: <CreditCard className="w-5 h-5 mr-2"/>},
+        {href: '/sites', label: t('header.sites'), icon: <Globe className="w-5 h-5 mr-2"/>},
     ];
 
     return (

@@ -29,6 +29,19 @@ export const pt = {
         loggingIn: "Entrando...",
         error: "Ocorreu um erro durante o login"
     },
+    loading: {
+        title: "Carregando {page}...",
+        description: "Por favor, aguarde enquanto carregamos os dados."
+    },
+    plans: {
+        newPlans: "Novo Plano",
+        title: "Planos",
+        noPlans: "Nenhum plano encontrado.",
+        actions: {
+            edit: "Editar",
+            access: "Acessar",
+        }
+    },
     common: {
         loading: "Carregando...",
         Resetting: "Reiniciando...",
