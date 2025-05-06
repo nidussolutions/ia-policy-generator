@@ -1,0 +1,15 @@
+meta {
+  name: List All
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{admin}}/users/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhN2NkMTM0OC1hMWVlLTQ1NTQtODIxNi1iNmJhMGVmODRmODkiLCJpYXQiOjE3NDYzMjg4ODEsImV4cCI6MTc0NjkzMzY4MX0.9aDdwgJ6OF3l2OUGv-qTZcLbA0MweLs8Tcisa7zNTKo
+}

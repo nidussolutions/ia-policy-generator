@@ -1,19 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 
-import authRouter from './routes/auth';
+import authRouter from './routes/auth.route';
 import userRouter from './routes/user';
 import sitesRouter from './routes/sites';
-import documentRouter from './routes/documents';
-import generatorRouter from './routes/generator';
-import dashboardRouter from './routes/dashboard';
-import publicRouter from './routes/public';
+import documentRouter from './routes/document.route';
+import generatorRouter from './routes/generator.route';
+import dashboardRouter from './routes/statistcs.route';
+import publicRouter from './routes/public.route';
 import plansRouter from './routes/plans';
 import stripeRouter from './routes/stripe';
 import webhookRouter from './routes/webhook';
-import invoicesRouter from './routes/invoices';
+import invoicesRouter from './routes/invoices.route';
 import subscriptionRouter from './routes/subscription';
-import resetPasswordRouter from './routes/passwordReset';
+import resetPasswordRouter from './routes/passwordReset.route';
 
 import appAdmin from './routes/admin';
 

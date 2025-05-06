@@ -1,10 +1,8 @@
-import { Router } from 'express';
-import { PrismaClient } from '../../generated/prisma';
-
-const router = Router();
+import { Request, Response } from 'express';
+import { PrismaClient } from '../../../generated/prisma';
 const prisma = new PrismaClient();
 
-router.get('/:publicId', async (req, res) => {
+export const publicId = async (req: Request, res: Response) => {
   const { publicId } = req.params;
 
   try {
@@ -28,6 +26,4 @@ router.get('/:publicId', async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'Erro ao carregar documento público' });
   }
-});
-
-export default router;
+};

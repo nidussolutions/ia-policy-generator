@@ -41,6 +41,7 @@ const itemVariants = {
     },
 };
 
+<<<<<<< HEAD
 const buttonVariants = {
     hover: {
         scale: 1.02,
@@ -79,6 +80,22 @@ export default function LoginPage() {
         const token = localStorage.getItem('token');
         if (token) router.push('/dashboard');
     }, [router]);
+=======
+export default function LoginPage() {
+  const { t } = useI18n();
+  const { login, token } = useAuth();
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    if (token) router.push('/dashboard');
+  }, [router, token]);
+>>>>>>> 627fa83e05f73c7a86bddcc48de860f558c921bb
 
     if (!mounted) return null;
 

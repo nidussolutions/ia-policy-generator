@@ -42,6 +42,17 @@ export const pt = {
             access: "Acessar",
         }
     },
+    users: {
+        title: "Usuários",
+        noUsers: "Nenhum usuário encontrado.",
+        actions: {
+            edit: "Editar",
+            access: "Acessar",
+            plan: "Plano",
+        },
+        noSub: "Sem assinatura",
+        sub: "Assinatura ativa",
+    },
     common: {
         loading: "Carregando...",
         Resetting: "Reiniciando...",
