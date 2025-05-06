@@ -14,7 +14,7 @@ type UserType = {
     id: string;
     name: string;
     email: string;
-    cretedAt: string;
+    createdAt: string;
     updatedAt: string;
     plan: {
         name: string;
