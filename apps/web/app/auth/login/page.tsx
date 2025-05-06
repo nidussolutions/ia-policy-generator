@@ -23,10 +23,9 @@ const itemVariants = {
   },
 };
 
-
 export default function LoginPage() {
   const { t } = useI18n();
-  const { login } = useAuth();
+  const { login, token } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,9 +35,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     setMounted(true);
-    const token = localStorage.getItem('token');
     if (token) router.push('/dashboard');
-  }, [router]);
+  }, [router, token]);
 
   if (!mounted) {
     return null;

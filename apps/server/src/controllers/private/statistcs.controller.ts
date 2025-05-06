@@ -26,7 +26,10 @@ export const getMetrics = async (
   }
 };
 
-export const logs = async (req: AuthRequest, res: Response): Promise<any> => {
+export const getLogs = async (
+  req: AuthRequest,
+  res: Response
+): Promise<any> => {
   const userId = req.userId;
 
   try {

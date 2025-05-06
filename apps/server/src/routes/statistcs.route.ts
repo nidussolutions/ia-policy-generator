@@ -1,12 +1,14 @@
 import { Router } from 'express';
-import { PrismaClient } from '../../generated/prisma';
 import { authMiddleware } from '../middlewares/authMiddlewares';
+import {
+  getLogs,
+  getMetrics,
+} from '../controllers/private/statistcs.controller';
 
 const router = Router();
-const prisma = new PrismaClient();
 
-router.get('/metrics', authMiddleware);
+router.get('/metrics', authMiddleware, getMetrics);
 
-router.get('/logs', authMiddleware);
+router.get('/logs', authMiddleware, getLogs);
 
 export default router;
