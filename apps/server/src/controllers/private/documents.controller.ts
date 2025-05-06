@@ -1,11 +1,13 @@
-import { Router } from 'express';
-import { PrismaClient } from '../../generated/prisma';
-import { AuthRequest, authMiddleware } from '../middlewares/authMiddlewares';
+import { Response } from 'express';
+import { PrismaClient } from '../../../generated/prisma';
+import { AuthRequest } from '../../middlewares/authMiddlewares';
 
-const router = Router();
 const prisma = new PrismaClient();
 
-router.get('/:siteId', authMiddleware, async (req: AuthRequest, res) => {
+export const getDocBySiteId = async (
+  req: AuthRequest,
+  res: Response
+): Promise<any> => {
   const { siteId } = req.params;
 
   try {
@@ -26,9 +28,12 @@ router.get('/:siteId', authMiddleware, async (req: AuthRequest, res) => {
     console.log('Error during creating document: ', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
+};
 
-router.get('/view/:id', authMiddleware, async (req: AuthRequest, res) => {
+export const viewDocById = async (
+  req: AuthRequest,
+  res: Response
+): Promise<any> => {
   const { id } = req.params;
 
   try {
@@ -53,9 +58,12 @@ router.get('/view/:id', authMiddleware, async (req: AuthRequest, res) => {
     console.log('Error during creating document: ', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
+};
 
-router.put('/:id', authMiddleware, async (req: AuthRequest, res) => {
+export const editDoc = async (
+  req: AuthRequest,
+  res: Response
+): Promise<any> => {
   const { id } = req.params;
   const { content } = req.body;
 
@@ -86,9 +94,12 @@ router.put('/:id', authMiddleware, async (req: AuthRequest, res) => {
     console.log('Error during creating document: ', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
+};
 
-router.delete('/:id', authMiddleware, async (req: AuthRequest, res) => {
+export const deleteDoc = async (
+  req: AuthRequest,
+  res: Response
+): Promise<any> => {
   const { id } = req.params;
 
   try {
@@ -115,6 +126,4 @@ router.delete('/:id', authMiddleware, async (req: AuthRequest, res) => {
     console.log('Error during deleting document: ', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
-
-export default router;
+};
